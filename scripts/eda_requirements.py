@@ -3,9 +3,9 @@
 RFP 요구사항 동결 데이터셋 v0.2.0 EDA 스크립트
 
 수행 작업:
-1. 문서별 및 요구사항 유형별 행 수 집계
+1. 문서별 및 원문/정규화 요구사항 유형별 행 수 집계
 2. 본문 문자 길이, 단어 수, 공백 분할 토큰 길이 분포 통계 (min, max, mean, median, P90, P95, P99)
-3. 중첩표(' | ') 포함 행, 특이 ID(canonical != source_id) 행, 최단/최장 본문 사례 추출
+3. 중첩표(' | ') 포함 행, 승인된 특이 ID(canonical != source_id) 원문 예외 행, 최단/최장 본문 사례 추출
 4. JSON 결과(reports/eda_v0.2.0.json), Markdown 보고서(reports/eda_v0.2.0.md), 
    Jupyter Notebook(notebooks/eda_v0.2.0.ipynb) 자동 생성
 """
@@ -15,6 +15,37 @@ import os
 import sys
 from pathlib import Path
 from typing import Dict, List, Any
+
+
+def normalize_requirement_type(raw_type: str) -> str:
+    """원문 요구사항 유형을 대표 대분류로 정규화 매핑"""
+    if not raw_type or raw_type == "None" or raw_type is None:
+        return "미지정 (None)"
+    
+    t = str(raw_type).strip()
+    
+    if any(k in t for k in ["기능", "SFR", "AI 활용 업무", "AI 기반 솔루션", "그룹웨어", "서비스"]):
+        return "기능 요구사항"
+    if "성능" in t or "PER" in t:
+        return "성능 요구사항"
+    if "보안" in t or "SER" in t:
+        return "보안 요구사항"
+    if "데이터" in t or "DAR" in t or "ECM" in t:
+        return "데이터 요구사항"
+    if "품질" in t or "QUR" in t:
+        return "품질 요구사항"
+    if "인터페이스" in t or "INR" in t:
+        return "인터페이스 요구사항"
+    if "제약" in t or "COR" in t:
+        return "제약사항"
+    if "테스트" in t or "TER" in t:
+        return "테스트 요구사항"
+    if any(k in t for k in ["장비", "인프라", "시스템", "AI 플랫폼 및 인프라"]):
+        return "인프라·장비 요구사항"
+    if any(k in t for k in ["프로젝트", "PMR", "PSR", "컨설팅", "CNR", "CUR", "거버넌스", "안전"]):
+        return "프로젝트 관리·지원 요구사항"
+        
+    return "기타"
 
 
 def load_dataset(filepath: str) -> List[Dict[str, Any]]:
@@ -59,7 +90,8 @@ def analyze_dataset(records: List[Dict[str, Any]]) -> Dict[str, Any]:
     total_count = len(records)
     
     doc_counts = {}
-    type_counts = {}
+    raw_type_counts = {}
+    norm_type_counts = {}
     doc_type_counts = {}
     
     char_lengths = []
@@ -72,7 +104,9 @@ def analyze_dataset(records: List[Dict[str, Any]]) -> Dict[str, Any]:
     
     for r in records:
         doc_id = r.get("document_id", "unknown")
-        req_type = r.get("requirement_type", "unknown")
+        raw_req_type = str(r.get("requirement_type", "None"))
+        norm_req_type = normalize_requirement_type(raw_req_type)
+        
         req_uid = r.get("requirement_uid", "")
         req_id = r.get("requirement_id", "")
         source_req_id = r.get("source_requirement_id", "")
@@ -81,13 +115,14 @@ def analyze_dataset(records: List[Dict[str, Any]]) -> Dict[str, Any]:
         # 문서별 집계
         doc_counts[doc_id] = doc_counts.get(doc_id, 0) + 1
         
-        # 유형별 집계
-        type_counts[req_type] = type_counts.get(req_type, 0) + 1
+        # 원문 및 정규화 유형별 집계
+        raw_type_counts[raw_req_type] = raw_type_counts.get(raw_req_type, 0) + 1
+        norm_type_counts[norm_req_type] = norm_type_counts.get(norm_req_type, 0) + 1
         
-        # 문서 x 유형 교차 집계
+        # 문서 x 정규화 유형 교차 집계
         if doc_id not in doc_type_counts:
             doc_type_counts[doc_id] = {}
-        doc_type_counts[doc_id][req_type] = doc_type_counts[doc_id].get(req_type, 0) + 1
+        doc_type_counts[doc_id][norm_req_type] = doc_type_counts[doc_id].get(norm_req_type, 0) + 1
         
         # 본문 길이
         c_len = len(raw_text)
@@ -100,14 +135,15 @@ def analyze_dataset(records: List[Dict[str, Any]]) -> Dict[str, Any]:
             doc_char_lengths[doc_id] = []
         doc_char_lengths[doc_id].append(c_len)
         
-        # 특이 ID 검사
+        # 승인된 원문 ID 예외 검사 (Canonical ID != Source ID)
         if req_id != source_req_id:
             id_mismatches.append({
                 "requirement_uid": req_uid,
                 "document_id": doc_id,
                 "requirement_id": req_id,
                 "source_requirement_id": source_req_id,
-                "requirement_name": r.get("requirement_name", "")
+                "requirement_name": r.get("requirement_name", ""),
+                "note": "원문 이중 하이픈(CUR-CM--001) 추적용 승인 예외 보존건"
             })
             
         # 중첩표 검사 (' | ' 포함 여부)
@@ -159,7 +195,8 @@ def analyze_dataset(records: List[Dict[str, Any]]) -> Dict[str, Any]:
         "dataset_version": records[0].get("dataset_version", "v0.2.0") if records else "v0.2.0",
         "total_records": total_count,
         "document_counts": doc_counts,
-        "type_counts": type_counts,
+        "raw_type_counts": raw_type_counts,
+        "normalized_type_counts": norm_type_counts,
         "document_type_counts": doc_type_counts,
         "char_length_stats": overall_char_stats,
         "word_count_stats": overall_word_stats,
@@ -181,7 +218,7 @@ def generate_markdown_report(eda_result: Dict[str, Any]) -> str:
     lines.append(f"- **총 행 수**: {eda_result['total_records']:,} 행 (요구사항 ID 1개 = 1행)")
     lines.append(f"- **대상 문서 수**: {len(eda_result['document_counts'])} 개")
     lines.append(f"- **중첩표 포함 행 수**: {eda_result['nested_table_count']} 행")
-    lines.append(f"- **특이 ID (Canonical != Source) 행 수**: {len(eda_result['id_mismatches'])} 행")
+    lines.append(f"- **승인된 원문 예외 ID (Canonical != Source) 행 수**: {len(eda_result['id_mismatches'])} 행 (의도적 원문 추적 보존건)")
     lines.append("")
     
     # 1. 문서별 요구사항 수
@@ -195,14 +232,24 @@ def generate_markdown_report(eda_result: Dict[str, Any]) -> str:
     lines.append(f"| **합계** | **{eda_result['total_records']:,}** | **100.0%** |")
     lines.append("")
 
-    # 2. 요구사항 유형별 분포
-    lines.append("## 2. 요구사항 유형별 분포")
+    # 2. 정규화 요구사항 유형별 분포
+    lines.append("## 2. 요구사항 유형별 분포 (정규화 대분류)")
     lines.append("")
-    lines.append("| requirement_type | 행 수 | 비율 (%) |")
+    lines.append("| 정규화 유형 (normalized_requirement_type) | 행 수 | 비율 (%) |")
     lines.append("|---|---:|---:|")
-    for req_type, count in sorted(eda_result['type_counts'].items(), key=lambda x: x[1], reverse=True):
+    for req_type, count in sorted(eda_result['normalized_type_counts'].items(), key=lambda x: x[1], reverse=True):
         ratio = (count / eda_result['total_records']) * 100
         lines.append(f"| `{req_type}` | {count:,} | {ratio:.1f}% |")
+    lines.append("")
+
+    lines.append("### 원문 표기 요구사항 유형 분포 (Raw Types Top 15)")
+    lines.append("")
+    lines.append("| 원문 표기 유형 | 행 수 | 비율 (%) |")
+    lines.append("|---|---:|---:|")
+    sorted_raw = sorted(eda_result['raw_type_counts'].items(), key=lambda x: x[1], reverse=True)
+    for raw_type, count in sorted_raw[:15]:
+        ratio = (count / eda_result['total_records']) * 100
+        lines.append(f"| `{raw_type}` | {count:,} | {ratio:.1f}% |")
     lines.append("")
 
     # 3. 본문 길이 통계 (문자 수 및 단어 수)
@@ -227,15 +274,17 @@ def generate_markdown_report(eda_result: Dict[str, Any]) -> str:
     lines.append("")
 
     # 4. 특이 사례 및 극단치
-    lines.append("## 4. 특이사항 및 극단치 분석")
+    lines.append("## 4. 승인된 원문 예외 및 특이 사례 분석")
     lines.append("")
-    lines.append("### 4.1 Canonical ID와 Source ID 불일치 건")
+    lines.append("### 4.1 승인된 원문 예외 ID (Canonical ID != Source ID)")
+    lines.append("")
+    lines.append("> 이 항목은 결함이 아니라 원문 오타/불일치의 추적성을 보존하기 위해 `requirements_v0.2.0` 데이터셋 및 `extraction_freeze_v0.2.0.md`에 명시적으로 의도하여 남긴 승인 예외(Policy Resolved) 항목입니다.")
     lines.append("")
     if eda_result['id_mismatches']:
-        lines.append("| requirement_uid | requirement_id | source_requirement_id | 요구사항명 |")
-        lines.append("|---|---|---|---|")
+        lines.append("| requirement_uid | Canonical `requirement_id` | Source `source_requirement_id` | 요구사항명 | 비고 |")
+        lines.append("|---|---|---|---|---|")
         for item in eda_result['id_mismatches']:
-            lines.append(f"| `{item['requirement_uid']}` | `{item['requirement_id']}` | `{item['source_requirement_id']}` | {item['requirement_name']} |")
+            lines.append(f"| `{item['requirement_uid']}` | `{item['requirement_id']}` | `{item['source_requirement_id']}` | {item['requirement_name']} | {item.get('note', '')} |")
     else:
         lines.append("- 불일치 건 없음")
     lines.append("")
@@ -275,11 +324,11 @@ def generate_jupyter_notebook(eda_result: Dict[str, Any]) -> Dict[str, Any]:
         "source": [
             "# RFP 요구사항 데이터셋 v0.2.0 EDA 노트북\n",
             "\n",
-            "이 노트북은 `data/processed/requirements_v0.2.0.jsonl` (총 1,024행) 동결 데이터셋의 문서별/유형별 분포, 본문 길이, 중첩표 및 특이 ID를 탐색하고 시각화합니다."
+            "이 노트북은 `data/processed/requirements_v0.2.0.jsonl` (총 1,024행) 동결 데이터셋의 문서별/유형별 분포, 본문 길이, 중첩표 및 승인된 원문 예외 ID를 탐색하고 시각화합니다."
         ]
     })
     
-    # 셀 2: 환경 설정 및 임포트
+    # 셀 2: 환경 설정 및 임포트 & 정규화 함수
     cells.append({
         "cell_type": "code",
         "execution_count": None,
@@ -302,6 +351,34 @@ def generate_jupyter_notebook(eda_result: Dict[str, Any]) -> Dict[str, Any]:
             "    dataset_path = Path('data/processed/requirements_v0.2.0.jsonl')\n",
             "\n",
             "df = pd.read_json(dataset_path, lines=True)\n",
+            "\n",
+            "def normalize_req_type(raw_type):\n",
+            "    if not raw_type or raw_type == 'None' or str(raw_type) == 'nan':\n",
+            "        return '미지정 (None)'\n",
+            "    t = str(raw_type).strip()\n",
+            "    if any(k in t for k in ['기능', 'SFR', 'AI 활용 업무', 'AI 기반 솔루션', '그룹웨어', '서비스']):\n",
+            "        return '기능 요구사항'\n",
+            "    if '성능' in t or 'PER' in t:\n",
+            "        return '성능 요구사항'\n",
+            "    if '보안' in t or 'SER' in t:\n",
+            "        return '보안 요구사항'\n",
+            "    if '데이터' in t or 'DAR' in t or 'ECM' in t:\n",
+            "        return '데이터 요구사항'\n",
+            "    if '품질' in t or 'QUR' in t:\n",
+            "        return '품질 요구사항'\n",
+            "    if '인터페이스' in t or 'INR' in t:\n",
+            "        return '인터페이스 요구사항'\n",
+            "    if '제약' in t or 'COR' in t:\n",
+            "        return '제약사항'\n",
+            "    if '테스트' in t or 'TER' in t:\n",
+            "        return '테스트 요구사항'\n",
+            "    if any(k in t for k in ['장비', '인프라', '시스템', 'AI 플랫폼 및 인프라']):\n",
+            "        return '인프라·장비 요구사항'\n",
+            "    if any(k in t for k in ['프로젝트', 'PMR', 'PSR', '컨설팅', 'CNR', 'CUR', '거버넌스', '안전']):\n",
+            "        return '프로젝트 관리·지원 요구사항'\n",
+            "    return '기타'\n",
+            "\n",
+            "df['normalized_type'] = df['requirement_type'].apply(normalize_req_type)\n",
             "print(f\"데이터셋 로드 완료: 총 {len(df):,} 행\")\n",
             "df.head(3)"
         ]
@@ -331,30 +408,52 @@ def generate_jupyter_notebook(eda_result: Dict[str, Any]) -> Dict[str, Any]:
         ]
     })
 
-    # 셀 4: 요구사항 유형별 분포
+    # 셀 4: 정규화 요구사항 유형별 분포
     cells.append({
         "cell_type": "code",
         "execution_count": None,
         "metadata": {},
         "outputs": [],
         "source": [
-            "# 2. 요구사항 유형별 분포\n",
-            "type_counts = df['requirement_type'].value_counts().reset_index()\n",
-            "type_counts.columns = ['requirement_type', 'count']\n",
-            "display(type_counts)\n",
+            "# 2. 정규화 요구사항 유형별 분포 (통합 대분류)\n",
+            "norm_type_counts = df['normalized_type'].value_counts().reset_index()\n",
+            "norm_type_counts.columns = ['normalized_type', 'count']\n",
+            "norm_type_counts['ratio_pct'] = (norm_type_counts['count'] / len(df) * 100).round(2)\n",
+            "display(norm_type_counts)\n",
             "\n",
-            "# 시각화\n",
-            "plt.figure(figsize=(10, 4))\n",
-            "sns.barplot(data=type_counts, x='count', y='requirement_type', palette='magma')\n",
-            "plt.title('요구사항 유형별 분포')\n",
+            "# 시각화 (정규화 대분류)\n",
+            "plt.figure(figsize=(10, 5))\n",
+            "sns.barplot(data=norm_type_counts, x='count', y='normalized_type', palette='crest')\n",
+            "plt.title('정규화 요구사항 유형별 분포 (통합 대분류)')\n",
             "plt.xlabel('행 수')\n",
-            "plt.ylabel('요구사항 유형')\n",
+            "plt.ylabel('정규화 유형')\n",
             "plt.tight_layout()\n",
             "plt.show()"
         ]
     })
 
-    # 셀 5: 본문 길이 분포 (문자 수 & 단어 수)
+    # 셀 5: 원문 표기 요구사항 유형 분포
+    cells.append({
+        "cell_type": "code",
+        "execution_count": None,
+        "metadata": {},
+        "outputs": [],
+        "source": [
+            "# 원문 표기 유형 Top 15 시각화 (세부 표기 차이 확인용)\n",
+            "raw_type_counts = df['requirement_type'].value_counts().head(15).reset_index()\n",
+            "raw_type_counts.columns = ['raw_requirement_type', 'count']\n",
+            "\n",
+            "plt.figure(figsize=(10, 6))\n",
+            "sns.barplot(data=raw_type_counts, x='count', y='raw_requirement_type', palette='magma')\n",
+            "plt.title('원문 표기 요구사항 유형 분포 (Top 15 Raw Types)')\n",
+            "plt.xlabel('행 수')\n",
+            "plt.ylabel('원문 표기 유형')\n",
+            "plt.tight_layout()\n",
+            "plt.show()"
+        ]
+    })
+
+    # 셀 6: 본문 길이 분포 (문자 수 & 단어 수)
     cells.append({
         "cell_type": "code",
         "execution_count": None,
@@ -383,19 +482,19 @@ def generate_jupyter_notebook(eda_result: Dict[str, Any]) -> Dict[str, Any]:
         ]
     })
 
-    # 셀 6: 중첩표 및 특이 ID 분석
+    # 셀 7: 승인된 원문 예외 ID 및 중첩표 분석
     cells.append({
         "cell_type": "code",
         "execution_count": None,
         "metadata": {},
         "outputs": [],
         "source": [
-            "# 4. 중첩표(' | ') 및 특이 ID 검사\n",
+            "# 4. 승인된 원문 ID 예외(Policy Resolved) 및 중첩표(' | ') 검사\n",
             "df['has_nested_table'] = df['raw_requirement_text'].apply(lambda x: ' | ' in x)\n",
             "df['id_mismatch'] = df['requirement_id'] != df['source_requirement_id']\n",
             "\n",
             "print(f\"중첩표 포함 행 수: {df['has_nested_table'].sum()} 건\")\n",
-            "print(f\"Canonical ID != Source ID 불일치 행 수: {df['id_mismatch'].sum()} 건\")\n",
+            "print(f\"승인된 원문 예외 ID (Canonical ID != Source ID) 행 수: {df['id_mismatch'].sum()} 건 (의도된 추적용 보존)\")\n",
             "\n",
             "if df['id_mismatch'].sum() > 0:\n",
             "    display(df[df['id_mismatch']][['requirement_uid', 'requirement_id', 'source_requirement_id', 'requirement_name']])"
