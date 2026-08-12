@@ -1,0 +1,27 @@
+{
+  "record_count": 1024,
+  "document_count": 10,
+  "records_by_document": {
+    "ccrs_ai_platform": 95,
+    "defense_intelligent_platform": 169,
+    "genai_incident_response": 67,
+    "incheon_airport_digital_work": 78,
+    "kac_ai_work_platform": 86,
+    "kangwon_land_genai": 50,
+    "kexim_ai_platform": 137,
+    "koen_ai_infrastructure": 101,
+    "korail_genai_isp_ismp": 49,
+    "mfds_drug_ai_review": 192
+  },
+  "records_by_adapter": {
+    "header_id": 86,
+    "labeled_id": 938
+  },
+  "missing_name_count": 0,
+  "missing_name_uids": [],
+  "missing_body_count": 0,
+  "missing_body_uids": [],
+  "duplicate_uid_count": 0,
+  "duplicate_uids": [],
+  "empty_documents": []
+}
