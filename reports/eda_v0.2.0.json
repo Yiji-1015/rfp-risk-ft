@@ -1,0 +1,487 @@
+{
+  "dataset_version": "requirements_v0.2.0",
+  "total_records": 1024,
+  "document_counts": {
+    "ccrs_ai_platform": 95,
+    "defense_intelligent_platform": 169,
+    "genai_incident_response": 67,
+    "incheon_airport_digital_work": 78,
+    "kac_ai_work_platform": 86,
+    "kangwon_land_genai": 50,
+    "kexim_ai_platform": 137,
+    "koen_ai_infrastructure": 101,
+    "korail_genai_isp_ismp": 49,
+    "mfds_drug_ai_review": 192
+  },
+  "type_counts": {
+    "기능 요구사항": 97,
+    "성능 요구사항": 21,
+    "시스템 장비 요구사항": 9,
+    "인터페이스 요구사항": 20,
+    "데이터 요구사항": 32,
+    "테스트 요구사항": 27,
+    "보안 요구사항": 42,
+    "품질 요구사항": 34,
+    "제약사항": 46,
+    "프로젝트 관리 요구사항": 42,
+    "프로젝트 지원 요구사항": 28,
+    "컨설팅 요구사항": 16,
+    "시스템 장비구성": 27,
+    "시스템 장비 구성": 2,
+    "기능": 60,
+    "기능요구사항": 7,
+    "기능 요구사항(SFR)": 38,
+    "인터페이스 요구사항(INR)": 15,
+    "테스트 요구사항(TER)": 5,
+    "성능 요구사항(PER)": 10,
+    "데이터 요구사항(DAR)": 13,
+    "보안 요구사항(SER)": 18,
+    "품질 요구사항(QUR)": 6,
+    "품질관리 요구사항(QUR)": 3,
+    "제약사항(COR)": 5,
+    "컨설팅 요구사항(CNR)": 1,
+    "프로젝트 관리(PMR)": 5,
+    "프로젝트 지원(PSR)": 6,
+    "컨설팅 요구사항(CUR)": 1,
+    "시스템장비구성 요구사항": 3,
+    "프로젝트 관리 요구사항(PMR)": 10,
+    "프로젝트 지원요구사항(PSR)": 6,
+    "AI 플랫폼 및 인프라": 6,
+    "AI 활용 업무 기능": 9,
+    "그룹웨어 기능": 21,
+    "시스템 장비구성 요구사항": 6,
+    "시스템 요구사항": 3,
+    "서비스 요구사항": 4,
+    "시스템 구성 요구사항": 5,
+    "AI 기반 솔루션 요구사항": 9,
+    "거버넌스 및 PMO 요구사항": 5,
+    "품질관리 요구사항": 3,
+    "ECM 요구사항": 10,
+    "인프라 요구사항": 12,
+    "인프라 상세 요구사항": 5,
+    "프로젝트 보안 요구사항": 1,
+    "프로젝트관리 요구사항": 30,
+    "프로젝트지원 요구사항": 6,
+    "null": 101,
+    "제약 사항": 3,
+    "안전 요구사항": 2,
+    "프로젝트 관리": 11,
+    "데이터": 26,
+    "성능": 10,
+    "인터페이스": 10,
+    "테스트": 6,
+    "보안": 18,
+    "품질": 6,
+    "프로젝트관리": 26,
+    "프로젝트지원": 15
+  },
+  "document_type_counts": {
+    "ccrs_ai_platform": {
+      "기능 요구사항": 30,
+      "성능 요구사항": 5,
+      "시스템 장비 요구사항": 9,
+      "인터페이스 요구사항": 7,
+      "데이터 요구사항": 4,
+      "테스트 요구사항": 5,
+      "보안 요구사항": 11,
+      "품질 요구사항": 5,
+      "제약사항": 8,
+      "프로젝트 관리 요구사항": 5,
+      "프로젝트 지원 요구사항": 4,
+      "컨설팅 요구사항": 2
+    },
+    "defense_intelligent_platform": {
+      "시스템 장비구성": 27,
+      "시스템 장비 구성": 2,
+      "기능": 60,
+      "기능요구사항": 7,
+      "성능 요구사항": 6,
+      "인터페이스 요구사항": 4,
+      "데이터 요구사항": 3,
+      "테스트 요구사항": 9,
+      "보안 요구사항": 9,
+      "품질 요구사항": 6,
+      "제약사항": 7,
+      "프로젝트 관리 요구사항": 19,
+      "프로젝트 지원 요구사항": 10
+    },
+    "genai_incident_response": {
+      "기능 요구사항(SFR)": 19,
+      "인터페이스 요구사항(INR)": 10,
+      "테스트 요구사항(TER)": 3,
+      "성능 요구사항(PER)": 3,
+      "데이터 요구사항(DAR)": 5,
+      "보안 요구사항(SER)": 10,
+      "품질 요구사항(QUR)": 1,
+      "품질관리 요구사항(QUR)": 3,
+      "제약사항(COR)": 1,
+      "컨설팅 요구사항(CNR)": 1,
+      "프로젝트 관리(PMR)": 5,
+      "프로젝트 지원(PSR)": 6
+    },
+    "incheon_airport_digital_work": {
+      "컨설팅 요구사항(CUR)": 1,
+      "기능 요구사항(SFR)": 19,
+      "성능 요구사항(PER)": 7,
+      "시스템장비구성 요구사항": 3,
+      "인터페이스 요구사항(INR)": 5,
+      "데이터 요구사항(DAR)": 8,
+      "테스트 요구사항(TER)": 2,
+      "보안 요구사항(SER)": 8,
+      "품질 요구사항(QUR)": 5,
+      "제약사항(COR)": 4,
+      "프로젝트 관리 요구사항(PMR)": 10,
+      "프로젝트 지원요구사항(PSR)": 6
+    },
+    "kac_ai_work_platform": {
+      "컨설팅 요구사항": 1,
+      "AI 플랫폼 및 인프라": 6,
+      "AI 활용 업무 기능": 9,
+      "그룹웨어 기능": 21,
+      "시스템 장비구성 요구사항": 6,
+      "성능 요구사항": 2,
+      "인터페이스 요구사항": 2,
+      "데이터 요구사항": 4,
+      "테스트 요구사항": 2,
+      "보안 요구사항": 6,
+      "품질 요구사항": 4,
+      "제약사항": 5,
+      "프로젝트 관리 요구사항": 11,
+      "프로젝트 지원 요구사항": 7
+    },
+    "kangwon_land_genai": {
+      "시스템 요구사항": 3,
+      "기능 요구사항": 6,
+      "데이터 요구사항": 4,
+      "보안 요구사항": 4,
+      "제약사항": 4,
+      "성능 요구사항": 4,
+      "인터페이스 요구사항": 3,
+      "품질 요구사항": 6,
+      "테스트 요구사항": 4,
+      "프로젝트 관리 요구사항": 7,
+      "프로젝트 지원 요구사항": 5
+    },
+    "kexim_ai_platform": {
+      "서비스 요구사항": 4,
+      "데이터 요구사항": 8,
+      "시스템 구성 요구사항": 5,
+      "AI 기반 솔루션 요구사항": 9,
+      "거버넌스 및 PMO 요구사항": 5,
+      "품질관리 요구사항": 3,
+      "품질 요구사항": 9,
+      "ECM 요구사항": 10,
+      "인터페이스 요구사항": 4,
+      "인프라 요구사항": 12,
+      "인프라 상세 요구사항": 5,
+      "성능 요구사항": 4,
+      "테스트 요구사항": 7,
+      "보안 요구사항": 7,
+      "프로젝트 보안 요구사항": 1,
+      "프로젝트관리 요구사항": 30,
+      "프로젝트지원 요구사항": 6,
+      "제약사항": 8
+    },
+    "koen_ai_infrastructure": {
+      "null": 101
+    },
+    "korail_genai_isp_ismp": {
+      "컨설팅 요구사항": 13,
+      "데이터 요구사항": 9,
+      "보안 요구사항": 5,
+      "품질 요구사항": 4,
+      "제약 사항": 3,
+      "안전 요구사항": 2,
+      "프로젝트 관리": 11,
+      "프로젝트 지원 요구사항": 2
+    },
+    "mfds_drug_ai_review": {
+      "기능 요구사항": 61,
+      "데이터": 26,
+      "성능": 10,
+      "인터페이스": 10,
+      "테스트": 6,
+      "보안": 18,
+      "품질": 6,
+      "제약사항": 14,
+      "프로젝트관리": 26,
+      "프로젝트지원": 15
+    }
+  },
+  "char_length_stats": {
+    "min": 26,
+    "max": 4895,
+    "mean": 453.35,
+    "median": 337.0,
+    "p90": 927.8,
+    "p95": 1213.6,
+    "p99": 2169.54
+  },
+  "word_count_stats": {
+    "min": 7,
+    "max": 1294,
+    "mean": 116.56,
+    "median": 86.0,
+    "p90": 240.7,
+    "p95": 314.85,
+    "p99": 530.08
+  },
+  "document_char_length_stats": {
+    "ccrs_ai_platform": {
+      "min": 144,
+      "max": 2685,
+      "mean": 769.17,
+      "median": 622.0,
+      "p90": 1460.0,
+      "p95": 1883.4,
+      "p99": 2606.98
+    },
+    "defense_intelligent_platform": {
+      "min": 31,
+      "max": 2205,
+      "mean": 548.49,
+      "median": 443.0,
+      "p90": 1164.6,
+      "p95": 1292.8,
+      "p99": 1550.96
+    },
+    "genai_incident_response": {
+      "min": 154,
+      "max": 3392,
+      "mean": 550.7,
+      "median": 429.0,
+      "p90": 865.4,
+      "p95": 1002.9,
+      "p99": 2456.12
+    },
+    "incheon_airport_digital_work": {
+      "min": 62,
+      "max": 1339,
+      "mean": 430.74,
+      "median": 372.5,
+      "p90": 804.7,
+      "p95": 996.4,
+      "p99": 1265.08
+    },
+    "kac_ai_work_platform": {
+      "min": 106,
+      "max": 2091,
+      "mean": 682.31,
+      "median": 580.0,
+      "p90": 1271.0,
+      "p95": 1407.25,
+      "p99": 1776.5
+    },
+    "kangwon_land_genai": {
+      "min": 81,
+      "max": 1117,
+      "mean": 401.12,
+      "median": 291.0,
+      "p90": 771.5,
+      "p95": 1000.55,
+      "p99": 1113.08
+    },
+    "kexim_ai_platform": {
+      "min": 26,
+      "max": 4895,
+      "mean": 487.42,
+      "median": 347.0,
+      "p90": 1007.2,
+      "p95": 1618.2,
+      "p99": 2384.88
+    },
+    "koen_ai_infrastructure": {
+      "min": 37,
+      "max": 658,
+      "mean": 179.39,
+      "median": 127.0,
+      "p90": 347.0,
+      "p95": 454.0,
+      "p99": 576.0
+    },
+    "korail_genai_isp_ismp": {
+      "min": 79,
+      "max": 830,
+      "mean": 349.71,
+      "median": 295.0,
+      "p90": 731.0,
+      "p95": 785.8,
+      "p99": 823.28
+    },
+    "mfds_drug_ai_review": {
+      "min": 32,
+      "max": 2070,
+      "mean": 245.86,
+      "median": 190.0,
+      "p90": 464.1,
+      "p95": 622.25,
+      "p99": 831.46
+    }
+  },
+  "id_mismatches": [
+    {
+      "requirement_uid": "incheon_airport_digital_work:CUR-CM-001",
+      "document_id": "incheon_airport_digital_work",
+      "requirement_id": "CUR-CM-001",
+      "source_requirement_id": "CUR-CM--001",
+      "requirement_name": "공사 AI 업무 체계 고도화 컨설팅"
+    }
+  ],
+  "nested_table_count": 41,
+  "nested_table_samples": [
+    {
+      "requirement_uid": "ccrs_ai_platform:SFR-022",
+      "document_id": "ccrs_ai_platform",
+      "requirement_id": "SFR-022",
+      "requirement_name": "Agent 채권양수도 추론",
+      "char_length": 945
+    },
+    {
+      "requirement_uid": "defense_intelligent_platform:ECR-029",
+      "document_id": "defense_intelligent_platform",
+      "requirement_id": "ECR-029",
+      "requirement_name": "VDI 장비 및 기능 요구사항",
+      "char_length": 1174
+    },
+    {
+      "requirement_uid": "defense_intelligent_platform:INR-004",
+      "document_id": "defense_intelligent_platform",
+      "requirement_id": "INR-004",
+      "requirement_name": "대내외 정보시스템과의 연동",
+      "char_length": 672
+    },
+    {
+      "requirement_uid": "defense_intelligent_platform:QUR-001",
+      "document_id": "defense_intelligent_platform",
+      "requirement_id": "QUR-001",
+      "requirement_name": "품질관리 방안",
+      "char_length": 810
+    },
+    {
+      "requirement_uid": "defense_intelligent_platform:PSR-002",
+      "document_id": "defense_intelligent_platform",
+      "requirement_id": "PSR-002",
+      "requirement_name": "AI 활용 교육",
+      "char_length": 749
+    },
+    {
+      "requirement_uid": "genai_incident_response:SFR-003",
+      "document_id": "genai_incident_response",
+      "requirement_id": "SFR-003",
+      "requirement_name": "침해대응 업무 특화 sLLM(전문가 모델) 도입",
+      "char_length": 1044
+    },
+    {
+      "requirement_uid": "incheon_airport_digital_work:SFR-007",
+      "document_id": "incheon_airport_digital_work",
+      "requirement_id": "SFR-007",
+      "requirement_name": "(과제 4) 손쉬운 사업발주",
+      "char_length": 1158
+    },
+    {
+      "requirement_uid": "incheon_airport_digital_work:ECR-003",
+      "document_id": "incheon_airport_digital_work",
+      "requirement_id": "ECR-003",
+      "requirement_name": "IT인프라 제공 활용",
+      "char_length": 437
+    },
+    {
+      "requirement_uid": "incheon_airport_digital_work:INR-005",
+      "document_id": "incheon_airport_digital_work",
+      "requirement_id": "INR-005",
+      "requirement_name": "시스템 인터페이스 대상",
+      "char_length": 657
+    },
+    {
+      "requirement_uid": "incheon_airport_digital_work:PMR-007",
+      "document_id": "incheon_airport_digital_work",
+      "requirement_id": "PMR-007",
+      "requirement_name": "산출물 제출",
+      "char_length": 789
+    }
+  ],
+  "shortest_samples": [
+    {
+      "requirement_uid": "kexim_ai_platform:PMR-025",
+      "document_id": "kexim_ai_platform",
+      "requirement_id": "PMR-025",
+      "requirement_name": "관련기관과 원활한 업무 협의",
+      "char_length": 26,
+      "snippet": "◦ 연계기관 간 원활한 업무협의 진행 방안 제시"
+    },
+    {
+      "requirement_uid": "defense_intelligent_platform:ECR-019",
+      "document_id": "defense_intelligent_platform",
+      "requirement_id": "ECR-019",
+      "requirement_name": "백업SW",
+      "char_length": 31,
+      "snippet": "○ 도입 수량 - 총 1식(250TB 이상) 의 라이선스"
+    },
+    {
+      "requirement_uid": "kexim_ai_platform:COR-001",
+      "document_id": "kexim_ai_platform",
+      "requirement_id": "COR-001",
+      "requirement_name": "데이터 사용 및 접근 제약사항",
+      "char_length": 31,
+      "snippet": "◦ 허가된 사용자에 한하여 DBMS에 접근 및 사용 제한"
+    },
+    {
+      "requirement_uid": "mfds_drug_ai_review:PMR-015",
+      "document_id": "mfds_drug_ai_review",
+      "requirement_id": "PMR-015",
+      "requirement_name": "관련기관과 원활한 업무 협의",
+      "char_length": 32,
+      "snippet": "◦ 연계기관 간 원활한 업무협의 진행 방안을 제시하여야 함"
+    },
+    {
+      "requirement_uid": "mfds_drug_ai_review:COR-004",
+      "document_id": "mfds_drug_ai_review",
+      "requirement_id": "COR-004",
+      "requirement_name": "데이터 사용 및 접근",
+      "char_length": 33,
+      "snippet": "◦ 허가된 사용자에 한하여 DBMS에 접근 및 사용을 제한함"
+    }
+  ],
+  "longest_samples": [
+    {
+      "requirement_uid": "kexim_ai_platform:INR-DTL-005",
+      "document_id": "kexim_ai_platform",
+      "requirement_id": "INR-DTL-005",
+      "requirement_name": "상용 S/W 도입 품목 요구사항",
+      "char_length": 4895,
+      "snippet": "◦ 도입품목 및 수량 연번 | 기능 | 용도 | 수량 1 | WEB | WEB 서버 | 12 2 | WAS | WAS 서버 3 | AI 기반 솔루션 | LLM 서빙 및 에이전트 관"
+    },
+    {
+      "requirement_uid": "genai_incident_response:SER-004",
+      "document_id": "genai_incident_response",
+      "requirement_id": "SER-004",
+      "requirement_name": "수행업체 보안 준수사항",
+      "char_length": 3392,
+      "snippet": "○ 사업자는「국정원 국가정보보안기본지침」,「과기정통부 정보보안기본지침」등 보안 관련 규정 등에 근거, 자체 정보보호관리체계를 수립하고 정보보호계획서에 반영한 후 사업수행 계획서 제"
+    },
+    {
+      "requirement_uid": "ccrs_ai_platform:ECR-006",
+      "document_id": "ccrs_ai_platform",
+      "requirement_id": "ECR-006",
+      "requirement_name": "AI플랫폼 장비 도입",
+      "char_length": 2685,
+      "snippet": "■ 공통 요구사항 (전체 서버, 장비 공통) - 제시된 사양 이상이어야 하며, 동급 또는 상위 제안 허용 - OS는 LTS 버전(Rocky Linux 9.x / RHEL / Alm"
+    },
+    {
+      "requirement_uid": "ccrs_ai_platform:SFR-003",
+      "document_id": "ccrs_ai_platform",
+      "requirement_id": "SFR-003",
+      "requirement_name": "지식화 파이프라인·분류·시점관리 및 벡터 인덱스",
+      "char_length": 2602,
+      "snippet": "■ 문서 유형별 지식화 파이프라인 - 파이프라인은 구축 유형에 따라 승인 단계 적용 여부가 상이하게 운영됨 · (초기 구축) 파싱 → 자동 분류·메타데이터 추출 → 청킹 → 임베딩"
+    },
+    {
+      "requirement_uid": "ccrs_ai_platform:PSR-001",
+      "document_id": "ccrs_ai_platform",
+      "requirement_id": "PSR-001",
+      "requirement_name": "교육훈련 및 기술이전",
+      "char_length": 2555,
+      "snippet": "■ [교육 계획 수립] - 사업자는 시범운영 개시 2주 전까지 교육훈련계획서를 위원회에 제출하고 승인을 득해야 한다. - 교육계획서에는 교육 목적·대상·일정·강사·교재·일반사용자 "
+    }
+  ]
+}

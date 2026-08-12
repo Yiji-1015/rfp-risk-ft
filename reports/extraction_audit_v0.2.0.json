@@ -1,0 +1,299 @@
+{
+  "record_count": 1024,
+  "document_count": 10,
+  "records_by_document": {
+    "ccrs_ai_platform": 95,
+    "defense_intelligent_platform": 169,
+    "genai_incident_response": 67,
+    "incheon_airport_digital_work": 78,
+    "kac_ai_work_platform": 86,
+    "kangwon_land_genai": 50,
+    "kexim_ai_platform": 137,
+    "koen_ai_infrastructure": 101,
+    "korail_genai_isp_ismp": 49,
+    "mfds_drug_ai_review": 192
+  },
+  "records_by_adapter": {
+    "header_id": 86,
+    "labeled_id": 938
+  },
+  "missing_name_count": 0,
+  "missing_name_uids": [],
+  "missing_body_count": 0,
+  "missing_body_uids": [],
+  "duplicate_uid_count": 0,
+  "duplicate_uids": [],
+  "empty_documents": [],
+  "index_exact_match_document_count": 7,
+  "index_mismatch_document_count": 2,
+  "index_policy_resolved_document_count": 2,
+  "unresolved_index_mismatch_document_count": 0,
+  "documents_without_index_ids": [
+    "koen_ai_infrastructure"
+  ],
+  "accepted_document_exceptions": [
+    {
+      "document_id": "koen_ai_infrastructure",
+      "exception_type": "summary_detail_count_mismatch",
+      "summary_count": 99,
+      "detail_count": 101,
+      "category_differences": {
+        "PER": {
+          "summary_count": 5,
+          "detail_count": 4
+        },
+        "QUR": {
+          "summary_count": 9,
+          "detail_count": 12
+        }
+      },
+      "policy": "상세 요구사항 표 101건을 유지하고 개수표 차이를 원문 예외로 기록"
+    }
+  ],
+  "index_comparisons": {
+    "ccrs_ai_platform": {
+      "index_count": 95,
+      "detail_count": 95,
+      "index_only_ids": [],
+      "detail_only_ids": [],
+      "duplicate_index_ids": [],
+      "is_exact_match": true
+    },
+    "kangwon_land_genai": {
+      "index_count": 50,
+      "detail_count": 50,
+      "index_only_ids": [],
+      "detail_only_ids": [],
+      "duplicate_index_ids": [],
+      "is_exact_match": true
+    },
+    "defense_intelligent_platform": {
+      "index_count": 170,
+      "detail_count": 169,
+      "index_only_ids": [],
+      "detail_only_ids": [],
+      "duplicate_index_ids": [
+        "SFR-048"
+      ],
+      "is_exact_match": false
+    },
+    "koen_ai_infrastructure": {
+      "index_count": 0,
+      "detail_count": 101,
+      "index_only_ids": [],
+      "detail_only_ids": [],
+      "duplicate_index_ids": [],
+      "is_exact_match": false
+    },
+    "kexim_ai_platform": {
+      "index_count": 137,
+      "detail_count": 137,
+      "index_only_ids": [],
+      "detail_only_ids": [],
+      "duplicate_index_ids": [],
+      "is_exact_match": true
+    },
+    "genai_incident_response": {
+      "index_count": 67,
+      "detail_count": 67,
+      "index_only_ids": [],
+      "detail_only_ids": [],
+      "duplicate_index_ids": [],
+      "is_exact_match": true
+    },
+    "mfds_drug_ai_review": {
+      "index_count": 192,
+      "detail_count": 192,
+      "index_only_ids": [],
+      "detail_only_ids": [],
+      "duplicate_index_ids": [],
+      "is_exact_match": true
+    },
+    "incheon_airport_digital_work": {
+      "index_count": 78,
+      "detail_count": 78,
+      "index_only_ids": [],
+      "detail_only_ids": [],
+      "duplicate_index_ids": [],
+      "is_exact_match": true
+    },
+    "kac_ai_work_platform": {
+      "index_count": 87,
+      "detail_count": 86,
+      "index_only_ids": [
+        "PER-003"
+      ],
+      "detail_only_ids": [],
+      "duplicate_index_ids": [],
+      "is_exact_match": false
+    },
+    "korail_genai_isp_ismp": {
+      "index_count": 49,
+      "detail_count": 49,
+      "index_only_ids": [],
+      "detail_only_ids": [],
+      "duplicate_index_ids": [],
+      "is_exact_match": true
+    }
+  },
+  "index_policy_comparisons": {
+    "ccrs_ai_platform": {
+      "index_count": 95,
+      "detail_count": 95,
+      "index_only_ids": [],
+      "detail_only_ids": [],
+      "duplicate_index_ids": [],
+      "is_exact_match": true,
+      "accepted_index_only_ids": [],
+      "unresolved_index_only_ids": [],
+      "accepted_detail_only_ids": [],
+      "unresolved_detail_only_ids": [],
+      "accepted_duplicate_index_ids": [],
+      "unresolved_duplicate_index_ids": [],
+      "is_policy_resolved": true
+    },
+    "kangwon_land_genai": {
+      "index_count": 50,
+      "detail_count": 50,
+      "index_only_ids": [],
+      "detail_only_ids": [],
+      "duplicate_index_ids": [],
+      "is_exact_match": true,
+      "accepted_index_only_ids": [],
+      "unresolved_index_only_ids": [],
+      "accepted_detail_only_ids": [],
+      "unresolved_detail_only_ids": [],
+      "accepted_duplicate_index_ids": [],
+      "unresolved_duplicate_index_ids": [],
+      "is_policy_resolved": true
+    },
+    "defense_intelligent_platform": {
+      "index_count": 170,
+      "detail_count": 169,
+      "index_only_ids": [],
+      "detail_only_ids": [],
+      "duplicate_index_ids": [
+        "SFR-048"
+      ],
+      "is_exact_match": false,
+      "accepted_index_only_ids": [],
+      "unresolved_index_only_ids": [],
+      "accepted_detail_only_ids": [],
+      "unresolved_detail_only_ids": [],
+      "accepted_duplicate_index_ids": [
+        "SFR-048"
+      ],
+      "unresolved_duplicate_index_ids": [],
+      "is_policy_resolved": true
+    },
+    "koen_ai_infrastructure": {
+      "index_count": 0,
+      "detail_count": 101,
+      "index_only_ids": [],
+      "detail_only_ids": [],
+      "duplicate_index_ids": [],
+      "is_exact_match": false,
+      "accepted_index_only_ids": [],
+      "unresolved_index_only_ids": [],
+      "accepted_detail_only_ids": [],
+      "unresolved_detail_only_ids": [],
+      "accepted_duplicate_index_ids": [],
+      "unresolved_duplicate_index_ids": [],
+      "is_policy_resolved": false
+    },
+    "kexim_ai_platform": {
+      "index_count": 137,
+      "detail_count": 137,
+      "index_only_ids": [],
+      "detail_only_ids": [],
+      "duplicate_index_ids": [],
+      "is_exact_match": true,
+      "accepted_index_only_ids": [],
+      "unresolved_index_only_ids": [],
+      "accepted_detail_only_ids": [],
+      "unresolved_detail_only_ids": [],
+      "accepted_duplicate_index_ids": [],
+      "unresolved_duplicate_index_ids": [],
+      "is_policy_resolved": true
+    },
+    "genai_incident_response": {
+      "index_count": 67,
+      "detail_count": 67,
+      "index_only_ids": [],
+      "detail_only_ids": [],
+      "duplicate_index_ids": [],
+      "is_exact_match": true,
+      "accepted_index_only_ids": [],
+      "unresolved_index_only_ids": [],
+      "accepted_detail_only_ids": [],
+      "unresolved_detail_only_ids": [],
+      "accepted_duplicate_index_ids": [],
+      "unresolved_duplicate_index_ids": [],
+      "is_policy_resolved": true
+    },
+    "mfds_drug_ai_review": {
+      "index_count": 192,
+      "detail_count": 192,
+      "index_only_ids": [],
+      "detail_only_ids": [],
+      "duplicate_index_ids": [],
+      "is_exact_match": true,
+      "accepted_index_only_ids": [],
+      "unresolved_index_only_ids": [],
+      "accepted_detail_only_ids": [],
+      "unresolved_detail_only_ids": [],
+      "accepted_duplicate_index_ids": [],
+      "unresolved_duplicate_index_ids": [],
+      "is_policy_resolved": true
+    },
+    "incheon_airport_digital_work": {
+      "index_count": 78,
+      "detail_count": 78,
+      "index_only_ids": [],
+      "detail_only_ids": [],
+      "duplicate_index_ids": [],
+      "is_exact_match": true,
+      "accepted_index_only_ids": [],
+      "unresolved_index_only_ids": [],
+      "accepted_detail_only_ids": [],
+      "unresolved_detail_only_ids": [],
+      "accepted_duplicate_index_ids": [],
+      "unresolved_duplicate_index_ids": [],
+      "is_policy_resolved": true
+    },
+    "kac_ai_work_platform": {
+      "index_count": 87,
+      "detail_count": 86,
+      "index_only_ids": [
+        "PER-003"
+      ],
+      "detail_only_ids": [],
+      "duplicate_index_ids": [],
+      "is_exact_match": false,
+      "accepted_index_only_ids": [
+        "PER-003"
+      ],
+      "unresolved_index_only_ids": [],
+      "accepted_detail_only_ids": [],
+      "unresolved_detail_only_ids": [],
+      "accepted_duplicate_index_ids": [],
+      "unresolved_duplicate_index_ids": [],
+      "is_policy_resolved": true
+    },
+    "korail_genai_isp_ismp": {
+      "index_count": 49,
+      "detail_count": 49,
+      "index_only_ids": [],
+      "detail_only_ids": [],
+      "duplicate_index_ids": [],
+      "is_exact_match": true,
+      "accepted_index_only_ids": [],
+      "unresolved_index_only_ids": [],
+      "accepted_detail_only_ids": [],
+      "unresolved_detail_only_ids": [],
+      "accepted_duplicate_index_ids": [],
+      "unresolved_duplicate_index_ids": [],
+      "is_policy_resolved": true
+    }
+  }
+}

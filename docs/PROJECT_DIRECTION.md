@@ -38,6 +38,7 @@
 - LLM 라벨링 자체를 연구 대상으로 삼는다.
 - 앵커 풀은 실험 전에 동결하고, 입력별로 관련 앵커만 동적으로 선택한다.
 - 문서 단위 데이터 분할로 처음 보는 기관과 도메인에 대한 일반화를 평가한다.
+- 딥러닝 비교 실험은 PyTorch를 사용해 구현하고, 학습·평가·체크포인트 관리 과정을 포트폴리오에 드러낸다.
 
 ### 2.2 작업 가설
 
@@ -333,6 +334,31 @@ LLM, temperature, 출력 스키마, 입력 순서와 실행 조건은 기록하�
 | Logistic vs SVM | 라벨·특징·분할 | 분류기 | 선형 모델 차이 |
 | TF-IDF vs 임베딩 | 라벨·분할 | 표현 방식 | 사전학습 의미 표현의 효과 |
 | 임베딩 ML vs 파인튜닝 | 라벨·분할 | 인코더 학습 여부 | 제한된 GPU 비용 대비 추가 이득 |
+
+### 9.4 PyTorch 구현과 모델 저장
+
+딥러닝 비교 실험에는 PyTorch를 명시적으로 사용한다. Hugging Face Transformers의 사전학습 인코더를 활용할 수 있지만, 포트폴리오에서 구현 역량을 확인할 수 있도록 최소한 다음 요소를 직접 구성하고 기록한다.
+
+- `Dataset`과 `DataLoader`
+- 학습·검증 루프
+- optimizer와 learning-rate scheduler
+- class weight 또는 weighted loss
+- early stopping과 best-checkpoint 선택
+- seed와 실행 환경 고정
+
+추론용 최종 가중치는 `state_dict` 또는 `safetensors` 형식으로 저장한다. 중단 후 학습 재개가 필요한 체크포인트에는 모델뿐 아니라 optimizer, scheduler, epoch, 설정 버전과 라벨 매핑도 함께 보존한다. 모델 바이너리는 Git에 직접 커밋하지 않는다.
+
+### 9.5 실험 및 아티팩트 관리
+
+초기 실험 추적 도구는 오픈소스 MLflow를 우선 검토한다. 로컬 환경에서 시작해 실행별로 다음 항목을 연결한다.
+
+- 모델명, 데이터셋·라벨·분할 버전
+- learning rate, batch size, epoch, class weight와 seed
+- train/validation loss, Macro F1과 `계약·질의검토` Recall
+- best epoch와 PyTorch 체크포인트
+- confusion matrix, 예측 결과와 오류 분석 자료
+
+사람이 정하는 앵커 선택 가중치와 학습 설정은 YAML로 저장해 Git으로 버전 관리한다. 학습으로 생성되는 모델 가중치와 실행 산출물은 MLflow artifact로 관리한다. 데이터와 대용량 모델 파일을 원격 저장소와 함께 버전 관리할 필요가 생기면 DVC를 추가하되, 초기에는 MLflow와 역할을 중복시키지 않는다.
 
 ## 10. 평가 설계
 
