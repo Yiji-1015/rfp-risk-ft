@@ -11,6 +11,8 @@ models/*
 # Python
 __pycache__/
 *.pyc
+.pytest_cache/
+*.egg-info/
 .venv/
 venv/
 .ipynb_checkpoints/
@@ -25,3 +27,6 @@ Thumbs.db
 
 # Environment
 .env
+
+# Local experiment tracking
+mlruns/

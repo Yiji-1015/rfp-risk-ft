@@ -14,6 +14,8 @@ accelerate>=0.24.0
 
 # LLM API & Utilities
 openai>=1.0.0
+google-genai>=1.0.0
+python-dotenv>=1.0.0
 pyyaml>=6.0
 tqdm>=4.65.0
 pydantic>=2.0.0
@@ -24,3 +26,6 @@ mlflow>=2.8.0
 # Jupyter Environment
 jupyter
 ipykernel
+
+# Tests
+pytest>=7.0.0

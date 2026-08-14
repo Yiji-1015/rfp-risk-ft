@@ -10,6 +10,8 @@
 | [`RESEARCH_DECISIONS.md`](RESEARCH_DECISIONS.md) | 확정된 방법론 결정 원본 | 데이터셋·전처리·입력·라벨링 규칙을 구현하거나 논문에 쓸 때 | 새로운 결정을 확정하거나 기존 결정을 변경할 때 |
 | [`../CONTEXT.md`](../CONTEXT.md) | 작업 재개용 인계 메모 | 새 작업 세션을 시작할 때 | 작업 종료 전 현재 상태와 다음 할 일을 넘길 때 |
 | [`../data/README.md`](../data/README.md) | 데이터 산출물 사용 안내 | 생성 파일과 재생성 명령을 확인할 때 | 데이터 파일·버전·명령이 추가되거나 바뀔 때 |
+| [`../reports/current/README.md`](../reports/current/README.md) | 현재 보고서 목록 | 현재 데이터·실험 결과를 확인할 때 | 현재 기준 산출물이 바뀔 때 |
+| [`../reports/archive/README.md`](../reports/archive/README.md) | 과거 실험 보관 정책 | 이전 결과를 재현하거나 비교할 때 | 과거 산출물을 추가 보관할 때 |
 | [`../README.md`](../README.md) | 프로젝트 입구 | 저장소를 처음 볼 때 | 프로젝트 소개나 핵심 실행 순서가 바뀔 때 |
 
 ## 충돌 시 우선순위
@@ -25,7 +27,6 @@
 
 - 아이디어나 검토 중인 내용은 `PROJECT_DIRECTION.md`의 작업 가설 또는 열려 있는 결정에 둔다.
 - 사용자와 합의해 확정한 내용은 근거와 함께 `RESEARCH_DECISIONS.md`에 둔다.
-- 실험 결과는 가설이나 결정과 섞지 않는다. 결과 문서가 필요해질 때 별도로 만든다.
+- 현재 실험 결과는 `reports/current/`, 과거 결과는 `reports/archive/`에 둔다.
 - 같은 설명을 여러 문서에 길게 복사하지 않는다. 기준 문서로 링크한다.
 - 숫자 결과에는 데이터 버전과 실행 조건을 함께 기록한다.
-

@@ -6,8 +6,8 @@ RFP 요구사항 동결 데이터셋 v0.2.0 EDA 스크립트
 1. 문서별 및 원문/정규화 요구사항 유형별 행 수 집계
 2. 본문 문자 길이, 단어 수, 공백 분할 토큰 길이 분포 통계 (min, max, mean, median, P90, P95, P99)
 3. 중첩표(' | ') 포함 행, 승인된 특이 ID(canonical != source_id) 원문 예외 행, 최단/최장 본문 사례 추출
-4. JSON 결과(reports/current/eda_v0.2.0.json), Markdown 보고서(reports/current/eda_v0.2.0.md), 
-   Jupyter Notebook(notebooks/eda_v0.2.0.ipynb) 자동 생성
+4. JSON 결과(reports/current/eda_v0.2.0.json)와 Markdown 보고서
+   (reports/current/eda_v0.2.0.md) 생성
 """
 
 import json
@@ -541,15 +541,5 @@ def main():
         f.write(md_report)
     print(f"Markdown 보고서 생성 완료: {md_path}")
     
-    # 3. Jupyter Notebook (.ipynb) 저장
-    notebook_dir = root_dir / "notebooks"
-    notebook_dir.mkdir(parents=True, exist_ok=True)
-    nb_path = notebook_dir / "eda_v0.2.0.ipynb"
-    nb_data = generate_jupyter_notebook(eda_result)
-    with open(nb_path, 'w', encoding='utf-8') as f:
-        json.dump(nb_data, f, ensure_ascii=False, indent=2)
-    print(f"Jupyter Notebook 생성 완료: {nb_path}")
-
-
 if __name__ == "__main__":
     main()
