@@ -15,7 +15,6 @@ accelerate>=0.24.0
 # LLM API & Utilities
 anthropic>=0.77.0
 openai>=1.0.0
-google-genai>=1.0.0
 python-dotenv>=1.0.0
 pyyaml>=6.0
 tqdm>=4.65.0

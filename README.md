@@ -22,8 +22,6 @@ python -m scripts.labeling.run_claude_labeling --limit 3 --execute
 
 기본값은 Sonnet 5, `effort=medium`, `max_tokens=4096`, 5분 프롬프트 캐시다. 한 시간 캐시는 `--cache-ttl 1h`로 선택한다. 실제 호출은 `--execute`를 명시해야 하며 `.env`의 `ANTHROPIC_API_KEY`를 사용한다. 상세 사용법은 [`docs/CLAUDE_LABELING_USAGE.md`](docs/CLAUDE_LABELING_USAGE.md)를 참고한다.
 
-Gemini 진단만 필요하면 `python -m scripts.utilities.check_gemini models`를 사용한다.
-
 ## 디렉터리
 
 | 경로 | 내용 |
@@ -53,4 +51,4 @@ Gemini 진단만 필요하면 `python -m scripts.utilities.check_gemini models`�
 - 이전 실험 결과는 삭제하거나 덮어쓰지 않고 `reports/archive/`에 둔다.
 - `.env`, API 키, 캐시, 모델 바이너리는 커밋하지 않는다.
 
-문서 우선순위와 상세 지도는 [`docs/README.md`](docs/README.md), 데이터 재생성 방법은 [`data/README.md`](data/README.md)를 참고한다.
+연구 설계와 확정 결정은 `docs/`의 현재 문서를, 데이터 재생성 방법은 [`data/README.md`](data/README.md)를 참고한다.

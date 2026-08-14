@@ -8,9 +8,7 @@ RFP 요구사항 데이터 누수 방지형 Pure TF-IDF 앵커 검색기 (Anchor
 3. Top-K 유사 앵커 및 유사도 점수 반환
 """
 
-import json
 import sys
-from pathlib import Path
 from typing import List, Dict, Any, Tuple
 
 # Windows 콘솔 utf-8 인코딩 대응
@@ -167,42 +165,3 @@ class PureTfidfAnchorRetriever:
                         break
 
         return stratified_results
-
-
-def self_test():
-    """간단한 자체 동작 검증 함수"""
-    root_dir = Path(__file__).resolve().parents[2]
-    sample_file = root_dir / "reports" / "current" / "labeling_pilot_results_v0.1.0.jsonl"
-    
-    if not sample_file.exists():
-        print(f"테스트용 파일을 찾을 수 없습니다: {sample_file}")
-        return
-
-    with open(sample_file, "r", encoding="utf-8") as f:
-        pool = [json.loads(line.strip()) for line in f if line.strip()]
-
-    print(f"로드된 파일럿 앵커 후보 수: {len(pool)}개")
-    retriever = PureTfidfAnchorRetriever(pool)
-    
-    # 첫 번째 요구사항을 target으로 테스트
-    target = pool[0]
-    top_anchors = retriever.get_top_k_anchors(target, top_k=3)
-    
-    print("\n" + "="*70)
-    print(f"[Target 요구사항] ({target['document_id']}) {target['requirement_uid']}")
-    print(f"명칭: {target['requirement_name']}")
-    print(f"본문 스니펫: {target.get('raw_requirement_text', '')[:60]}...")
-    print("="*70)
-    print("\n[검색된 Top-3 유사 앵커 (동일 문서 자동 제외)]:")
-    
-    for rank, (anc, score) in enumerate(top_anchors, 1):
-        print(f"\n#{rank} (유사도 점수: {score:.4f})")
-        print(f"   UID: {anc['requirement_uid']} (출처 문서: {anc['document_id']})")
-        print(f"   명칭: {anc['requirement_name']}")
-        print(f"   본문: {anc.get('raw_requirement_text', '')[:70]}...")
-        if 'pilot_result' in anc and 'primary_action' in anc['pilot_result']:
-            print(f"   라벨: {anc['pilot_result']['primary_action']}")
-
-
-if __name__ == "__main__":
-    self_test()

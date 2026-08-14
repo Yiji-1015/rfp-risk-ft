@@ -9,7 +9,7 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Any, Literal
 
-ProviderName = Literal["auto", "gemini", "openai", "anthropic"]
+ProviderName = Literal["auto", "openai", "anthropic"]
 
 
 @dataclass
@@ -25,31 +25,11 @@ class TokenUsage:
     def from_response(cls, response: Any, provider: ProviderName = "auto") -> TokenUsage:
         resolved = provider if provider != "auto" else detect_provider(response)
         extractors = {
-            "gemini": cls._from_gemini,
             "openai": cls._from_openai,
             "anthropic": cls._from_anthropic,
         }
         extractor = extractors.get(resolved, cls._from_generic)
         return extractor(response)
-
-    @classmethod
-    def _from_gemini(cls, response: Any) -> TokenUsage:
-        meta = getattr(response, "usage_metadata", None)
-        if meta is None and isinstance(response, dict):
-            meta = response.get("usage_metadata") or response.get("usage")
-        if meta is None:
-            return cls()
-
-        input_tokens = _read_int(meta, "prompt_token_count")
-        output_tokens = _read_int(meta, "candidates_token_count")
-        total_tokens = _read_int(meta, "total_token_count") or (input_tokens + output_tokens)
-        return cls(
-            input_tokens=input_tokens,
-            output_tokens=output_tokens,
-            total_tokens=total_tokens,
-            cached_tokens=_read_int(meta, "cached_content_token_count"),
-            thoughts_tokens=_read_int(meta, "thoughts_token_count"),
-        )
 
     @classmethod
     def _from_openai(cls, response: Any) -> TokenUsage:
@@ -99,7 +79,6 @@ class TokenUsage:
     @classmethod
     def _from_generic(cls, response: Any) -> TokenUsage:
         for candidate in (
-            cls._from_gemini(response),
             cls._from_openai(response),
             cls._from_anthropic(response),
         ):
@@ -121,8 +100,6 @@ class TokenUsage:
 
 
 def detect_provider(response: Any) -> str:
-    if getattr(response, "usage_metadata", None) is not None:
-        return "gemini"
     usage = getattr(response, "usage", None)
     if usage is None and isinstance(response, dict):
         usage = response.get("usage")
@@ -184,7 +161,6 @@ def load_pricing_from_env(prefix: str = "LLM") -> PricingConfig:
       LLM_OUTPUT_PRICE_PER_1M_USD
       USD_KRW_RATE
 
-    Legacy Gemini names (USD) are still accepted.
     """
     input_krw = _float_env(f"{prefix}_INPUT_PRICE_PER_1M_KRW")
     output_krw = _float_env(f"{prefix}_OUTPUT_PRICE_PER_1M_KRW")
@@ -201,10 +177,6 @@ def load_pricing_from_env(prefix: str = "LLM") -> PricingConfig:
     output_usd = _float_env(f"{prefix}_OUTPUT_PRICE_PER_1M_USD") or _float_env(
         f"{prefix}_OUTPUT_PRICE_PER_1M"
     )
-    if not input_usd and not output_usd:
-        input_usd = _float_env("GEMINI_INPUT_PRICE_PER_1M")
-        output_usd = _float_env("GEMINI_OUTPUT_PRICE_PER_1M")
-
     rate = _float_env("USD_KRW_RATE")
     if rate and (input_usd or output_usd):
         return PricingConfig(

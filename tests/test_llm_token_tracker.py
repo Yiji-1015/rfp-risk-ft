@@ -10,16 +10,6 @@ from scripts.labeling.llm_token_tracker import (
 )
 
 
-class _GeminiUsageMeta:
-    prompt_token_count = 1200
-    candidates_token_count = 350
-    total_token_count = 1550
-
-
-class _GeminiResponse:
-    usage_metadata = _GeminiUsageMeta()
-
-
 class _OpenAIUsage:
     prompt_tokens = 900
     completion_tokens = 120
@@ -39,12 +29,6 @@ class _AnthropicUsage:
 
 class _AnthropicResponse:
     usage = _AnthropicUsage()
-
-
-def test_token_usage_from_gemini_response():
-    usage = TokenUsage.from_response(_GeminiResponse(), provider="gemini")
-    assert usage.input_tokens == 1200
-    assert usage.output_tokens == 350
 
 
 def test_token_usage_from_openai_response():
