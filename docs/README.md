@@ -8,6 +8,7 @@
 |---|---|---|---|
 | [`PROJECT_DIRECTION.md`](PROJECT_DIRECTION.md) | 연구 전체 설계도 | 연구 목적, 가설, 모델과 평가 계획을 파악할 때 | 연구 범위나 전체 실험 계획이 바뀔 때 |
 | [`RESEARCH_DECISIONS.md`](RESEARCH_DECISIONS.md) | 확정된 방법론 결정 원본 | 데이터셋·전처리·입력·라벨링 규칙을 구현하거나 논문에 쓸 때 | 새로운 결정을 확정하거나 기존 결정을 변경할 때 |
+| [`CLAUDE_API_MIGRATION_DECISIONS.md`](CLAUDE_API_MIGRATION_DECISIONS.md) | Claude API 전환 결정 보고서 | LLM 공급자·모델·비용·실행 방식을 정할 때 | Claude 전환 결정을 확정하거나 공식 API 조건이 바뀔 때 |
 | [`../CONTEXT.md`](../CONTEXT.md) | 작업 재개용 인계 메모 | 새 작업 세션을 시작할 때 | 작업 종료 전 현재 상태와 다음 할 일을 넘길 때 |
 | [`../data/README.md`](../data/README.md) | 데이터 산출물 사용 안내 | 생성 파일과 재생성 명령을 확인할 때 | 데이터 파일·버전·명령이 추가되거나 바뀔 때 |
 | [`../reports/current/README.md`](../reports/current/README.md) | 현재 보고서 목록 | 현재 데이터·실험 결과를 확인할 때 | 현재 기준 산출물이 바뀔 때 |
