@@ -33,6 +33,8 @@ class _OpenAIResponse:
 class _AnthropicUsage:
     input_tokens = 500
     output_tokens = 80
+    cache_creation_input_tokens = 400
+    cache_read_input_tokens = 300
 
 
 class _AnthropicResponse:
@@ -55,6 +57,8 @@ def test_token_usage_from_anthropic_response():
     usage = TokenUsage.from_response(_AnthropicResponse(), provider="anthropic")
     assert usage.input_tokens == 500
     assert usage.output_tokens == 80
+    assert usage.cache_creation_tokens == 400
+    assert usage.cached_tokens == 300
 
 
 def test_token_tracker_krw_cost():

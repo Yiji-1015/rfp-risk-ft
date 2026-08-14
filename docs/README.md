@@ -4,6 +4,8 @@
 
 ## 문서 지도
 
+- [`CLAUDE_LABELING_USAGE.md`](CLAUDE_LABELING_USAGE.md): Claude 호출·캐시·dry-run 사용법
+
 | 문서 | 용도 | 읽는 시점 | 수정하는 시점 |
 |---|---|---|---|
 | [`PROJECT_DIRECTION.md`](PROJECT_DIRECTION.md) | 연구 전체 설계도 | 연구 목적, 가설, 모델과 평가 계획을 파악할 때 | 연구 범위나 전체 실험 계획이 바뀔 때 |

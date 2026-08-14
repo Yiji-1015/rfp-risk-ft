@@ -18,6 +18,7 @@ class TokenUsage:
     output_tokens: int = 0
     total_tokens: int = 0
     cached_tokens: int = 0
+    cache_creation_tokens: int = 0
     thoughts_tokens: int = 0
 
     @classmethod
@@ -84,11 +85,15 @@ class TokenUsage:
         input_tokens = _read_int(usage, "input_tokens")
         output_tokens = _read_int(usage, "output_tokens")
         cached_tokens = _read_int(usage, "cache_read_input_tokens")
+        cache_creation_tokens = _read_int(usage, "cache_creation_input_tokens")
         return cls(
             input_tokens=input_tokens,
             output_tokens=output_tokens,
-            total_tokens=input_tokens + output_tokens,
+            total_tokens=(
+                input_tokens + output_tokens + cached_tokens + cache_creation_tokens
+            ),
             cached_tokens=cached_tokens,
+            cache_creation_tokens=cache_creation_tokens,
         )
 
     @classmethod
@@ -108,6 +113,9 @@ class TokenUsage:
             output_tokens=self.output_tokens + other.output_tokens,
             total_tokens=self.total_tokens + other.total_tokens,
             cached_tokens=self.cached_tokens + other.cached_tokens,
+            cache_creation_tokens=(
+                self.cache_creation_tokens + other.cache_creation_tokens
+            ),
             thoughts_tokens=self.thoughts_tokens + other.thoughts_tokens,
         )
 
@@ -313,7 +321,9 @@ class TokenTracker:
         print(f"출력 토큰:  {self.totals.output_tokens:,}")
         print(f"합계 토큰:  {self.totals.total_tokens:,}")
         if self.totals.cached_tokens:
-            print(f"캐시 토큰:  {self.totals.cached_tokens:,}")
+            print(f"캐시 읽기:  {self.totals.cached_tokens:,}")
+        if self.totals.cache_creation_tokens:
+            print(f"캐시 생성:  {self.totals.cache_creation_tokens:,}")
         if self.totals.thoughts_tokens:
             print(f"사고 토큰:  {self.totals.thoughts_tokens:,}")
         if self.by_label:
@@ -351,6 +361,7 @@ class TokenTracker:
             "output_tokens": self.totals.output_tokens,
             "total_tokens": self.totals.total_tokens,
             "cached_tokens": self.totals.cached_tokens,
+            "cache_creation_tokens": self.totals.cache_creation_tokens,
             "thoughts_tokens": self.totals.thoughts_tokens,
             "currency": self.currency,
             "estimated_cost": self.estimated_cost(),

@@ -4,6 +4,9 @@ scripts/labeling/validate_label_schema.py 단위 테스트
 """
 
 import unittest
+import pytest
+
+from scripts.labeling.label_schema import LabelResult
 from scripts.labeling.validate_label_schema import validate_label_output
 
 
@@ -51,6 +54,16 @@ class LabelSchemaValidationTests(unittest.TestCase):
         is_valid, errors = validate_label_output(invalid_data)
         self.assertFalse(is_valid)
         self.assertTrue(any("missing_information" in e for e in errors))
+
+    def test_pydantic_schema_forbids_extra_fields(self):
+        invalid_data = dict(self.valid_output, unexpected="nope")
+        with pytest.raises(ValueError):
+            LabelResult.model_validate(invalid_data)
+
+    def test_pydantic_schema_limits_evidence_count(self):
+        invalid_data = dict(self.valid_output, evidence=[])
+        with pytest.raises(ValueError):
+            LabelResult.model_validate(invalid_data)
 
 
 if __name__ == "__main__":
