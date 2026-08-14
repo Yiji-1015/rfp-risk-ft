@@ -2,7 +2,7 @@
 
 공공 AI·IT 구축 RFP의 요구사항을 추출하고, 제안 견적과 계약 검토가 필요한 조항을 분류하는 연구 프로젝트다.
 
-현재 기준 데이터셋은 10개 RFP에서 추출한 `requirements_v0.2.0`이다. 연구 방법의 확정 사항은 [`docs/RESEARCH_DECISIONS.md`](docs/RESEARCH_DECISIONS.md), 전체 방향은 [`docs/PROJECT_DIRECTION.md`](docs/PROJECT_DIRECTION.md)를 따른다.
+현재 기준 데이터셋은 10개 RFP에서 추출한 `requirements_v0.2.0`이다. 연구 의사결정 이력은 [`docs/history/`](docs/history/), 전체 방향은 [`docs/PROJECT_DIRECTION.md`](docs/PROJECT_DIRECTION.md)를 따른다.
 
 ## 빠른 시작
 
@@ -20,7 +20,7 @@ python -m scripts.labeling.run_claude_labeling --limit 3
 python -m scripts.labeling.run_claude_labeling --limit 3 --execute
 ```
 
-기본값은 Sonnet 5, `effort=medium`, `max_tokens=4096`, 5분 프롬프트 캐시다. 한 시간 캐시는 `--cache-ttl 1h`로 선택한다. 실제 호출은 `--execute`를 명시해야 하며 `.env`의 `ANTHROPIC_API_KEY`를 사용한다. 상세 사용법은 [`docs/CLAUDE_LABELING_USAGE.md`](docs/CLAUDE_LABELING_USAGE.md)를 참고한다.
+기본값은 Sonnet 5, `effort=medium`, `max_tokens=4096`, 5분 프롬프트 캐시다. 한 시간 캐시는 `--cache-ttl 1h`로 선택한다. 실제 호출은 `--execute`를 명시해야 하며 `.env`의 `ANTHROPIC_API_KEY`를 사용한다.
 
 ## 디렉터리
 

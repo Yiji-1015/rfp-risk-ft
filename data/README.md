@@ -1,6 +1,6 @@
 # 데이터 디렉터리
 
-> **문서 역할:** 생성된 데이터 파일의 의미, 버전과 재생성 명령을 안내한다. 연구 설계의 근거와 확정 규칙은 [`../docs/RESEARCH_DECISIONS.md`](../docs/RESEARCH_DECISIONS.md)에 기록한다.
+> **문서 역할:** 생성된 데이터 파일의 의미, 버전과 재생성 명령을 안내한다. 연구 설계의 근거는 [`../docs/history/`](../docs/history/)에 시간순으로 기록한다.
 
 ## `processed/requirements_v0.2.0.*`
 
