@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-scripts/validate_label_schema.py 단위 테스트
+scripts/labeling/validate_label_schema.py 단위 테스트
 """
 
 import unittest

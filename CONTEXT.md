@@ -34,7 +34,7 @@ files_modified:
 - 실험 설정은 YAML, PyTorch 가중치와 실행 지표·아티팩트는 로컬 MLflow로 관리하는 방안을 우선 검토한다. 대용량 파일 버전 관리가 필요해질 때만 DVC를 추가한다.
 - GPU 예산은 약 5천 원이므로 전통 ML을 먼저 하고 파인튜닝은 작게 제한한다.
 - 요구사항 추출 감사 v0.2.0을 구현했다. 1,024행, 10개 문서, 누락 본문·중복 UID 0건이며 목록 ID가 있는 9개 문서 중 6개가 완전 일치한다.
-- 요구사항 데이터셋 v0.2.0을 1,024행으로 동결했고 `labeling_ready: true`다. 승인된 원문 예외와 파일 해시는 `reports/extraction_freeze_v0.2.0.md`에 기록했다.
+- 요구사항 데이터셋 v0.2.0을 1,024행으로 동결했고 `labeling_ready: true`다. 승인된 원문 예외와 파일 해시는 `reports/current/extraction_freeze_v0.2.0.md`에 기록했다.
 
 ### Remaining Work
 

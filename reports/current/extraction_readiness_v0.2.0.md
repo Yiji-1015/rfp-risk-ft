@@ -54,4 +54,4 @@
 4. 문서별 첫·중간·마지막·최장 본문 표본 40행 모두 Markdown 포함 여부를 확인했다.
 5. 중첩표 행·셀 경계를 각각 줄바꿈과 ` | `로 보존한다.
 
-> 동결 근거와 파일 해시는 `reports/extraction_freeze_v0.2.0.md`에서 관리한다.
+> 동결 근거와 파일 해시는 `reports/current/extraction_freeze_v0.2.0.md`에서 관리한다.

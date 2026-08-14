@@ -129,7 +129,7 @@ def sample_pilot_dataset(records: List[Dict[str, Any]], target_size: int = 40) -
 
 
 def main():
-    root_dir = Path(__file__).resolve().parent.parent
+    root_dir = Path(__file__).resolve().parents[2]
     dataset_path = root_dir / "data" / "processed" / "requirements_v0.2.0.jsonl"
     
     if not dataset_path.exists():

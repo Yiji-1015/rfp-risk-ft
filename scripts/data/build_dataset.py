@@ -25,7 +25,7 @@ ROOT = Path(__file__).resolve().parents[2]
 SOURCE_DIR = ROOT / "RFP_data" / "md"
 OUTPUT_DIR = ROOT / "data" / "processed"
 REVIEW_DIR = ROOT / "data" / "review"
-REPORT_DIR = ROOT / "reports"
+REPORT_DIR = ROOT / "reports" / "current"
 VERSION = "v0.2.0"
 DATASET_VERSION = f"requirements_{VERSION}"
 

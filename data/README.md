@@ -12,18 +12,18 @@
 - `requirement_id`는 canonical ID, `source_requirement_id`는 상세표의 원문 ID다.
 - `normalized_requirement_text`는 현재 원문과 같다. 정규화 규칙은 추출 감사 후 별도 버전에서 추가한다.
 - `source_file`, `source_location`, `source_sha256`로 입력 원문을 추적한다.
-- 라벨링 전 `reports/extraction_audit_v0.2.0.md`와 `reports/extraction_readiness_v0.2.0.md`를 확인해야 한다.
+- 라벨링 전 `reports/current/extraction_audit_v0.2.0.md`와 `reports/current/extraction_readiness_v0.2.0.md`를 확인해야 한다.
 
 재생성:
 
 ```powershell
-python scripts/build_dataset.py
+python -m scripts.data.build_dataset
 ```
 
 엄격 검증:
 
 ```powershell
-python scripts/build_dataset.py --strict
+python -m scripts.data.build_dataset --strict
 ```
 
 `--strict`는 필수 필드·UID 오류뿐 아니라 목록-상세표 불일치가 남아 있어도 종료 코드 1을 반환한다.
@@ -43,17 +43,17 @@ python scripts/build_dataset.py --strict
 재생성:
 
 ```powershell
-python scripts/preprocess_text.py --per-document 2
+python -m scripts.data.preprocess_text --per-document 2
 ```
 
 전체 요구사항 중 본문이 가장 긴 1건 생성:
 
 ```powershell
-python scripts/preprocess_text.py --longest
+python -m scripts.data.preprocess_text --longest
 ```
 
 원본 파일 용량이 가장 큰 RFP의 전체 요구사항 생성:
 
 ```powershell
-python scripts/preprocess_text.py --largest-document
+python -m scripts.data.preprocess_text --largest-document
 ```

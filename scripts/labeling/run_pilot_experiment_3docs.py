@@ -11,7 +11,7 @@
 1. data/processed/requirements_v0.2.0.jsonl 중 3개 문서 요구사항 로드
 2. [실험 A] Zero-shot 라벨링 실행 (Resume 지원)
 3. [실험 B] Pure TF-IDF Dynamic Few-shot 라벨링 실행 (동일 문서 앵커 자동 제외, Resume 지원)
-4. 두 실험 결과 간 라벨 일치율 및 변동(Shift) 분석 보고서 생성 (reports/pilot_3docs_comparison_v0.1.0.md)
+4. 두 실험 결과 간 라벨 일치율 및 변동(Shift) 분석 보고서 생성 (reports/archive/pilot_3docs_comparison_v0.1.0.md)
 """
 
 import os
@@ -34,7 +34,7 @@ from scripts.labeling.anchor_retriever import PureTfidfAnchorRetriever
 from scripts.labeling.validate_label_schema import validate_label_output
 
 # 환경 변수 및 Gemini Client 초기화
-root_dir = Path(__file__).resolve().parent.parent
+root_dir = Path(__file__).resolve().parents[2]
 load_dotenv(root_dir / ".env")
 
 api_key = os.getenv("GEMINI_API_KEY")
@@ -203,7 +203,7 @@ def run_experiment():
         c = sum(1 for r in records if r["document_id"] == doc)
         print(f"  - {doc}: {c}건")
 
-    reports_dir = root_dir / "reports"
+    reports_dir = root_dir / "reports" / "archive"
     reports_dir.mkdir(parents=True, exist_ok=True)
     
     zeroshot_file = reports_dir / "experiment_3docs_zeroshot.jsonl"

@@ -171,8 +171,8 @@ class PureTfidfAnchorRetriever:
 
 def self_test():
     """간단한 자체 동작 검증 함수"""
-    root_dir = Path(__file__).resolve().parent.parent
-    sample_file = root_dir / "reports" / "labeling_pilot_results_v0.1.0.jsonl"
+    root_dir = Path(__file__).resolve().parents[2]
+    sample_file = root_dir / "reports" / "current" / "labeling_pilot_results_v0.1.0.jsonl"
     
     if not sample_file.exists():
         print(f"테스트용 파일을 찾을 수 없습니다: {sample_file}")

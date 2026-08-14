@@ -8,7 +8,7 @@ RFP 요구사항 동결 데이터셋 v0.2.0 LLM 라벨링 파일럿 실행 스�
 3. docs/LABELING_SCHEMA_DRAFT.md 명세에 맞춘 System Prompt 및 JSON Schema 설정
 4. 404 / 429 에러 시 가용 모델 순환 및 Exponential Backoff 재시도
 5. 이미 라벨링된 건은 이어하기(Resume) 처리하여 40건 100% 완성
-6. 결과를 reports/labeling_pilot_results_v0.1.0.jsonl 및 CSV로 저장
+6. 결과를 reports/current/labeling_pilot_results_v0.1.0.jsonl 및 CSV로 저장
 """
 
 import os
@@ -30,7 +30,7 @@ from google.genai import types
 from scripts.labeling.validate_label_schema import validate_label_output
 
 # .env 파일 로드
-root_dir = Path(__file__).resolve().parent.parent
+root_dir = Path(__file__).resolve().parents[2]
 load_dotenv(root_dir / ".env")
 
 api_key = os.getenv("GEMINI_API_KEY")
@@ -173,7 +173,7 @@ def main():
     with open(sample_file, "r", encoding="utf-8") as f:
         samples = [json.loads(line.strip()) for line in f if line.strip()]
 
-    reports_dir = root_dir / "reports"
+    reports_dir = root_dir / "reports" / "current"
     reports_dir.mkdir(parents=True, exist_ok=True)
     output_jsonl = reports_dir / "labeling_pilot_results_v0.1.0.jsonl"
     output_csv = reports_dir / "labeling_pilot_results_v0.1.0.csv"

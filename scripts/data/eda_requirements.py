@@ -6,7 +6,7 @@ RFP 요구사항 동결 데이터셋 v0.2.0 EDA 스크립트
 1. 문서별 및 원문/정규화 요구사항 유형별 행 수 집계
 2. 본문 문자 길이, 단어 수, 공백 분할 토큰 길이 분포 통계 (min, max, mean, median, P90, P95, P99)
 3. 중첩표(' | ') 포함 행, 승인된 특이 ID(canonical != source_id) 원문 예외 행, 최단/최장 본문 사례 추출
-4. JSON 결과(reports/eda_v0.2.0.json), Markdown 보고서(reports/eda_v0.2.0.md), 
+4. JSON 결과(reports/current/eda_v0.2.0.json), Markdown 보고서(reports/current/eda_v0.2.0.md), 
    Jupyter Notebook(notebooks/eda_v0.2.0.ipynb) 자동 생성
 """
 
@@ -516,7 +516,7 @@ def generate_jupyter_notebook(eda_result: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def main():
-    root_dir = Path(__file__).resolve().parent.parent
+    root_dir = Path(__file__).resolve().parents[2]
     dataset_path = root_dir / "data" / "processed" / "requirements_v0.2.0.jsonl"
     
     if not dataset_path.exists():
@@ -527,7 +527,7 @@ def main():
     eda_result = analyze_dataset(records)
     
     # 1. JSON 보고서 저장
-    reports_dir = root_dir / "reports"
+    reports_dir = root_dir / "reports" / "current"
     reports_dir.mkdir(parents=True, exist_ok=True)
     json_path = reports_dir / "eda_v0.2.0.json"
     with open(json_path, 'w', encoding='utf-8') as f:

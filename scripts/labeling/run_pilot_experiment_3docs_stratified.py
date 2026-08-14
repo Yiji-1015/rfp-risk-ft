@@ -26,7 +26,7 @@ from google.genai import types
 from scripts.labeling.anchor_retriever import PureTfidfAnchorRetriever
 
 # 1. 환경변수 및 루트 디렉토리 설정
-root_dir = Path(__file__).resolve().parent.parent
+root_dir = Path(__file__).resolve().parents[2]
 load_dotenv(root_dir / ".env")
 
 api_key = os.getenv("GEMINI_API_KEY")
@@ -154,7 +154,8 @@ def format_stratified_fewshot_prompt(target: Dict[str, Any], anchors: List[Tuple
 
 def run_stratified_experiment():
     data_path = root_dir / "data" / "processed" / "requirements_v0.1.0.jsonl"
-    reports_dir = root_dir / "reports"
+    reports_dir = root_dir / "reports" / "archive"
+    reports_dir.mkdir(parents=True, exist_ok=True)
     fewshot_file = reports_dir / "experiment_3docs_fewshot.jsonl"
     stratified_out_file = reports_dir / "experiment_3docs_stratified.jsonl"
 

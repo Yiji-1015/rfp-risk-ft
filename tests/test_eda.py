@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-scripts/eda_requirements.py 에 대한 단위 테스트
+scripts/data/eda_requirements.py 에 대한 단위 테스트
 """
 
 import unittest

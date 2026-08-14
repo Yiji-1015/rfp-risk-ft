@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-scripts/sample_pilot.py 에 대한 단위 테스트
+scripts/data/sample_pilot.py 에 대한 단위 테스트
 """
 
 import unittest
