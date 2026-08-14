@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from scripts.build_dataset import (
+from scripts.data.build_dataset import (
     apply_index_exception_policy,
     build_review_queue,
     compare_index_and_detail_ids,

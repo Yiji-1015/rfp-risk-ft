@@ -4,7 +4,7 @@ scripts/validate_label_schema.py 단위 테스트
 """
 
 import unittest
-from scripts.validate_label_schema import validate_label_output
+from scripts.labeling.validate_label_schema import validate_label_output
 
 
 class LabelSchemaValidationTests(unittest.TestCase):

@@ -27,7 +27,7 @@ from dotenv import load_dotenv
 import google.genai as genai
 from google.genai import types
 
-from validate_label_schema import validate_label_output
+from scripts.labeling.validate_label_schema import validate_label_output
 
 # .env 파일 로드
 root_dir = Path(__file__).resolve().parent.parent

@@ -1,12 +1,6 @@
-import sys
 import unittest
-from pathlib import Path
 
-
-ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(ROOT / "scripts"))
-
-from preprocess_text import (
+from scripts.data.preprocess_text import (
     choose_longest,
     flatten_list_text,
     make_model_text,

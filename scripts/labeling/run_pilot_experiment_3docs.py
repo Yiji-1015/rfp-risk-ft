@@ -30,8 +30,8 @@ from dotenv import load_dotenv
 import google.genai as genai
 from google.genai import types
 
-from anchor_retriever import PureTfidfAnchorRetriever
-from validate_label_schema import validate_label_output
+from scripts.labeling.anchor_retriever import PureTfidfAnchorRetriever
+from scripts.labeling.validate_label_schema import validate_label_output
 
 # 환경 변수 및 Gemini Client 초기화
 root_dir = Path(__file__).resolve().parent.parent

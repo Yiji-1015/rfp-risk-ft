@@ -23,7 +23,7 @@ from dotenv import load_dotenv
 import google.genai as genai
 from google.genai import types
 
-from anchor_retriever import PureTfidfAnchorRetriever
+from scripts.labeling.anchor_retriever import PureTfidfAnchorRetriever
 
 # 1. 환경변수 및 루트 디렉토리 설정
 root_dir = Path(__file__).resolve().parent.parent

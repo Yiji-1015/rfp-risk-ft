@@ -4,7 +4,7 @@ scripts/eda_requirements.py 에 대한 단위 테스트
 """
 
 import unittest
-from scripts.eda_requirements import (
+from scripts.data.eda_requirements import (
     normalize_requirement_type,
     calculate_stats,
     analyze_dataset,

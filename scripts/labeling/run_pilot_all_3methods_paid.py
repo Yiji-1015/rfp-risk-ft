@@ -25,7 +25,8 @@ from dotenv import load_dotenv
 import google.genai as genai
 from google.genai import types
 
-from anchor_retriever import PureTfidfAnchorRetriever
+from scripts.labeling.anchor_retriever import PureTfidfAnchorRetriever
+from scripts.labeling.llm_token_tracker import TokenTracker, load_pricing_from_env
 
 # 1. 환경변수 및 루트 디렉토리 설정
 root_dir = Path(__file__).resolve().parent.parent
@@ -46,6 +47,13 @@ TARGET_DOC_IDS = [
 
 # 3. 플래그십 모델 (Prepay 결제 동기화 대기 동안 3.1-flash-lite 사용)
 TARGET_MODEL = "gemini-3.1-flash-lite"
+LLM_PROVIDER = os.getenv("LLM_PROVIDER", "gemini")
+
+token_tracker = TokenTracker.from_pricing(
+    provider=LLM_PROVIDER,
+    model=TARGET_MODEL,
+    pricing=load_pricing_from_env(),
+)
 
 SYSTEM_PROMPT = """당신은 한국 공공기관 IT/AI 사업 제안요청서(RFP) 요구사항 리스크 분석 전문가입니다.
 제공된 요구사항 항목에 대해 다음 3가지 주 라벨 중 하나를 판단하여 지정하고 상세 사유와 세부 리스크 요인을 분석하세요.
@@ -97,7 +105,7 @@ RESPONSE_SCHEMA = {
 }
 
 
-def call_gemini_api(user_prompt: str) -> Dict[str, Any]:
+def call_gemini_api(user_prompt: str, label: str = "default") -> Dict[str, Any]:
     """유료 쿼터 적용 gemini-3.5-flash 초고속 앤 직렬 호출"""
     config = types.GenerateContentConfig(
         system_instruction=SYSTEM_PROMPT,
@@ -113,6 +121,12 @@ def call_gemini_api(user_prompt: str) -> Dict[str, Any]:
                 model=TARGET_MODEL,
                 contents=user_prompt,
                 config=config
+            )
+            usage = token_tracker.record(response, label=label)
+            print(
+                f"  [tokens/{label}] {token_tracker.format_usage(usage)} "
+                f"| 누적 input={token_tracker.totals.input_tokens:,} "
+                f"output={token_tracker.totals.output_tokens:,}"
             )
             return json.loads(response.text)
         except Exception as e:
@@ -191,6 +205,12 @@ def run_full_controlled_experiment():
                     results_map[obj["requirement_uid"]] = obj
 
     print(f"--- [gemini-3.5-flash] 3개 기법 100% 동일 모델 일괄 실험 시작 (완료: {len(results_map)}/{len(target_items)}건) ---")
+    remaining = len(target_items) - len(results_map)
+    if remaining:
+        print(
+            f"⚠️  남은 API 호출 예상: {remaining * 3:,}회 "
+            f"(요구사항 {remaining}건 × zero/pure/stratified 3기법)"
+        )
 
     with open(out_file, "a", encoding="utf-8") as out_f:
         for idx, item in enumerate(target_items, 1):
@@ -203,19 +223,19 @@ def run_full_controlled_experiment():
 
             # A. Step 1: Zero-shot 호출
             z_prompt = format_zeroshot_prompt(item)
-            z_res = call_gemini_api(z_prompt)
+            z_res = call_gemini_api(z_prompt, label="zero_shot")
             item["zero_shot_result"] = z_res
 
             # B. Step 2: Pure Few-shot 호출 (Top-3 유사 앵커)
             pure_anchors = retriever.get_top_k_anchors(item, top_k=3)
             p_prompt = format_fewshot_prompt(item, pure_anchors, is_stratified=False)
-            p_res = call_gemini_api(p_prompt)
+            p_res = call_gemini_api(p_prompt, label="pure_fewshot")
             item["pure_fewshot_result"] = p_res
 
             # C. Step 3: Stratified Few-shot 호출 (1:1:1 균형 앵커)
             strat_anchors = retriever.get_stratified_top_k_anchors(item, target_labels=["통상수용", "견적반영", "계약·질의검토"])
             s_prompt = format_fewshot_prompt(item, strat_anchors, is_stratified=True)
-            s_res = call_gemini_api(s_prompt)
+            s_res = call_gemini_api(s_prompt, label="stratified_fewshot")
             item["stratified_fewshot_result"] = s_res
 
             # 결과 저장
@@ -227,10 +247,19 @@ def run_full_controlled_experiment():
             time.sleep(0.3)
 
     # 4. 종합 3자 비교 보고서 생성
-    generate_full_report(list(results_map.values()), report_file)
+    generate_full_report(
+        list(results_map.values()),
+        report_file,
+        token_summary=token_tracker.to_dict() if token_tracker.calls else None,
+    )
+
+    token_usage_file = reports_dir / "experiment_3docs_paid_token_usage.json"
+    token_tracker.print_summary()
+    token_tracker.save_json(token_usage_file)
+    print(f"토큰 사용량 JSON 저장: {token_usage_file}")
 
 
-def generate_full_report(results: List[Dict[str, Any]], report_path: Path):
+def generate_full_report(results: List[Dict[str, Any]], report_path: Path, token_summary: Dict[str, Any] | None = None):
     """Zero-shot vs Pure Few-shot vs Stratified Few-shot 100% 동일 모델 3자 무결성 비교 보고서"""
     total = len(results)
     if total == 0:
@@ -276,6 +305,36 @@ def generate_full_report(results: List[Dict[str, Any]], report_path: Path):
    - 프롬프트에 `통상수용 1개 + 견적반영 1개 + 계약·질의검토 1개`를 균형 제공함으로써, 다수 클래스로의 쏠림(Anchor Softening Bias)을 방지하고 `계약·질의검토` 조항의 재현율(Recall)을 안전하게 확보함.
 
 """
+
+    if token_summary:
+        report_content += f"""---
+
+## 3. API 토큰 사용량 (이번 실행)
+
+| 항목 | 값 |
+|---|---:|
+| API 호출 수 | {token_summary.get('calls', 0):,}회 |
+| 입력 토큰 | {token_summary.get('input_tokens', 0):,} |
+| 출력 토큰 | {token_summary.get('output_tokens', 0):,} |
+| 합계 토큰 | {token_summary.get('total_tokens', 0):,} |
+"""
+        if token_summary.get("estimated_cost"):
+            cost_label = "예상 비용 (원)" if token_summary.get("currency") == "KRW" else "예상 비용"
+            if token_summary.get("currency") == "KRW":
+                report_content += f"| {cost_label} | {token_summary['estimated_cost']:,.0f}원 |\n"
+            else:
+                report_content += f"| {cost_label} | ${token_summary['estimated_cost']:.4f} |\n"
+        by_label = token_summary.get("by_label") or {}
+        if by_label:
+            report_content += "\n| 기법 | 입력 | 출력 | 합계 |\n|---|---:|---:|---:|\n"
+            for label, usage in sorted(by_label.items()):
+                report_content += (
+                    f"| {label} | {usage.get('input_tokens', 0):,} | "
+                    f"{usage.get('output_tokens', 0):,} | {usage.get('total_tokens', 0):,} |\n"
+                )
+        report_content += "\n"
+
+    report_content += ""
 
     with open(report_path, "w", encoding="utf-8") as f:
         f.write(report_content)

@@ -5,7 +5,7 @@ scripts/sample_pilot.py 에 대한 단위 테스트
 
 import unittest
 from pathlib import Path
-from scripts.sample_pilot import load_dataset, sample_pilot_dataset
+from scripts.data.sample_pilot import load_dataset, sample_pilot_dataset
 
 
 class SamplePilotTests(unittest.TestCase):

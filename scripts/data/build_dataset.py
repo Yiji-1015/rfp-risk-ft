@@ -21,7 +21,7 @@ from pathlib import Path
 from typing import Iterable
 
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 SOURCE_DIR = ROOT / "RFP_data" / "md"
 OUTPUT_DIR = ROOT / "data" / "processed"
 REVIEW_DIR = ROOT / "data" / "review"
