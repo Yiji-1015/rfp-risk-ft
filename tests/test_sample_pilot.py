@@ -4,16 +4,29 @@ scripts/data/sample_pilot.py 에 대한 단위 테스트
 """
 
 import unittest
-from pathlib import Path
-from scripts.data.sample_pilot import load_dataset, sample_pilot_dataset
+from scripts.data.sample_pilot import sample_pilot_dataset
 
 
 class SamplePilotTests(unittest.TestCase):
 
     def setUp(self):
-        root_dir = Path(__file__).resolve().parent.parent
-        self.dataset_path = root_dir / "data" / "processed" / "requirements_v0.2.0.jsonl"
-        self.records = load_dataset(str(self.dataset_path))
+        self.records = []
+        for doc_index in range(10):
+            for row_index in range(5):
+                requirement_id = f"REQ-{doc_index:02d}-{row_index:02d}"
+                self.records.append(
+                    {
+                        "document_id": f"doc-{doc_index:02d}",
+                        "requirement_uid": f"doc-{doc_index:02d}:{requirement_id}",
+                        "requirement_id": requirement_id,
+                        "source_requirement_id": requirement_id,
+                        "requirement_type": "기능 요구사항",
+                        "raw_requirement_text": "요구사항 본문 " + ("가" * row_index),
+                    }
+                )
+
+        self.records[0]["source_requirement_id"] = "SOURCE-EXCEPTION"
+        self.records[1]["raw_requirement_text"] = "상위 셀 | 중첩 셀"
 
     def test_sample_pilot_coverage_and_size(self):
         pilot = sample_pilot_dataset(self.records, target_size=40)
