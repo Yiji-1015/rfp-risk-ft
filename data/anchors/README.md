@@ -4,21 +4,19 @@ Dynamic few-shot 프롬프트에 주입할 사례 모음이다. `scripts/labelin
 
 ## 파일
 
-| 파일 | 상태 |
-|---|---|
-| `anchor_pool_v1.jsonl` | **동결됨** (2026-08-18, 20건, 10개 문서). 결정 22 참조. |
+| 파일 | 크기 | 설명 | 근거 |
+|---|---:|---|---|
+| `anchor_pool_v1.jsonl` | 20건 | 초기 파일럿 기준 풀 (사람 11 + 모델 9) | [결정 22](file:///c:/Users/LLOYDK/Desktop/proposal-automation/rfp-risk-ft/docs/history/decisions-02.md) |
+| `anchor_pool_v2.jsonl` | **100건** | 10개 기관 층화 3회 일관성 검증 10% 대표 풀 | [결정 25](file:///c:/Users/LLOYDK/Desktop/proposal-automation/rfp-risk-ft/docs/history/decisions-03.md) |
+| `anchor_pool_v3.jsonl` | **192건** | Chunk 1(신용회복위 95건) 누적 통합 최신 앵커 풀 | [결정 26](file:///c:/Users/LLOYDK/Desktop/proposal-automation/rfp-risk-ft/docs/history/decisions-03.md) |
 
-## anchor_pool_v1 구성
+## 버전별 라벨 구성
 
-| 라벨 | 사람확정 | 모델일관 | 계 |
-|---|---:|---:|---:|
-| 통상수용 | 7 | 0 | 7 |
-| 견적반영 | 3 | 0 | 3 |
-| 계약·질의검토 | 1 | 9 | 10 |
-
-`provenance` 필드로 출처 등급을 구분한다. 값이 없으면 사람 확정, `모델일관_3of3`이면 동일 입력 3회 실행에서 주 라벨이 일치한 건이다. 두 등급은 논문에서 분리해 보고한다.
-
-**알려진 한계**: `견적반영` 앵커가 3건뿐이라 층화 인출 시 유사도가 낮은 앵커가 실릴 수 있다. `계약·질의검토`는 10건 중 9건이 모델 일관성 등급이다.
+| 버전 | 통상수용 | 견적반영 | 계약·질의검토 | 총 건수 |
+|---|---:|---:|---:|---:|
+| **v1 (초기 기준)** | 7건 | 3건 | 10건 | **20건** |
+| **v2 (10% 대표 풀)** | 44건 | 25건 | 31건 | **100건** |
+| **v3 (청크 누적 풀)** | **71건** | **59건** | **62건** | **192건** |
 
 ## 행 스키마
 

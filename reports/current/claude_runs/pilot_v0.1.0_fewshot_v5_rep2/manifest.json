@@ -1,0 +1,52 @@
+{
+  "execute": true,
+  "input": "C:\\Users\\LLOYDK\\Desktop\\proposal-automation\\rfp-risk-ft\\data\\samples\\labeling_pilot_sample_v0.1.0.jsonl",
+  "sample_count": 40,
+  "strategy": "fewshot-stratified",
+  "schema_version": "4.0.0",
+  "prompt_version": "claude-rfp-risk-v5",
+  "parameters": {
+    "model": "claude-sonnet-5",
+    "effort": "medium",
+    "thinking": "adaptive",
+    "max_tokens": 16000,
+    "cache_ttl": "5m",
+    "timeout_seconds": 120.0,
+    "max_retries": 2,
+    "structured_output": true
+  },
+  "anchoring": {
+    "anchor_block_version": "anchor-block-v1",
+    "retrieval": "stratified",
+    "top_k": 1,
+    "retriever": {
+      "retriever_version": "tfidf-word-char-v1",
+      "word_ngram_range": [
+        1,
+        2
+      ],
+      "char_ngram_range": [
+        3,
+        4
+      ],
+      "char_analyzer": "char_wb",
+      "sublinear_tf": true,
+      "similarity": "cosine",
+      "same_document_masking": true
+    },
+    "anchor_pool": {
+      "path": "C:\\Users\\LLOYDK\\Desktop\\proposal-automation\\rfp-risk-ft\\data\\anchors\\anchor_pool_v1.jsonl",
+      "pool_version": "anchor_pool_v1",
+      "sha256": "68225739149e68bd51af81a8290d2bc833288d7a44d254ed6cd6874576cccd12",
+      "total_rows": 20,
+      "reviewed_count": 20,
+      "label_counts": {
+        "견적반영": 3,
+        "계약·질의검토": 10,
+        "통상수용": 7
+      },
+      "document_count": 10,
+      "labels_without_anchor": []
+    }
+  }
+}

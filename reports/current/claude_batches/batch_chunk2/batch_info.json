@@ -1,0 +1,3857 @@
+{
+  "batch_id": "msgbatch_013j9N5UPBTJ2GbHRoniE33H",
+  "status": "in_progress",
+  "created_at": "2026-08-19T07:28:08.263779+00:00",
+  "request_count": 100,
+  "input_path": "C:\\Users\\LLOYDK\\Desktop\\proposal-automation\\rfp-risk-ft\\data\\processed\\requirements_v0.2.0.jsonl",
+  "anchor_pool_meta": {
+    "path": "C:\\Users\\LLOYDK\\Desktop\\proposal-automation\\rfp-risk-ft\\data\\anchors\\anchor_pool_v3.jsonl",
+    "pool_version": "anchor_pool_v3",
+    "sha256": "75143e6ac78f54dc5251a4b1dcffd45835693ac5b1f0e8736279cb65788706a8",
+    "total_rows": 192,
+    "reviewed_count": 192,
+    "label_counts": {
+      "견적반영": 59,
+      "계약·질의검토": 62,
+      "통상수용": 71
+    },
+    "document_count": 10,
+    "labels_without_anchor": []
+  },
+  "traces": {
+    "defense_intelligent_platform:ECR-006": [
+      {
+        "requirement_uid": "kexim_ai_platform:PMR-025",
+        "primary_action": "통상수용",
+        "similarity": 0.0743,
+        "overlap_terms": [
+          "원활한",
+          "제시"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-003",
+        "primary_action": "견적반영",
+        "similarity": 0.0637,
+        "overlap_terms": [
+          "분산",
+          "구성을",
+          "아키텍처를",
+          "장애에",
+          "학습"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:INR-DTL-005",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.078,
+        "overlap_terms": [
+          "분산",
+          "부하 분산",
+          "통한",
+          "부하",
+          "was"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:ECR-007": [
+      {
+        "requirement_uid": "kac_ai_work_platform:SER-003",
+        "primary_action": "통상수용",
+        "similarity": 0.0391,
+        "overlap_terms": [
+          "접속",
+          "접속 차단",
+          "이상",
+          "차단",
+          "관리"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-003",
+        "primary_action": "견적반영",
+        "similarity": 0.0577,
+        "overlap_terms": [
+          "hw",
+          "서버",
+          "제안 가능",
+          "제안",
+          "10gbe"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-007",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.2223,
+        "overlap_terms": [
+          "port",
+          "nic",
+          "sfp",
+          "cpu",
+          "이상"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:ECR-008": [
+      {
+        "requirement_uid": "kac_ai_work_platform:SER-003",
+        "primary_action": "통상수용",
+        "similarity": 0.0452,
+        "overlap_terms": [
+          "접속",
+          "접속 차단",
+          "이상",
+          "차단",
+          "관리"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-003",
+        "primary_action": "견적반영",
+        "similarity": 0.057,
+        "overlap_terms": [
+          "hw",
+          "서버",
+          "제안 가능",
+          "제안",
+          "10gbe"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-007",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.2105,
+        "overlap_terms": [
+          "port",
+          "nic",
+          "sfp",
+          "포트",
+          "이상"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:ECR-009": [
+      {
+        "requirement_uid": "kac_ai_work_platform:SER-003",
+        "primary_action": "통상수용",
+        "similarity": 0.044,
+        "overlap_terms": [
+          "접속",
+          "접속 차단",
+          "이상",
+          "차단",
+          "관리"
+        ]
+      },
+      {
+        "requirement_uid": "kangwon_land_genai:ECR-003",
+        "primary_action": "견적반영",
+        "similarity": 0.0638,
+        "overlap_terms": [
+          "ssd",
+          "이상",
+          "이상 ssd",
+          "제안",
+          "서버"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-006",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.2158,
+        "overlap_terms": [
+          "nic",
+          "포트",
+          "port",
+          "ssd",
+          "이상"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:ECR-010": [
+      {
+        "requirement_uid": "kexim_ai_platform:PMR-025",
+        "primary_action": "통상수용",
+        "similarity": 0.0547,
+        "overlap_terms": [
+          "원활한"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-003",
+        "primary_action": "견적반영",
+        "similarity": 0.0934,
+        "overlap_terms": [
+          "gpu 서버",
+          "gpu",
+          "서버",
+          "스토리지",
+          "고성능"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-007",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1655,
+        "overlap_terms": [
+          "port",
+          "이상",
+          "이상 cpu",
+          "서버",
+          "메모리"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:ECR-011": [
+      {
+        "requirement_uid": "genai_incident_response:SFR-018",
+        "primary_action": "통상수용",
+        "similarity": 0.083,
+        "overlap_terms": [
+          "확장성",
+          "지원",
+          "인터페이스",
+          "형태",
+          "제공"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-003",
+        "primary_action": "견적반영",
+        "similarity": 0.1768,
+        "overlap_terms": [
+          "스토리지",
+          "nas",
+          "용량",
+          "storage",
+          "hw"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-006",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1711,
+        "overlap_terms": [
+          "스토리지",
+          "이상",
+          "지원",
+          "성능 제공",
+          "ssd"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:ECR-012": [
+      {
+        "requirement_uid": "korail_genai_isp_ismp:CSR-003",
+        "primary_action": "통상수용",
+        "similarity": 0.0523,
+        "overlap_terms": [
+          "네트워크",
+          "간의",
+          "인프라",
+          "포함",
+          "호환성"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-003",
+        "primary_action": "견적반영",
+        "similarity": 0.1157,
+        "overlap_terms": [
+          "스토리지",
+          "구조로",
+          "구성",
+          "네트워크",
+          "이상의"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-006",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1811,
+        "overlap_terms": [
+          "switch",
+          "2식",
+          "수량",
+          "이상",
+          "스토리지"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:ECR-013": [
+      {
+        "requirement_uid": "genai_incident_response:SFR-018",
+        "primary_action": "통상수용",
+        "similarity": 0.033,
+        "overlap_terms": [
+          "인터페이스"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-021",
+        "primary_action": "견적반영",
+        "similarity": 0.0506,
+        "overlap_terms": [
+          "000개",
+          "10"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-007",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.095,
+        "overlap_terms": [
+          "이상",
+          "이상 인터페이스",
+          "000",
+          "인터페이스",
+          "포함"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:ECR-014": [
+      {
+        "requirement_uid": "ccrs_ai_platform:SER-010",
+        "primary_action": "통상수용",
+        "similarity": 0.1402,
+        "overlap_terms": [
+          "취약점",
+          "국정원 8대",
+          "owasp top",
+          "8대",
+          "top 10"
+        ]
+      },
+      {
+        "requirement_uid": "incheon_airport_digital_work:SER-008",
+        "primary_action": "견적반영",
+        "similarity": 0.0547,
+        "overlap_terms": [
+          "https",
+          "기타",
+          "서버",
+          "기능 제공",
+          "기능"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-006",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1101,
+        "overlap_terms": [
+          "2식",
+          "이상",
+          "트래픽",
+          "기타",
+          "throughput"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:ECR-015": [
+      {
+        "requirement_uid": "ccrs_ai_platform:SER-010",
+        "primary_action": "통상수용",
+        "similarity": 0.0281,
+        "overlap_terms": [
+          "국정원",
+          "100",
+          "인증",
+          "또는"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-003",
+        "primary_action": "견적반영",
+        "similarity": 0.0358,
+        "overlap_terms": [
+          "제품",
+          "10gbe",
+          "이상",
+          "또는"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-007",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.151,
+        "overlap_terms": [
+          "이상",
+          "2식",
+          "port",
+          "이상 메모리",
+          "10gbe"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:ECR-016": [
+      {
+        "requirement_uid": "ccrs_ai_platform:INR-004",
+        "primary_action": "통상수용",
+        "similarity": 0.0286,
+        "overlap_terms": [
+          "연결",
+          "자동"
+        ]
+      },
+      {
+        "requirement_uid": "kangwon_land_genai:ECR-003",
+        "primary_action": "견적반영",
+        "similarity": 0.1084,
+        "overlap_terms": [
+          "키보드",
+          "마우스",
+          "모니터",
+          "서버",
+          "연결"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-007",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1162,
+        "overlap_terms": [
+          "콘솔",
+          "4개",
+          "이상",
+          "장치",
+          "kvm"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:ECR-017": [
+      {
+        "requirement_uid": "korail_genai_isp_ismp:CSR-011",
+        "primary_action": "통상수용",
+        "similarity": 0.034,
+        "overlap_terms": [
+          "제시",
+          "위한",
+          "네트워크",
+          "서버"
+        ]
+      },
+      {
+        "requirement_uid": "kangwon_land_genai:ECR-003",
+        "primary_action": "견적반영",
+        "similarity": 0.0623,
+        "overlap_terms": [
+          "설치",
+          "제안",
+          "전원",
+          "네트워크",
+          "서버"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-008",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0663,
+        "overlap_terms": [
+          "수량",
+          "서버",
+          "제안",
+          "전원",
+          "네트워크"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:ECR-018": [
+      {
+        "requirement_uid": "kac_ai_work_platform:SER-003",
+        "primary_action": "통상수용",
+        "similarity": 0.0905,
+        "overlap_terms": [
+          "접속",
+          "ip",
+          "사용자 접속",
+          "사용자",
+          "관리자"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-009",
+        "primary_action": "견적반영",
+        "similarity": 0.1045,
+        "overlap_terms": [
+          "도입",
+          "linux",
+          "접근통제",
+          "보안",
+          "linux windows"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-008",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1197,
+        "overlap_terms": [
+          "도입 수량",
+          "수량",
+          "도입",
+          "구성에",
+          "구축된"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:ECR-019": [
+      {
+        "requirement_uid": "ccrs_ai_platform:SER-008",
+        "primary_action": "통상수용",
+        "similarity": 0.0688,
+        "overlap_terms": [
+          "이상 라이선스",
+          "라이선스",
+          "이상"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-009",
+        "primary_action": "견적반영",
+        "similarity": 0.0517,
+        "overlap_terms": [
+          "도입",
+          "도입 수량",
+          "수량"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-008",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1576,
+        "overlap_terms": [
+          "수량 1식",
+          "1식",
+          "도입 수량",
+          "수량",
+          "도입"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:ECR-020": [
+      {
+        "requirement_uid": "mfds_drug_ai_review:SFR-002",
+        "primary_action": "통상수용",
+        "similarity": 0.0482,
+        "overlap_terms": [
+          "지능형"
+        ]
+      },
+      {
+        "requirement_uid": "mfds_drug_ai_review:SFR-001",
+        "primary_action": "견적반영",
+        "similarity": 0.0436,
+        "overlap_terms": [
+          "지능형"
+        ]
+      },
+      {
+        "requirement_uid": "incheon_airport_digital_work:ECR-001",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0408,
+        "overlap_terms": [
+          "운용",
+          "설계",
+          "sw",
+          "기존",
+          "분석"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:ECR-021": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:CON-003",
+        "primary_action": "통상수용",
+        "similarity": 0.0611,
+        "overlap_terms": [
+          "운영",
+          "ai"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SER-003",
+        "primary_action": "견적반영",
+        "similarity": 0.0734,
+        "overlap_terms": [
+          "sfr",
+          "운영",
+          "ai 플랫폼",
+          "플랫폼",
+          "ai"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-008",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1063,
+        "overlap_terms": [
+          "수량 1식",
+          "1식",
+          "도입 수량",
+          "수량",
+          "도입"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:ECR-022": [
+      {
+        "requirement_uid": "mfds_drug_ai_review:DAR-019",
+        "primary_action": "통상수용",
+        "similarity": 0.0599,
+        "overlap_terms": [
+          "데이터",
+          "참조",
+          "이를",
+          "관리",
+          "위한"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-029",
+        "primary_action": "견적반영",
+        "similarity": 0.075,
+        "overlap_terms": [
+          "있어야",
+          "환경을",
+          "새로운",
+          "테이블",
+          "기능을"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:INR-DTL-005",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1097,
+        "overlap_terms": [
+          "다양한",
+          "테이블",
+          "플랫폼",
+          "저장",
+          "다양한 데이터"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:ECR-023": [
+      {
+        "requirement_uid": "mfds_drug_ai_review:SFR-002",
+        "primary_action": "통상수용",
+        "similarity": 0.0966,
+        "overlap_terms": [
+          "지능형",
+          "포털",
+          "관리",
+          "서비스",
+          "구축"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-003",
+        "primary_action": "견적반영",
+        "similarity": 0.0977,
+        "overlap_terms": [
+          "구성을",
+          "kubernetes",
+          "구성",
+          "구축을 위해",
+          "가능한 구조로"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-002",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.108,
+        "overlap_terms": [
+          "kubernetes",
+          "플랫폼",
+          "구성",
+          "가능한",
+          "api"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:ECR-024": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-012",
+        "primary_action": "통상수용",
+        "similarity": 0.1039,
+        "overlap_terms": [
+          "제공 사용자",
+          "제공",
+          "사용자",
+          "접근",
+          "접근 권한을"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-011",
+        "primary_action": "견적반영",
+        "similarity": 0.0864,
+        "overlap_terms": [
+          "적용하는",
+          "접근",
+          "보안",
+          "구현을",
+          "실시간으로"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-012",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0916,
+        "overlap_terms": [
+          "핵심",
+          "동적",
+          "워크로드",
+          "클라우드",
+          "아키텍처"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:ECR-025": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-012",
+        "primary_action": "통상수용",
+        "similarity": 0.0951,
+        "overlap_terms": [
+          "기능 제공",
+          "제공",
+          "기능",
+          "관리 기능",
+          "관리"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-029",
+        "primary_action": "견적반영",
+        "similarity": 0.0679,
+        "overlap_terms": [
+          "환경에",
+          "지원해야",
+          "유연하게",
+          "있도록",
+          "기능을 지원해야"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-008",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.12,
+        "overlap_terms": [
+          "수량 1식",
+          "1식",
+          "도입 수량",
+          "수량",
+          "도입"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:ECR-026": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-012",
+        "primary_action": "통상수용",
+        "similarity": 0.1063,
+        "overlap_terms": [
+          "기능 제공",
+          "관리 기능",
+          "제공",
+          "기능",
+          "제공 사용자"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-004",
+        "primary_action": "견적반영",
+        "similarity": 0.1471,
+        "overlap_terms": [
+          "복구",
+          "자동화",
+          "배포",
+          "클러스터",
+          "제공해야"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:INR-DTL-005",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1782,
+        "overlap_terms": [
+          "컨테이너",
+          "기능 지원",
+          "기능 제공",
+          "통한",
+          "지원"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:ECR-027": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-012",
+        "primary_action": "통상수용",
+        "similarity": 0.0947,
+        "overlap_terms": [
+          "기능 제공",
+          "관리 기능",
+          "제공",
+          "기능",
+          "관리"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-003",
+        "primary_action": "견적반영",
+        "similarity": 0.0723,
+        "overlap_terms": [
+          "hw",
+          "이상의",
+          "서버",
+          "네트워크",
+          "자원을"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-012",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1093,
+        "overlap_terms": [
+          "자원",
+          "클라우드",
+          "플랫폼 자원",
+          "관리하는 기능",
+          "기능 제공"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:ECR-028": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-012",
+        "primary_action": "통상수용",
+        "similarity": 0.0945,
+        "overlap_terms": [
+          "제공",
+          "기능 제공",
+          "제공 사용자",
+          "사용자",
+          "기능"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:SER-001",
+        "primary_action": "견적반영",
+        "similarity": 0.0801,
+        "overlap_terms": [
+          "제공되어야",
+          "기능이 제공되어야",
+          "지원",
+          "기능을",
+          "제공"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:INR-DTL-005",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0909,
+        "overlap_terms": [
+          "다양한",
+          "지원",
+          "솔루션",
+          "제공",
+          "기능 제공"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:ECR-029": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-012",
+        "primary_action": "통상수용",
+        "similarity": 0.0365,
+        "overlap_terms": [
+          "기능 제공",
+          "제공",
+          "기능",
+          "서비스",
+          "사용자"
+        ]
+      },
+      {
+        "requirement_uid": "kangwon_land_genai:ECR-003",
+        "primary_action": "견적반영",
+        "similarity": 0.0692,
+        "overlap_terms": [
+          "스토리지",
+          "ssd",
+          "전원 이중화",
+          "전원",
+          "이상"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-007",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.2064,
+        "overlap_terms": [
+          "dual",
+          "sfp",
+          "fc",
+          "32gbps",
+          "10gbe"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-001": [
+      {
+        "requirement_uid": "mfds_drug_ai_review:SFR-002",
+        "primary_action": "통상수용",
+        "similarity": 0.1023,
+        "overlap_terms": [
+          "포털",
+          "서비스",
+          "기능"
+        ]
+      },
+      {
+        "requirement_uid": "mfds_drug_ai_review:SFR-001",
+        "primary_action": "견적반영",
+        "similarity": 0.1297,
+        "overlap_terms": [
+          "포털",
+          "로그인",
+          "서비스",
+          "사용자",
+          "제공"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-001",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1099,
+        "overlap_terms": [
+          "포털",
+          "사용자 인증",
+          "표시",
+          "로그인",
+          "사용자"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-002": [
+      {
+        "requirement_uid": "kac_ai_work_platform:SER-003",
+        "primary_action": "통상수용",
+        "similarity": 0.1213,
+        "overlap_terms": [
+          "로그인",
+          "비밀번호",
+          "기능 로그인",
+          "id",
+          "로그인 로그인"
+        ]
+      },
+      {
+        "requirement_uid": "mfds_drug_ai_review:SFR-001",
+        "primary_action": "견적반영",
+        "similarity": 0.0709,
+        "overlap_terms": [
+          "로그인",
+          "포털",
+          "로그인 기능",
+          "기능",
+          "id"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-001",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0806,
+        "overlap_terms": [
+          "포털",
+          "로그인",
+          "로그아웃",
+          "기능",
+          "사용자 인증"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-003": [
+      {
+        "requirement_uid": "mfds_drug_ai_review:SFR-002",
+        "primary_action": "통상수용",
+        "similarity": 0.1251,
+        "overlap_terms": [
+          "포털 관리",
+          "포털",
+          "정보 관리",
+          "등록",
+          "기능"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-007",
+        "primary_action": "견적반영",
+        "similarity": 0.0877,
+        "overlap_terms": [
+          "등록 승인",
+          "등록",
+          "기능",
+          "사용자",
+          "승인"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-001",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0908,
+        "overlap_terms": [
+          "포털",
+          "사용자",
+          "인증",
+          "기능",
+          "sso"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-004": [
+      {
+        "requirement_uid": "kac_ai_work_platform:SER-003",
+        "primary_action": "통상수용",
+        "similarity": 0.1692,
+        "overlap_terms": [
+          "로그인",
+          "비밀번호",
+          "기능 로그인",
+          "id",
+          "이력 관리"
+        ]
+      },
+      {
+        "requirement_uid": "incheon_airport_digital_work:SER-008",
+        "primary_action": "견적반영",
+        "similarity": 0.0996,
+        "overlap_terms": [
+          "비밀번호",
+          "기능",
+          "접근",
+          "사용자",
+          "관리 기능"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-001",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0997,
+        "overlap_terms": [
+          "관리 로그인",
+          "비밀번호",
+          "포털",
+          "로그인",
+          "기능"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-005": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-012",
+        "primary_action": "통상수용",
+        "similarity": 0.1223,
+        "overlap_terms": [
+          "관리 기능",
+          "기능",
+          "사용자",
+          "관리",
+          "권한을"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SER-001",
+        "primary_action": "견적반영",
+        "similarity": 0.1107,
+        "overlap_terms": [
+          "권한",
+          "권한을",
+          "그룹별 접근",
+          "rbac",
+          "그룹별"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-001",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1418,
+        "overlap_terms": [
+          "관리 기능",
+          "권한",
+          "포털",
+          "메뉴",
+          "권한 관리"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-006": [
+      {
+        "requirement_uid": "mfds_drug_ai_review:SFR-002",
+        "primary_action": "통상수용",
+        "similarity": 0.1582,
+        "overlap_terms": [
+          "포털 관리",
+          "포털",
+          "메뉴관리",
+          "관리",
+          "제공하는"
+        ]
+      },
+      {
+        "requirement_uid": "kac_ai_work_platform:GW-015",
+        "primary_action": "견적반영",
+        "similarity": 0.0559,
+        "overlap_terms": [
+          "메뉴의",
+          "제공하는",
+          "기능을",
+          "기능",
+          "관리"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-001",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.098,
+        "overlap_terms": [
+          "메뉴",
+          "포털",
+          "이동",
+          "기능",
+          "관리"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-007": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-013",
+        "primary_action": "통상수용",
+        "similarity": 0.086,
+        "overlap_terms": [
+          "입력 기능",
+          "기능",
+          "입력",
+          "기능 제공",
+          "생성"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-029",
+        "primary_action": "견적반영",
+        "similarity": 0.0812,
+        "overlap_terms": [
+          "cpu gpu",
+          "과제",
+          "있어야",
+          "컨테이너",
+          "프로젝트별"
+        ]
+      },
+      {
+        "requirement_uid": "incheon_airport_digital_work:SFR-001",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0679,
+        "overlap_terms": [
+          "사용자가",
+          "플랫폼",
+          "상세",
+          "ai",
+          "하는"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-008": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-013",
+        "primary_action": "통상수용",
+        "similarity": 0.094,
+        "overlap_terms": [
+          "입력 기능",
+          "기능",
+          "입력",
+          "기능 제공",
+          "생성"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-007",
+        "primary_action": "견적반영",
+        "similarity": 0.0733,
+        "overlap_terms": [
+          "라이브러리",
+          "선택",
+          "기능",
+          "사용자가",
+          "기능 제공"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:SEC-006",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0886,
+        "overlap_terms": [
+          "학습데이터",
+          "라이브러리",
+          "활용",
+          "활용목적",
+          "보유"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-009": [
+      {
+        "requirement_uid": "mfds_drug_ai_review:SFR-002",
+        "primary_action": "통상수용",
+        "similarity": 0.0759,
+        "overlap_terms": [
+          "포털",
+          "현황을",
+          "조회",
+          "관리"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-009",
+        "primary_action": "견적반영",
+        "similarity": 0.0476,
+        "overlap_terms": [
+          "서버"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-001",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0492,
+        "overlap_terms": [
+          "포털",
+          "반입",
+          "관리",
+          "승인",
+          "활용"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-010": [
+      {
+        "requirement_uid": "ccrs_ai_platform:SER-008",
+        "primary_action": "통상수용",
+        "similarity": 0.0728,
+        "overlap_terms": [
+          "반입",
+          "승인",
+          "등록",
+          "신청",
+          "그룹"
+        ]
+      },
+      {
+        "requirement_uid": "mfds_drug_ai_review:SFR-001",
+        "primary_action": "견적반영",
+        "similarity": 0.0666,
+        "overlap_terms": [
+          "포털",
+          "개발",
+          "공개",
+          "있는",
+          "ai"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SER-007",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0913,
+        "overlap_terms": [
+          "반출",
+          "승인",
+          "승인된",
+          "데이터로",
+          "ai"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-011": [
+      {
+        "requirement_uid": "ccrs_ai_platform:SER-008",
+        "primary_action": "통상수용",
+        "similarity": 0.078,
+        "overlap_terms": [
+          "반입",
+          "승인",
+          "등록",
+          "신청",
+          "그룹"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-016",
+        "primary_action": "견적반영",
+        "similarity": 0.0762,
+        "overlap_terms": [
+          "분석",
+          "활용 데이터",
+          "다운로드할 있는",
+          "다운로드할",
+          "데이터"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SER-007",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0983,
+        "overlap_terms": [
+          "반출",
+          "승인",
+          "승인된",
+          "데이터로",
+          "데이터"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-012": [
+      {
+        "requirement_uid": "ccrs_ai_platform:INR-001",
+        "primary_action": "통상수용",
+        "similarity": 0.0769,
+        "overlap_terms": [
+          "연동",
+          "플랫폼",
+          "ai 플랫폼",
+          "운영",
+          "협의하여"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-003",
+        "primary_action": "견적반영",
+        "similarity": 0.0601,
+        "overlap_terms": [
+          "플랫폼",
+          "기능은",
+          "가능해야",
+          "ai 플랫폼",
+          "ai"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:INR-007",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1102,
+        "overlap_terms": [
+          "연동",
+          "협의하여",
+          "운영"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-013": [
+      {
+        "requirement_uid": "korail_genai_isp_ismp:CSR-003",
+        "primary_action": "통상수용",
+        "similarity": 0.095,
+        "overlap_terms": [
+          "확인",
+          "분석",
+          "필요성",
+          "또는 데이터",
+          "입력"
+        ]
+      },
+      {
+        "requirement_uid": "mfds_drug_ai_review:SFR-001",
+        "primary_action": "견적반영",
+        "similarity": 0.0858,
+        "overlap_terms": [
+          "데이터셋",
+          "개발",
+          "포털",
+          "제공",
+          "모델"
+        ]
+      },
+      {
+        "requirement_uid": "kangwon_land_genai:SFR-004",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0605,
+        "overlap_terms": [
+          "데이터셋",
+          "개발",
+          "입력",
+          "제공",
+          "포털"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-014": [
+      {
+        "requirement_uid": "mfds_drug_ai_review:SFR-002",
+        "primary_action": "통상수용",
+        "similarity": 0.09,
+        "overlap_terms": [
+          "포털",
+          "조회",
+          "기능을",
+          "수정",
+          "서비스"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-004",
+        "primary_action": "견적반영",
+        "similarity": 0.0978,
+        "overlap_terms": [
+          "제공해야",
+          "기능을 제공해야",
+          "조회",
+          "기능을",
+          "모델"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-012",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0733,
+        "overlap_terms": [
+          "모델",
+          "클라우드",
+          "조회",
+          "패키지",
+          "컨테이너"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-015": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-012",
+        "primary_action": "통상수용",
+        "similarity": 0.0823,
+        "overlap_terms": [
+          "기능",
+          "검색",
+          "ai",
+          "기반"
+        ]
+      },
+      {
+        "requirement_uid": "mfds_drug_ai_review:SFR-001",
+        "primary_action": "견적반영",
+        "similarity": 0.0886,
+        "overlap_terms": [
+          "포털",
+          "데이터셋",
+          "기능",
+          "검색",
+          "모델"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-002",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0799,
+        "overlap_terms": [
+          "플랫폼",
+          "기반 검색",
+          "ai 플랫폼",
+          "검색",
+          "기반"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-016": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:SER-007",
+        "primary_action": "통상수용",
+        "similarity": 0.071,
+        "overlap_terms": [
+          "권한을",
+          "활동 로그",
+          "로그",
+          "관리",
+          "활동"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-029",
+        "primary_action": "견적반영",
+        "similarity": 0.0979,
+        "overlap_terms": [
+          "프로젝트",
+          "프로젝트별",
+          "리소스",
+          "환경을",
+          "자원"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-012",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0812,
+        "overlap_terms": [
+          "자원",
+          "할당",
+          "실시간",
+          "알림",
+          "알림 발송"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-017": [
+      {
+        "requirement_uid": "mfds_drug_ai_review:SFR-002",
+        "primary_action": "통상수용",
+        "similarity": 0.0533,
+        "overlap_terms": [
+          "조회",
+          "조회 기능",
+          "기능"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-007",
+        "primary_action": "견적반영",
+        "similarity": 0.0455,
+        "overlap_terms": [
+          "조회",
+          "기능",
+          "가능",
+          "기본",
+          "추가"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-012",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0542,
+        "overlap_terms": [
+          "조회",
+          "기능 gpu",
+          "gpu cpu",
+          "gpu",
+          "가능"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-018": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-012",
+        "primary_action": "통상수용",
+        "similarity": 0.0881,
+        "overlap_terms": [
+          "기능",
+          "접근 권한을",
+          "권한을",
+          "관리",
+          "사용자"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-004",
+        "primary_action": "견적반영",
+        "similarity": 0.0656,
+        "overlap_terms": [
+          "사용량",
+          "사용량 조회",
+          "조회",
+          "모니터링",
+          "gpu"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-001",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0627,
+        "overlap_terms": [
+          "포털",
+          "기능",
+          "rbac",
+          "접근",
+          "관리"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-019": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:SER-007",
+        "primary_action": "통상수용",
+        "similarity": 0.1329,
+        "overlap_terms": [
+          "활동 로그",
+          "로그",
+          "조회",
+          "로그 조회",
+          "활동"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-011",
+        "primary_action": "견적반영",
+        "similarity": 0.0979,
+        "overlap_terms": [
+          "조회",
+          "이벤트",
+          "보안 이벤트",
+          "세션",
+          "로그"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-001",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0955,
+        "overlap_terms": [
+          "세션",
+          "포털",
+          "기능",
+          "로그인 로그아웃",
+          "조회"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-020": [
+      {
+        "requirement_uid": "ccrs_ai_platform:DAR-002",
+        "primary_action": "통상수용",
+        "similarity": 0.0698,
+        "overlap_terms": [
+          "정책",
+          "설정",
+          "이력",
+          "보존 기간",
+          "변경"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SER-003",
+        "primary_action": "견적반영",
+        "similarity": 0.0926,
+        "overlap_terms": [
+          "설정",
+          "항목의",
+          "변경",
+          "자원",
+          "설정 변경은"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-012",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1474,
+        "overlap_terms": [
+          "gpu",
+          "설정",
+          "자원",
+          "할당",
+          "cpu 메모리"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-021": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:SER-007",
+        "primary_action": "통상수용",
+        "similarity": 0.0591,
+        "overlap_terms": [
+          "관리",
+          "제공",
+          "있는",
+          "기능 제공",
+          "ai"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-029",
+        "primary_action": "견적반영",
+        "similarity": 0.1041,
+        "overlap_terms": [
+          "자원",
+          "리소스",
+          "사용",
+          "조회할",
+          "단위로"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-012",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1524,
+        "overlap_terms": [
+          "자원",
+          "할당",
+          "gpu cpu",
+          "gpu",
+          "조회할"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-022": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-012",
+        "primary_action": "통상수용",
+        "similarity": 0.1215,
+        "overlap_terms": [
+          "제공",
+          "관리 기능",
+          "기능",
+          "기능 제공",
+          "사용자"
+        ]
+      },
+      {
+        "requirement_uid": "mfds_drug_ai_review:SFR-001",
+        "primary_action": "견적반영",
+        "similarity": 0.1071,
+        "overlap_terms": [
+          "통합인증",
+          "일관성 있는",
+          "사용자 인터페이스",
+          "일관성",
+          "제공"
+        ]
+      },
+      {
+        "requirement_uid": "incheon_airport_digital_work:SFR-001",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1062,
+        "overlap_terms": [
+          "데이터에 대한",
+          "연계를 통한",
+          "데이터에",
+          "구현",
+          "권한"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-023": [
+      {
+        "requirement_uid": "mfds_drug_ai_review:COR-009",
+        "primary_action": "통상수용",
+        "similarity": 0.1317,
+        "overlap_terms": [
+          "데이터 표준화",
+          "표준화",
+          "표준",
+          "표준 원칙",
+          "데이터 표준"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-004",
+        "primary_action": "견적반영",
+        "similarity": 0.0908,
+        "overlap_terms": [
+          "메타데이터",
+          "기능 제공",
+          "용어",
+          "확장",
+          "제공"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:INR-DTL-005",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1428,
+        "overlap_terms": [
+          "테이블",
+          "기능 제공",
+          "제공 데이터",
+          "rdbms",
+          "기능"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-024": [
+      {
+        "requirement_uid": "korail_genai_isp_ismp:DAR-006",
+        "primary_action": "통상수용",
+        "similarity": 0.1642,
+        "overlap_terms": [
+          "데이터 품질",
+          "품질",
+          "품질 관리",
+          "관리 수행",
+          "데이터"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:QUR-002",
+        "primary_action": "견적반영",
+        "similarity": 0.0998,
+        "overlap_terms": [
+          "품질",
+          "정합성",
+          "정확성",
+          "지표",
+          "실행"
+        ]
+      },
+      {
+        "requirement_uid": "genai_incident_response:QUR-001",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.107,
+        "overlap_terms": [
+          "측정",
+          "지표",
+          "검증을",
+          "검증",
+          "도메인"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-025": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:DAT-001",
+        "primary_action": "통상수용",
+        "similarity": 0.1554,
+        "overlap_terms": [
+          "데이터 수집",
+          "수집",
+          "데이터",
+          "수집 주기",
+          "수집할"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:DAR-001",
+        "primary_action": "견적반영",
+        "similarity": 0.1352,
+        "overlap_terms": [
+          "수집",
+          "데이터 수집",
+          "데이터",
+          "메타",
+          "원천"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:INR-DTL-005",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1498,
+        "overlap_terms": [
+          "다양한",
+          "gui",
+          "추출",
+          "기능",
+          "전처리"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-026": [
+      {
+        "requirement_uid": "korail_genai_isp_ismp:DAR-006",
+        "primary_action": "통상수용",
+        "similarity": 0.0895,
+        "overlap_terms": [
+          "방안 제시",
+          "데이터",
+          "발주기관과",
+          "제시",
+          "방안"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:DAR-001",
+        "primary_action": "견적반영",
+        "similarity": 0.0834,
+        "overlap_terms": [
+          "데이터 수집",
+          "수집",
+          "데이터",
+          "있도록",
+          "되어야"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-028",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0837,
+        "overlap_terms": [
+          "있어야",
+          "추후",
+          "사용할",
+          "데이터",
+          "있도록"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-027": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-006",
+        "primary_action": "통상수용",
+        "similarity": 0.1158,
+        "overlap_terms": [
+          "데이터 수집",
+          "수집",
+          "데이터",
+          "오류",
+          "처리"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:DAR-001",
+        "primary_action": "견적반영",
+        "similarity": 0.0959,
+        "overlap_terms": [
+          "데이터 수집",
+          "수집",
+          "데이터",
+          "저장소 데이터",
+          "수집 데이터"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-003",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0974,
+        "overlap_terms": [
+          "조회",
+          "수집",
+          "건수",
+          "등록",
+          "처리"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-028": [
+      {
+        "requirement_uid": "mfds_drug_ai_review:SFR-046",
+        "primary_action": "통상수용",
+        "similarity": 0.0972,
+        "overlap_terms": [
+          "관리하는",
+          "학습을 위한",
+          "학습을",
+          "기능",
+          "위한"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:SER-001",
+        "primary_action": "견적반영",
+        "similarity": 0.0784,
+        "overlap_terms": [
+          "기능이 제공되어야",
+          "제공되어야",
+          "기능이",
+          "생성",
+          "ai"
+        ]
+      },
+      {
+        "requirement_uid": "kangwon_land_genai:SFR-001",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0987,
+        "overlap_terms": [
+          "생성형",
+          "생성형 ai",
+          "tuning",
+          "fine tuning",
+          "fine"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-029": [
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-005",
+        "primary_action": "통상수용",
+        "similarity": 0.0868,
+        "overlap_terms": [
+          "검색된",
+          "유사도",
+          "rag",
+          "프롬프트",
+          "확인할 있는"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-007",
+        "primary_action": "견적반영",
+        "similarity": 0.0956,
+        "overlap_terms": [
+          "프롬프트",
+          "프롬프트 관리",
+          "프롬프트를",
+          "검색",
+          "키워드"
+        ]
+      },
+      {
+        "requirement_uid": "incheon_airport_digital_work:SFR-001",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1098,
+        "overlap_terms": [
+          "데이터에 대한",
+          "데이터에",
+          "자연어",
+          "텍스트 이미지",
+          "플랫폼"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-030": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:DAT-001",
+        "primary_action": "통상수용",
+        "similarity": 0.0738,
+        "overlap_terms": [
+          "데이터 수집",
+          "수집",
+          "데이터",
+          "수집할"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-003",
+        "primary_action": "견적반영",
+        "similarity": 0.1082,
+        "overlap_terms": [
+          "storage",
+          "분산",
+          "인프라를",
+          "고성능",
+          "노드"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:INR-DTL-005",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1214,
+        "overlap_terms": [
+          "gui 기반",
+          "gui",
+          "분산",
+          "병렬",
+          "rdbms"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-031": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-012",
+        "primary_action": "통상수용",
+        "similarity": 0.1067,
+        "overlap_terms": [
+          "데이터",
+          "관리 기능",
+          "기능",
+          "기능 제공",
+          "관리"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:DAR-001",
+        "primary_action": "견적반영",
+        "similarity": 0.0853,
+        "overlap_terms": [
+          "데이터",
+          "데이터 수집",
+          "수집",
+          "데이터를",
+          "관리할"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:INR-DTL-005",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1152,
+        "overlap_terms": [
+          "gui",
+          "제공 데이터",
+          "테이블",
+          "저장",
+          "데이터"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-032": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-006",
+        "primary_action": "통상수용",
+        "similarity": 0.1085,
+        "overlap_terms": [
+          "수집",
+          "데이터",
+          "가능한 데이터",
+          "관리기능",
+          "오류"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-029",
+        "primary_action": "견적반영",
+        "similarity": 0.1124,
+        "overlap_terms": [
+          "있어야",
+          "데이터를",
+          "있는 기능을",
+          "환경",
+          "기능을"
+        ]
+      },
+      {
+        "requirement_uid": "incheon_airport_digital_work:SFR-001",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1274,
+        "overlap_terms": [
+          "데이터에 대한",
+          "데이터에",
+          "사용자가",
+          "데이터를",
+          "접근"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-033": [
+      {
+        "requirement_uid": "mfds_drug_ai_review:SFR-046",
+        "primary_action": "통상수용",
+        "similarity": 0.1137,
+        "overlap_terms": [
+          "학습데이터셋",
+          "질의응답",
+          "ai 모델",
+          "기능",
+          "이용하여"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-002",
+        "primary_action": "견적반영",
+        "similarity": 0.0747,
+        "overlap_terms": [
+          "이미지",
+          "유형별",
+          "기본",
+          "기능",
+          "텍스트"
+        ]
+      },
+      {
+        "requirement_uid": "kangwon_land_genai:SFR-001",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0767,
+        "overlap_terms": [
+          "모델을",
+          "완료된",
+          "모델로",
+          "기본",
+          "생성형"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-034": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-012",
+        "primary_action": "통상수용",
+        "similarity": 0.1023,
+        "overlap_terms": [
+          "기능 제공",
+          "제공",
+          "기능",
+          "관리 기능",
+          "데이터"
+        ]
+      },
+      {
+        "requirement_uid": "genai_incident_response:SER-001",
+        "primary_action": "견적반영",
+        "similarity": 0.1482,
+        "overlap_terms": [
+          "비식별 처리",
+          "비식별",
+          "처리",
+          "가명화",
+          "개인정보"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SER-009",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1401,
+        "overlap_terms": [
+          "가명처리",
+          "비식별화",
+          "개인정보 비식별화",
+          "마스킹",
+          "개인정보"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-035": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:DAT-001",
+        "primary_action": "통상수용",
+        "similarity": 0.0693,
+        "overlap_terms": [
+          "데이터 수집",
+          "데이터",
+          "수집",
+          "db",
+          "업무"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-003",
+        "primary_action": "견적반영",
+        "similarity": 0.1227,
+        "overlap_terms": [
+          "스토리지",
+          "연산",
+          "구성해야",
+          "분산",
+          "고성능"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:INR-DTL-005",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1174,
+        "overlap_terms": [
+          "분산",
+          "형식의",
+          "저장된",
+          "플랫폼",
+          "가용성"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-036": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-013",
+        "primary_action": "통상수용",
+        "similarity": 0.0851,
+        "overlap_terms": [
+          "기능",
+          "자동",
+          "필요한",
+          "자동 생성",
+          "기능 제공"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-029",
+        "primary_action": "견적반영",
+        "similarity": 0.1868,
+        "overlap_terms": [
+          "제공해야",
+          "지원해야",
+          "ide",
+          "있어야",
+          "vscode"
+        ]
+      },
+      {
+        "requirement_uid": "incheon_airport_digital_work:SFR-001",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1061,
+        "overlap_terms": [
+          "사용자가",
+          "플랫폼 내에서",
+          "플랫폼",
+          "학습",
+          "활용한"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-037": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-012",
+        "primary_action": "통상수용",
+        "similarity": 0.0911,
+        "overlap_terms": [
+          "기능 제공",
+          "기능",
+          "제공",
+          "관리 기능",
+          "제공 기능"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-029",
+        "primary_action": "견적반영",
+        "similarity": 0.0842,
+        "overlap_terms": [
+          "실험",
+          "모델",
+          "배포",
+          "환경",
+          "개발"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-012",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0899,
+        "overlap_terms": [
+          "llm",
+          "모델",
+          "환경",
+          "롤백",
+          "기능 제공"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-038": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-013",
+        "primary_action": "통상수용",
+        "similarity": 0.0998,
+        "overlap_terms": [
+          "생성된",
+          "기능",
+          "생성 기능",
+          "제공",
+          "생성"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-016",
+        "primary_action": "견적반영",
+        "similarity": 0.107,
+        "overlap_terms": [
+          "코드",
+          "코드 생성",
+          "자연어",
+          "생성된",
+          "생성"
+        ]
+      },
+      {
+        "requirement_uid": "incheon_airport_digital_work:SFR-001",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0853,
+        "overlap_terms": [
+          "자연어",
+          "사용자가",
+          "제공",
+          "기능",
+          "플랫폼"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-039": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-012",
+        "primary_action": "통상수용",
+        "similarity": 0.104,
+        "overlap_terms": [
+          "기능 제공",
+          "기능",
+          "제공",
+          "데이터",
+          "ai"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-029",
+        "primary_action": "견적반영",
+        "similarity": 0.1198,
+        "overlap_terms": [
+          "지원해야",
+          "제공해야",
+          "있도록",
+          "기능을 제공해야",
+          "기능을"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-028",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.14,
+        "overlap_terms": [
+          "인터페이스를 통해",
+          "재학습",
+          "데이터",
+          "인터페이스를",
+          "데이터의"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-040": [
+      {
+        "requirement_uid": "ccrs_ai_platform:SER-008",
+        "primary_action": "통상수용",
+        "similarity": 0.0799,
+        "overlap_terms": [
+          "모델",
+          "모델의",
+          "다운로드한 모델의",
+          "다운로드한",
+          "등록"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:PSR-004",
+        "primary_action": "견적반영",
+        "similarity": 0.0812,
+        "overlap_terms": [
+          "ai 모델",
+          "모델",
+          "업데이트",
+          "모델의",
+          "ai"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-012",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0829,
+        "overlap_terms": [
+          "모델을",
+          "모델",
+          "있는",
+          "있는 기능",
+          "조회"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-041": [
+      {
+        "requirement_uid": "korail_genai_isp_ismp:CSR-003",
+        "primary_action": "통상수용",
+        "similarity": 0.0665,
+        "overlap_terms": [
+          "프로세스",
+          "예상",
+          "성능",
+          "간의",
+          "분석"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-029",
+        "primary_action": "견적반영",
+        "similarity": 0.168,
+        "overlap_terms": [
+          "지원해야",
+          "시각화하여",
+          "제공해야",
+          "모델",
+          "있는 기능을"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-028",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0962,
+        "overlap_terms": [
+          "인터페이스를",
+          "모델",
+          "지원해야",
+          "모델의",
+          "학습"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-042": [
+      {
+        "requirement_uid": "ccrs_ai_platform:SER-008",
+        "primary_action": "통상수용",
+        "similarity": 0.1397,
+        "overlap_terms": [
+          "반입",
+          "외부에서",
+          "모델",
+          "신청",
+          "모델의"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:PSR-004",
+        "primary_action": "견적반영",
+        "similarity": 0.1178,
+        "overlap_terms": [
+          "ai 모델",
+          "모델",
+          "튜닝",
+          "파이프라인",
+          "재학습"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-003",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1114,
+        "overlap_terms": [
+          "파이프라인",
+          "조회",
+          "모델",
+          "모델 등록",
+          "파이프라인 단계별"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-043": [
+      {
+        "requirement_uid": "ccrs_ai_platform:QUR-001",
+        "primary_action": "통상수용",
+        "similarity": 0.0831,
+        "overlap_terms": [
+          "제공해야",
+          "ai플랫폼",
+          "파라미터",
+          "관리",
+          "시간"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-029",
+        "primary_action": "견적반영",
+        "similarity": 0.1158,
+        "overlap_terms": [
+          "지원해야",
+          "환경을",
+          "제공해야",
+          "성능 지표",
+          "기능을 제공해야"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-012",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0937,
+        "overlap_terms": [
+          "자원",
+          "동적",
+          "학습",
+          "설정",
+          "최대"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-044": [
+      {
+        "requirement_uid": "ccrs_ai_platform:SER-008",
+        "primary_action": "통상수용",
+        "similarity": 0.1255,
+        "overlap_terms": [
+          "관리 모델",
+          "모델",
+          "반입",
+          "모델의",
+          "지원해야"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-029",
+        "primary_action": "견적반영",
+        "similarity": 0.1577,
+        "overlap_terms": [
+          "지원해야",
+          "모델",
+          "제공해야",
+          "기능을 제공해야",
+          "기능을"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-003",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0963,
+        "overlap_terms": [
+          "모델",
+          "버전",
+          "전환",
+          "소스",
+          "모델 등록"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-045": [
+      {
+        "requirement_uid": "ccrs_ai_platform:INR-001",
+        "primary_action": "통상수용",
+        "similarity": 0.0798,
+        "overlap_terms": [
+          "연동",
+          "api",
+          "기반 연동",
+          "기반",
+          "브라우저"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-029",
+        "primary_action": "견적반영",
+        "similarity": 0.1338,
+        "overlap_terms": [
+          "실험",
+          "ide",
+          "코드",
+          "모델",
+          "테스트"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-012",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1048,
+        "overlap_terms": [
+          "보고서 생성",
+          "모델",
+          "추론",
+          "자원",
+          "보고서"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-046": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-006",
+        "primary_action": "통상수용",
+        "similarity": 0.1178,
+        "overlap_terms": [
+          "데이터 수집",
+          "수집",
+          "수집 기능",
+          "데이터",
+          "상태"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-008",
+        "primary_action": "견적반영",
+        "similarity": 0.1269,
+        "overlap_terms": [
+          "피드백",
+          "피드백을",
+          "제공 피드백",
+          "평가",
+          "개선"
+        ]
+      },
+      {
+        "requirement_uid": "genai_incident_response:QUR-001",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0774,
+        "overlap_terms": [
+          "피드백",
+          "지표",
+          "모니터링",
+          "개선",
+          "결과"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-047": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:SER-007",
+        "primary_action": "통상수용",
+        "similarity": 0.0843,
+        "overlap_terms": [
+          "로그",
+          "제공",
+          "ai",
+          "조회",
+          "있는"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-029",
+        "primary_action": "견적반영",
+        "similarity": 0.1207,
+        "overlap_terms": [
+          "지원해야",
+          "모델",
+          "있어야",
+          "배포",
+          "기능을"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-028",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1064,
+        "overlap_terms": [
+          "있어야",
+          "모델",
+          "모델의",
+          "완료된",
+          "배포"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-048": [
+      {
+        "requirement_uid": "ccrs_ai_platform:INR-001",
+        "primary_action": "통상수용",
+        "similarity": 0.0746,
+        "overlap_terms": [
+          "rest",
+          "지원해야",
+          "환경을",
+          "구축해야",
+          "제공해야"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-029",
+        "primary_action": "견적반영",
+        "similarity": 0.1531,
+        "overlap_terms": [
+          "지원해야",
+          "배포",
+          "있어야",
+          "환경을 제공해야",
+          "shadow"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-012",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1057,
+        "overlap_terms": [
+          "모델을",
+          "모델",
+          "추론",
+          "버전",
+          "배포"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-049": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-012",
+        "primary_action": "통상수용",
+        "similarity": 0.1229,
+        "overlap_terms": [
+          "기능",
+          "데이터 관리",
+          "제공",
+          "검색",
+          "문서"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:SER-001",
+        "primary_action": "견적반영",
+        "similarity": 0.0991,
+        "overlap_terms": [
+          "답변",
+          "검색",
+          "doc",
+          "ui를",
+          "요약"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:INR-DTL-005",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1147,
+        "overlap_terms": [
+          "ocr",
+          "모듈",
+          "기능",
+          "공유",
+          "저장"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-050": [
+      {
+        "requirement_uid": "mfds_drug_ai_review:SFR-046",
+        "primary_action": "통상수용",
+        "similarity": 0.0608,
+        "overlap_terms": [
+          "이용하여",
+          "기능",
+          "학습을",
+          "위한",
+          "있는"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-029",
+        "primary_action": "견적반영",
+        "similarity": 0.074,
+        "overlap_terms": [
+          "환경을",
+          "환경에",
+          "컨테이너",
+          "설정할",
+          "시각화하여"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:INR-DTL-005",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0762,
+        "overlap_terms": [
+          "컨테이너",
+          "json",
+          "기능",
+          "알고리즘",
+          "수행을"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-051": [
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-005",
+        "primary_action": "통상수용",
+        "similarity": 0.086,
+        "overlap_terms": [
+          "신뢰도",
+          "표시",
+          "기능",
+          "임계값",
+          "생성을"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-007",
+        "primary_action": "견적반영",
+        "similarity": 0.1118,
+        "overlap_terms": [
+          "조정",
+          "프롬프트",
+          "기능",
+          "대화",
+          "조회"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-012",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1394,
+        "overlap_terms": [
+          "모델",
+          "모델을",
+          "추론",
+          "다운로드",
+          "설정"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-052": [
+      {
+        "requirement_uid": "ccrs_ai_platform:SER-008",
+        "primary_action": "통상수용",
+        "similarity": 0.1427,
+        "overlap_terms": [
+          "반입",
+          "패키지",
+          "외부에서",
+          "신청",
+          "모델"
+        ]
+      },
+      {
+        "requirement_uid": "mfds_drug_ai_review:SFR-001",
+        "primary_action": "견적반영",
+        "similarity": 0.0735,
+        "overlap_terms": [
+          "모델 정보",
+          "기능 개발",
+          "사용자 인터페이스",
+          "기능",
+          "개발"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-012",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0951,
+        "overlap_terms": [
+          "로컬",
+          "반입",
+          "패키지",
+          "모델",
+          "자원"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-053": [
+      {
+        "requirement_uid": "ccrs_ai_platform:SER-010",
+        "primary_action": "통상수용",
+        "similarity": 0.1171,
+        "overlap_terms": [
+          "취약점",
+          "취약점 점검",
+          "점검",
+          "적용",
+          "서비스"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-002",
+        "primary_action": "견적반영",
+        "similarity": 0.0402,
+        "overlap_terms": [
+          "오픈소스",
+          "기능",
+          "승인",
+          "대한",
+          "다양한"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:SEC-006",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.076,
+        "overlap_terms": [
+          "취약점",
+          "취약점 점검",
+          "점검",
+          "대한 취약점",
+          "라이브러리"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-054": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-012",
+        "primary_action": "통상수용",
+        "similarity": 0.1327,
+        "overlap_terms": [
+          "기능 제공",
+          "제공",
+          "기능",
+          "관리 기능",
+          "사용자"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-004",
+        "primary_action": "견적반영",
+        "similarity": 0.1359,
+        "overlap_terms": [
+          "클러스터",
+          "작업",
+          "모니터링",
+          "상태",
+          "운영"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:INR-DTL-005",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1633,
+        "overlap_terms": [
+          "모니터링 기능",
+          "기능 제공",
+          "제공 데이터",
+          "클러스터",
+          "대용량 데이터"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-055": [
+      {
+        "requirement_uid": "ccrs_ai_platform:CNR-001",
+        "primary_action": "통상수용",
+        "similarity": 0.0571,
+        "overlap_terms": [
+          "제시하여야",
+          "방안을 제시하여야",
+          "ai",
+          "방안을",
+          "위한"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-029",
+        "primary_action": "견적반영",
+        "similarity": 0.0826,
+        "overlap_terms": [
+          "있어야",
+          "jupyter",
+          "cpu gpu",
+          "vscode",
+          "제공해야"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:INR-DTL-005",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.078,
+        "overlap_terms": [
+          "컨테이너",
+          "다양한",
+          "python",
+          "위한",
+          "ai"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-056": [
+      {
+        "requirement_uid": "ccrs_ai_platform:CNR-001",
+        "primary_action": "통상수용",
+        "similarity": 0.0637,
+        "overlap_terms": [
+          "제시하여야",
+          "프로세스",
+          "방안을 제시하여야",
+          "방안을",
+          "분석"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:SYS-004",
+        "primary_action": "견적반영",
+        "similarity": 0.0805,
+        "overlap_terms": [
+          "도구",
+          "제안하여야",
+          "포함하여",
+          "위한",
+          "데이터"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:INR-DTL-005",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0822,
+        "overlap_terms": [
+          "컨테이너",
+          "작업",
+          "다양한",
+          "python",
+          "위한"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-057": [
+      {
+        "requirement_uid": "kexim_ai_platform:ECR-003",
+        "primary_action": "통상수용",
+        "similarity": 0.0457,
+        "overlap_terms": [
+          "권한이",
+          "설정",
+          "관리"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-029",
+        "primary_action": "견적반영",
+        "similarity": 0.0496,
+        "overlap_terms": [
+          "프로젝트별",
+          "관리자가",
+          "cpu",
+          "저장소",
+          "있는"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-012",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0791,
+        "overlap_terms": [
+          "gpu cpu",
+          "gpu",
+          "클라우드",
+          "설정",
+          "플랫폼"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-058": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-012",
+        "primary_action": "통상수용",
+        "similarity": 0.0765,
+        "overlap_terms": [
+          "제공 기능",
+          "기능",
+          "제공",
+          "관리",
+          "데이터"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SER-005",
+        "primary_action": "견적반영",
+        "similarity": 0.1075,
+        "overlap_terms": [
+          "자원",
+          "논리적",
+          "격리",
+          "제한",
+          "화이트리스트"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-012",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1365,
+        "overlap_terms": [
+          "자원",
+          "gpu",
+          "환경 설정",
+          "할당",
+          "설정"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-059": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-012",
+        "primary_action": "통상수용",
+        "similarity": 0.0828,
+        "overlap_terms": [
+          "제공",
+          "기능 제공",
+          "기능",
+          "정보 제공",
+          "관리 기능"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-004",
+        "primary_action": "견적반영",
+        "similarity": 0.0992,
+        "overlap_terms": [
+          "모니터링",
+          "사용량을",
+          "자원",
+          "조회",
+          "k8s"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-012",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.143,
+        "overlap_terms": [
+          "할당",
+          "자원",
+          "자원 할당",
+          "클라우드",
+          "대시보드 제공"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-060": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-012",
+        "primary_action": "통상수용",
+        "similarity": 0.1446,
+        "overlap_terms": [
+          "관리 기능",
+          "기능 제공",
+          "제공",
+          "기능",
+          "제공 사용자"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-011",
+        "primary_action": "견적반영",
+        "similarity": 0.0806,
+        "overlap_terms": [
+          "서비스",
+          "템플릿",
+          "목록",
+          "기능 제공",
+          "기능"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-012",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1296,
+        "overlap_terms": [
+          "서비스",
+          "설정",
+          "레지스트리",
+          "제공",
+          "자원"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-061": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-012",
+        "primary_action": "통상수용",
+        "similarity": 0.1117,
+        "overlap_terms": [
+          "관리 기능",
+          "기능 제공",
+          "제공",
+          "기능",
+          "관리"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-029",
+        "primary_action": "견적반영",
+        "similarity": 0.1105,
+        "overlap_terms": [
+          "컨테이너 이미지",
+          "지표",
+          "컨테이너",
+          "레지스트리",
+          "배포"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-012",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1358,
+        "overlap_terms": [
+          "컨테이너",
+          "레지스트리",
+          "자원",
+          "gpu cpu",
+          "gpu"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-062": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-012",
+        "primary_action": "통상수용",
+        "similarity": 0.0977,
+        "overlap_terms": [
+          "제공",
+          "정보 제공",
+          "정보",
+          "관리",
+          "기능 제공"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-003",
+        "primary_action": "견적반영",
+        "similarity": 0.1043,
+        "overlap_terms": [
+          "스토리지",
+          "gpu",
+          "네트워크",
+          "인프라를",
+          "인프라"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-012",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1126,
+        "overlap_terms": [
+          "gpu",
+          "설정",
+          "클라우드",
+          "동적",
+          "통합 관리"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-063": [
+      {
+        "requirement_uid": "korail_genai_isp_ismp:CSR-003",
+        "primary_action": "통상수용",
+        "similarity": 0.0817,
+        "overlap_terms": [
+          "시스템에서",
+          "현황",
+          "사용 현황",
+          "대역폭",
+          "확인"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-004",
+        "primary_action": "견적반영",
+        "similarity": 0.1402,
+        "overlap_terms": [
+          "상태",
+          "gpu",
+          "모니터링",
+          "알람",
+          "상태 조회"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-012",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1222,
+        "overlap_terms": [
+          "gpu",
+          "자원",
+          "할당",
+          "동적",
+          "대시보드"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-064": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:SER-007",
+        "primary_action": "통상수용",
+        "similarity": 0.1527,
+        "overlap_terms": [
+          "로그",
+          "제공",
+          "이력",
+          "서비스",
+          "관리"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-009",
+        "primary_action": "견적반영",
+        "similarity": 0.111,
+        "overlap_terms": [
+          "트리거",
+          "변경",
+          "대시보드 제공",
+          "대시보드",
+          "시각화"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-012",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1294,
+        "overlap_terms": [
+          "자원",
+          "서비스",
+          "클라우드",
+          "제공",
+          "다운로드"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-065": [
+      {
+        "requirement_uid": "korail_genai_isp_ismp:CSR-003",
+        "primary_action": "통상수용",
+        "similarity": 0.0579,
+        "overlap_terms": [
+          "대역폭",
+          "현황",
+          "사용 현황",
+          "예상",
+          "하드웨어"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:ECR-004",
+        "primary_action": "견적반영",
+        "similarity": 0.125,
+        "overlap_terms": [
+          "재시작",
+          "gpu",
+          "장애",
+          "상태",
+          "클러스터"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-012",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1374,
+        "overlap_terms": [
+          "gpu",
+          "알림",
+          "장애",
+          "알림 장애",
+          "클라우드"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-066": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-012",
+        "primary_action": "통상수용",
+        "similarity": 0.0628,
+        "overlap_terms": [
+          "제공",
+          "기능 제공",
+          "사용자",
+          "기능"
+        ]
+      },
+      {
+        "requirement_uid": "incheon_airport_digital_work:SER-008",
+        "primary_action": "견적반영",
+        "similarity": 0.0508,
+        "overlap_terms": [
+          "접속",
+          "사용자",
+          "기능 제공",
+          "기능",
+          "제공"
+        ]
+      },
+      {
+        "requirement_uid": "incheon_airport_digital_work:SFR-001",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.061,
+        "overlap_terms": [
+          "로그인이",
+          "사용자가",
+          "사용자",
+          "제공",
+          "통해"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:SFR-067": [
+      {
+        "requirement_uid": "kac_ai_work_platform:SER-003",
+        "primary_action": "통상수용",
+        "similarity": 0.1055,
+        "overlap_terms": [
+          "접속",
+          "ip",
+          "비밀번호",
+          "않는",
+          "사용자"
+        ]
+      },
+      {
+        "requirement_uid": "incheon_airport_digital_work:SER-008",
+        "primary_action": "견적반영",
+        "similarity": 0.1337,
+        "overlap_terms": [
+          "접속",
+          "계정",
+          "ip",
+          "사용자",
+          "비밀번호"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-001",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0741,
+        "overlap_terms": [
+          "포털",
+          "단일",
+          "사용자",
+          "공지사항",
+          "할당"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:PER-001": [
+      {
+        "requirement_uid": "ccrs_ai_platform:CNR-001",
+        "primary_action": "통상수용",
+        "similarity": 0.0868,
+        "overlap_terms": [
+          "제시하여야",
+          "방안을",
+          "방안을 제시하여야",
+          "사용자",
+          "일정"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:PMR-004",
+        "primary_action": "견적반영",
+        "similarity": 0.0904,
+        "overlap_terms": [
+          "방안을",
+          "일정",
+          "도구",
+          "고려한",
+          "개발"
+        ]
+      },
+      {
+        "requirement_uid": "korail_genai_isp_ismp:SER-001",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1072,
+        "overlap_terms": [
+          "제시하여야",
+          "방안을 제시하여야",
+          "방안을",
+          "수준",
+          "대하여"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:PER-002": [
+      {
+        "requirement_uid": "korail_genai_isp_ismp:DAR-006",
+        "primary_action": "통상수용",
+        "similarity": 0.08,
+        "overlap_terms": [
+          "제시",
+          "데이터"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:PMR-004",
+        "primary_action": "견적반영",
+        "similarity": 0.0485,
+        "overlap_terms": [
+          "제시하고",
+          "대비",
+          "요구사항",
+          "업무",
+          "상세"
+        ]
+      },
+      {
+        "requirement_uid": "incheon_airport_digital_work:SFR-005",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1056,
+        "overlap_terms": [
+          "요청하는",
+          "사용자가 요청하는",
+          "업무",
+          "사용자가",
+          "것을 원칙으로"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:PER-003": [
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-018",
+        "primary_action": "통상수용",
+        "similarity": 0.0728,
+        "overlap_terms": [
+          "사용자가",
+          "사용자가 입력한",
+          "입력한",
+          "입력",
+          "내용을"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:SER-001",
+        "primary_action": "견적반영",
+        "similarity": 0.0601,
+        "overlap_terms": [
+          "사용자가",
+          "내용을",
+          "메시지",
+          "사용자에게",
+          "서비스"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:PER-002",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0779,
+        "overlap_terms": [
+          "3초",
+          "1초",
+          "예외",
+          "메시지",
+          "경우"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:PER-004": [
+      {
+        "requirement_uid": "kac_ai_work_platform:SER-003",
+        "primary_action": "통상수용",
+        "similarity": 0.0474,
+        "overlap_terms": [
+          "페이지"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:DAR-001",
+        "primary_action": "견적반영",
+        "similarity": 0.0321,
+        "overlap_terms": [
+          "되어야",
+          "이미지",
+          "사용"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:PER-002",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1852,
+        "overlap_terms": [
+          "초과하는",
+          "페이지",
+          "3초",
+          "이상의",
+          "시간"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:PER-005": [
+      {
+        "requirement_uid": "ccrs_ai_platform:DAR-004",
+        "primary_action": "통상수용",
+        "similarity": 0.0737,
+        "overlap_terms": [
+          "기준",
+          "존재하는",
+          "기준을",
+          "일관성",
+          "기준은"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:QUR-002",
+        "primary_action": "견적반영",
+        "similarity": 0.1016,
+        "overlap_terms": [
+          "환각률",
+          "근거",
+          "hallucination",
+          "개선",
+          "기준"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:PER-004",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1528,
+        "overlap_terms": [
+          "정확도",
+          "환각률",
+          "rate",
+          "기준",
+          "환각률 hallucination"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:PER-006": [
+      {
+        "requirement_uid": "korail_genai_isp_ismp:CSR-003",
+        "primary_action": "통상수용",
+        "similarity": 0.0548,
+        "overlap_terms": [
+          "시스템과",
+          "시스템과 연계",
+          "사용",
+          "시스템",
+          "성능"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-029",
+        "primary_action": "견적반영",
+        "similarity": 0.0615,
+        "overlap_terms": [
+          "사용자별로",
+          "한다",
+          "환경에서",
+          "환경",
+          "있는"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:COR-005",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0791,
+        "overlap_terms": [
+          "않아야",
+          "시스템과",
+          "한다",
+          "화면",
+          "시스템"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:INR-001": [
+      {
+        "requirement_uid": "ccrs_ai_platform:INR-006",
+        "primary_action": "통상수용",
+        "similarity": 0.1385,
+        "overlap_terms": [
+          "ux",
+          "ui ux",
+          "ui",
+          "사용자",
+          "ui를"
+        ]
+      },
+      {
+        "requirement_uid": "mfds_drug_ai_review:SFR-001",
+        "primary_action": "견적반영",
+        "similarity": 0.0799,
+        "overlap_terms": [
+          "ui",
+          "직관적이고",
+          "ux",
+          "ui ux",
+          "사용자"
+        ]
+      },
+      {
+        "requirement_uid": "mfds_drug_ai_review:COR-008",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0822,
+        "overlap_terms": [
+          "발주기관과",
+          "발주기관과 협의하여",
+          "시스템",
+          "적용",
+          "대한"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:INR-002": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:COR-003",
+        "primary_action": "통상수용",
+        "similarity": 0.2055,
+        "overlap_terms": [
+          "호환성",
+          "브라우저",
+          "브라우저 edge",
+          "다양한 브라우저",
+          "edge chrome"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:PMR-004",
+        "primary_action": "견적반영",
+        "similarity": 0.0586,
+        "overlap_terms": [
+          "방안을",
+          "호환성",
+          "품질",
+          "제시해야",
+          "고려하여"
+        ]
+      },
+      {
+        "requirement_uid": "mfds_drug_ai_review:COR-008",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0906,
+        "overlap_terms": [
+          "고려하여 발주기관과",
+          "발주기관과",
+          "고려하여",
+          "적용",
+          "따른"
+        ]
+      }
+    ],
+    "defense_intelligent_platform:INR-003": [
+      {
+        "requirement_uid": "mfds_drug_ai_review:SFR-002",
+        "primary_action": "통상수용",
+        "similarity": 0.028,
+        "overlap_terms": [
+          "제공하는",
+          "기능을"
+        ]
+      },
+      {
+        "requirement_uid": "kac_ai_work_platform:GW-015",
+        "primary_action": "견적반영",
+        "similarity": 0.0311,
+        "overlap_terms": [
+          "제공하는",
+          "기능을",
+          "사용",
+          "연동"
+        ]
+      },
+      {
+        "requirement_uid": "incheon_airport_digital_work:SFR-007",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0201,
+        "overlap_terms": [
+          "원칙으로"
+        ]
+      }
+    ]
+  },
+  "sample_uids": [
+    "defense_intelligent_platform:ECR-006",
+    "defense_intelligent_platform:ECR-007",
+    "defense_intelligent_platform:ECR-008",
+    "defense_intelligent_platform:ECR-009",
+    "defense_intelligent_platform:ECR-010",
+    "defense_intelligent_platform:ECR-011",
+    "defense_intelligent_platform:ECR-012",
+    "defense_intelligent_platform:ECR-013",
+    "defense_intelligent_platform:ECR-014",
+    "defense_intelligent_platform:ECR-015",
+    "defense_intelligent_platform:ECR-016",
+    "defense_intelligent_platform:ECR-017",
+    "defense_intelligent_platform:ECR-018",
+    "defense_intelligent_platform:ECR-019",
+    "defense_intelligent_platform:ECR-020",
+    "defense_intelligent_platform:ECR-021",
+    "defense_intelligent_platform:ECR-022",
+    "defense_intelligent_platform:ECR-023",
+    "defense_intelligent_platform:ECR-024",
+    "defense_intelligent_platform:ECR-025",
+    "defense_intelligent_platform:ECR-026",
+    "defense_intelligent_platform:ECR-027",
+    "defense_intelligent_platform:ECR-028",
+    "defense_intelligent_platform:ECR-029",
+    "defense_intelligent_platform:SFR-001",
+    "defense_intelligent_platform:SFR-002",
+    "defense_intelligent_platform:SFR-003",
+    "defense_intelligent_platform:SFR-004",
+    "defense_intelligent_platform:SFR-005",
+    "defense_intelligent_platform:SFR-006",
+    "defense_intelligent_platform:SFR-007",
+    "defense_intelligent_platform:SFR-008",
+    "defense_intelligent_platform:SFR-009",
+    "defense_intelligent_platform:SFR-010",
+    "defense_intelligent_platform:SFR-011",
+    "defense_intelligent_platform:SFR-012",
+    "defense_intelligent_platform:SFR-013",
+    "defense_intelligent_platform:SFR-014",
+    "defense_intelligent_platform:SFR-015",
+    "defense_intelligent_platform:SFR-016",
+    "defense_intelligent_platform:SFR-017",
+    "defense_intelligent_platform:SFR-018",
+    "defense_intelligent_platform:SFR-019",
+    "defense_intelligent_platform:SFR-020",
+    "defense_intelligent_platform:SFR-021",
+    "defense_intelligent_platform:SFR-022",
+    "defense_intelligent_platform:SFR-023",
+    "defense_intelligent_platform:SFR-024",
+    "defense_intelligent_platform:SFR-025",
+    "defense_intelligent_platform:SFR-026",
+    "defense_intelligent_platform:SFR-027",
+    "defense_intelligent_platform:SFR-028",
+    "defense_intelligent_platform:SFR-029",
+    "defense_intelligent_platform:SFR-030",
+    "defense_intelligent_platform:SFR-031",
+    "defense_intelligent_platform:SFR-032",
+    "defense_intelligent_platform:SFR-033",
+    "defense_intelligent_platform:SFR-034",
+    "defense_intelligent_platform:SFR-035",
+    "defense_intelligent_platform:SFR-036",
+    "defense_intelligent_platform:SFR-037",
+    "defense_intelligent_platform:SFR-038",
+    "defense_intelligent_platform:SFR-039",
+    "defense_intelligent_platform:SFR-040",
+    "defense_intelligent_platform:SFR-041",
+    "defense_intelligent_platform:SFR-042",
+    "defense_intelligent_platform:SFR-043",
+    "defense_intelligent_platform:SFR-044",
+    "defense_intelligent_platform:SFR-045",
+    "defense_intelligent_platform:SFR-046",
+    "defense_intelligent_platform:SFR-047",
+    "defense_intelligent_platform:SFR-048",
+    "defense_intelligent_platform:SFR-049",
+    "defense_intelligent_platform:SFR-050",
+    "defense_intelligent_platform:SFR-051",
+    "defense_intelligent_platform:SFR-052",
+    "defense_intelligent_platform:SFR-053",
+    "defense_intelligent_platform:SFR-054",
+    "defense_intelligent_platform:SFR-055",
+    "defense_intelligent_platform:SFR-056",
+    "defense_intelligent_platform:SFR-057",
+    "defense_intelligent_platform:SFR-058",
+    "defense_intelligent_platform:SFR-059",
+    "defense_intelligent_platform:SFR-060",
+    "defense_intelligent_platform:SFR-061",
+    "defense_intelligent_platform:SFR-062",
+    "defense_intelligent_platform:SFR-063",
+    "defense_intelligent_platform:SFR-064",
+    "defense_intelligent_platform:SFR-065",
+    "defense_intelligent_platform:SFR-066",
+    "defense_intelligent_platform:SFR-067",
+    "defense_intelligent_platform:PER-001",
+    "defense_intelligent_platform:PER-002",
+    "defense_intelligent_platform:PER-003",
+    "defense_intelligent_platform:PER-004",
+    "defense_intelligent_platform:PER-005",
+    "defense_intelligent_platform:PER-006",
+    "defense_intelligent_platform:INR-001",
+    "defense_intelligent_platform:INR-002",
+    "defense_intelligent_platform:INR-003"
+  ]
+}

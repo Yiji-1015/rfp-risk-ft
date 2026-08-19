@@ -13,14 +13,18 @@
 | `anchor_cand_cq_rep2` | 앵커후보 | 10 | 4.0.0 | claude-rfp-risk-v5 | zero-shot | 0 | 134 |
 | `anchor_cand_cq_rep3` | 앵커후보 | 10 | 4.0.0 | claude-rfp-risk-v5 | zero-shot | 0 | 122 |
 | `pilot_v0.1.0_fewshot_v5` | 파일럿 | 40 | 4.0.0 | claude-rfp-risk-v5 | fewshot-stratified | 0 | 755 |
+| `pilot_v0.1.0_fewshot_v5_rep2` | 파일럿 | 40 | 4.0.0 | claude-rfp-risk-v5 | fewshot-stratified | 0 | 1,152 |
+| `pilot_v0.1.0_fewshot_v5_rep3` | 파일럿 | 40 | 4.0.0 | claude-rfp-risk-v5 | fewshot-stratified | 0 | 1,145 |
 | `pilot_v0.1.0_zeroshot` | 파일럿 | 40 | 2.0.0 | claude-rfp-risk-v2 | zero-shot | 1 | 310 |
 | `pilot_v0.1.0_zeroshot_v3` | 파일럿 | 40 | 3.0.0 | claude-rfp-risk-v3 | zero-shot | 0 | 439 |
 | `pilot_v0.1.0_zeroshot_v4` | 파일럿 | 40 | 4.0.0 | claude-rfp-risk-v4 | zero-shot | 0 | 391 |
 | `pilot_v0.1.0_zeroshot_v5` | 파일럿 | 40 | 4.0.0 | claude-rfp-risk-v5 | zero-shot | 1 | 370 |
+| `pilot_v0.1.0_zeroshot_v5_rep2` | 파일럿 | 40 | 4.0.0 | claude-rfp-risk-v5 | zero-shot | 0 | 545 |
+| `pilot_v0.1.0_zeroshot_v5_rep3` | 파일럿 | 40 | 4.0.0 | claude-rfp-risk-v5 | zero-shot | 0 | 524 |
 | `standard_clause_v0.1.0_zeroshot` | 표준조항 | 50 | 4.0.0 | claude-rfp-risk-v4 | zero-shot | 0 | 353 |
 | `standard_clause_v0.1.0_zeroshot_v5` | 표준조항 | 50 | 4.0.0 | claude-rfp-risk-v5 | zero-shot | 2 | 294 |
 
-**합계 약 3,169원 / 유효 호출 320건**
+**합계 약 6,534원 / 유효 호출 480건**
 
 실패 건은 모두 재개 실행으로 재시도해 최종 성공했다. 위 실패 열은 최초 시도 기준이다.
 
@@ -70,16 +74,46 @@ v2는 `계약·질의검토` 80%로 편중됐다. 사람 확정 11건은 v2→v3
 - 사람 확정 11건 일치: zero-shot 10/11, few-shot 9/11
 - 최대 이동은 `견적반영 → 통상수용` 3건이다. 앵커 풀의 `견적반영` 앵커가 3건뿐이라 기준선이 약한 것이 원인 가설이다.
 
-## 5. 반복 일관성 (§10.2 첫 측정치)
+## 5. 반복 일관성 (Zero-shot vs Few-shot 층화, 40건 3회 실행)
 
-`계약·질의검토` 앵커 후보 10건, zero-shot v5로 3회 실행.
+동일 40건 표본에 대해 `zero-shot` 3회와 `fewshot-stratified` 3회를 실행해 3/3 일치율을 비교했다(결정 23).
 
-| 지표 | 결과 |
-|---|---|
-| 주 라벨 3/3 일치 | **10/10 (100%)** |
-| `blockers` 조합 3/3 일치 | 4/10 (40%) |
+| 필드 | Zero-shot 3/3 일치 | Few-shot 층화 3/3 일치 | 비고 |
+|---|---:|---:|---|
+| **`primary_action`** | 36/40 (**90.0%**) | 37/40 (**92.5%**) | Few-shot이 +2.5%p 더 안정적 |
+| **`blockers`** | 33/40 (**82.5%**) | 27/40 (**67.5%**) | Few-shot에서 세부 범주 분해 흔들림 |
+| **`cost_basis`** | 29/40 (**72.5%**) | 32/40 (**80.0%**) | Few-shot이 +7.5%p 우위 |
+| **`domain_dependency`** | 29/40 (**72.5%**) | 29/40 (**72.5%**) | 동일 |
+| **`build_difficulty`** | 32/40 (**80.0%**) | 37/40 (**92.5%**) | Few-shot이 +12.5%p 우위 |
 
-주 라벨은 안정적이나 세부 분해는 실행마다 달라진다. 보조 축을 학습 타깃으로 쓸 때 감안해야 한다. few-shot의 반복 일관성은 아직 측정하지 않았다.
+### 다수결 기준 전이 행렬 (Zero 다수결 -> Few 다수결)
+
+| Zero \ Few | 통상수용 | 견적반영 | 계약·질의검토 |
+|---|---:|---:|---:|
+| **통상수용** (14) | **14** | 0 | 0 |
+| **견적반영** (10) | 3 | **6** | 1 |
+| **계약·질의검토** (16) | 0 | 1 | **15** |
+
+- 다수결 일치: 35/40 (**87.5%**)
+- 통상수용과 계약·질의검토는 93~100% 견고하게 유지됨
+- `견적반영 → 통상수용` 3건 이동: 앵커 풀의 `견적반영` 앵커(3건) 부족 및 표준 플랫폼 기능 보정 영향
+- `genai_incident_response:SER-004`: Zero-shot은 `견적반영`이었으나 Few-shot은 포괄적 보안 배상 책임을 감지해 `계약·질의검토`로 적절히 격상됨
+- 사람 확정 11건 일치율 (다수결 기준): Zero-shot 10/11 (90.9%), Few-shot 9/11 (81.8%)
+
+### 5.2 100건 앵커 풀 확충 및 재검증 (결정 24, 25)
+
+10개 기관 층화 표본 100건에 대해 3회 일관성 스크리닝(300회 호출)을 수행하여, 81.0%(81건) 만장일치 통과 건을 기존 풀과 통합해 **총 100건(전체의 9.8%) 대형 앵커 풀**을 완성하였다.
+
+| 평가 항목 | 20건 풀 | 23건 풀 | **100건 대형 풀** |
+|---|---:|---:|---:|
+| **앵커 풀 크기** | 20건 | 23건 | **100건 (전체의 9.8%)** |
+| **평균 인출 유사도(Cosine)** | - | 0.0839 | **0.0945 (+12.6% 상승)** |
+| **사람 확정 11건 일치율** | 9/11 (81.8%) | 10/11 (90.9%) | 9/11 (81.8%) |
+| **파일럿 40건 통상수용** | 17건 (42.5%) | 15건 (37.5%) | 16건 (40.0%) |
+| **파일럿 40건 견적반영** | 7건 (17.5%) | 8건 (20.0%) | 7건 (17.5%) |
+| **파일럿 40건 계약·질의검토** | 16건 (40.0%) | 17건 (42.5%) | 17건 (42.5%) |
+
+- 100건 대표 표본 스크리닝 결과, 전체 100건 중 `견적반영`은 25.0%(25건), 핵심 기능(`SFR`) 영역에서는 41.0%(9/22건)로 높은 비중을 차지함을 확인.
 
 ## 6. 운영 관측
 
@@ -109,8 +143,11 @@ v2 실행에서 `requirement_uid` 에코 불일치 1건이 발생했다(재시�
 | 경로 | 내용 |
 |---|---|
 | `reports/current/claude_runs/*/` | 실행별 manifest와 results.jsonl |
-| `data/anchors/anchor_pool_v1.jsonl` | 앵커 풀 v1 (20건, 결정 22) |
+| `data/anchors/anchor_pool_v1.jsonl` | 100건 대형 앵커 풀 (결정 25, SHA-256: `eda3c8c7...`) |
+| `data/samples/anchor_pool_100_candidates_v0.1.0.jsonl` | 10개 기관 층화 표집 100건 후보군 |
+| `data/samples/labeling_pilot_sample_v0.1.0.jsonl` | 파일럿 표본 40건 |
 | `data/samples/standard_clause_sample_v0.1.0.jsonl` | 표준 조항 표본 50건 |
-| `data/samples/anchor_candidates_cq.jsonl` | 앵커 후보 10건 |
-| `data/review/label_shift_v2_to_v3.md` | 사람 검토용 변경 12건 시트 |
-| `rfp-risk-ft-claude-review/analysis/` | 실무자 검토 기록 (결정 21의 근거) |
+| `data/samples/anchor_candidates_quote.jsonl` | 견적반영 후보 6건 |
+| `scripts/labeling/analyze_consistency.py` | 반복 일치율 분석 스크립트 |
+| `scripts/labeling/compare_100_pool.py` | 100건 풀 비교 분석 스크립트 |
+
