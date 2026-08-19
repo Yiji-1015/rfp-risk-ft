@@ -61,7 +61,7 @@ def build_batch_requests(
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     requests = []
     traces = {}
-    tool_schema = LabelResult.model_json_schema()
+    label_schema = LabelResult.model_json_schema()
 
     for r in samples:
         uid = r["requirement_uid"]
@@ -87,7 +87,12 @@ def build_batch_requests(
             "model": DEFAULT_MODEL,
             "max_tokens": 16000,
             "thinking": {"type": "adaptive"},
-            "output_config": {"effort": "medium"},
+            "output_config": {
+                "effort": "medium",
+                # 동기 실행(messages.parse)과 같은 메커니즘을 쓴다. tool use로 우회하면
+                # 모델이 받는 과제 프레이밍이 달라져 같은 데이터셋 안에 두 방식이 섞인다.
+                "format": {"type": "json_schema", "schema": label_schema},
+            },
             "system": [
                 {
                     "type": "text",
@@ -96,14 +101,6 @@ def build_batch_requests(
                 }
             ],
             "messages": [{"role": "user", "content": user_content}],
-            "tools": [
-                {
-                    "name": "record_label",
-                    "description": "Record structured RFP requirement risk and pricing labeling",
-                    "input_schema": tool_schema,
-                }
-            ],
-            "tool_choice": {"type": "tool", "name": "record_label"},
         }
 
         # Anthropic custom_id pattern: ^[a-zA-Z0-9_-]{1,64}$
@@ -217,12 +214,12 @@ def cmd_download(args: argparse.Namespace) -> None:
 
             if res_type == "succeeded":
                 message = result.result.message
-                tool_calls = [
-                    c for c in message.content if getattr(c, "type", "") == "tool_use" and c.name == "record_label"
+                # output_config.format을 쓰면 응답은 text 블록에 순수 JSON으로 온다.
+                text_blocks = [
+                    c.text for c in message.content if getattr(c, "type", "") == "text"
                 ]
-                if tool_calls:
-                    label_data = tool_calls[0].input
-                    label_obj = LabelResult.model_validate(label_data)
+                if text_blocks:
+                    label_obj = LabelResult.model_validate_json(text_blocks[0])
                     record = {
                         "requirement_uid": uid,
                         "status": "ok",
@@ -238,7 +235,7 @@ def cmd_download(args: argparse.Namespace) -> None:
                     out_f.write(json.dumps(record, ensure_ascii=False) + "\n")
                     success_count += 1
                 else:
-                    out_f.write(json.dumps({"requirement_uid": uid, "status": "error", "error": "No tool call found"}, ensure_ascii=False) + "\n")
+                    out_f.write(json.dumps({"requirement_uid": uid, "status": "error", "error": "구조화 출력 text 블록 없음"}, ensure_ascii=False) + "\n")
                     error_count += 1
             else:
                 err_msg = str(getattr(result.result, "error", "Batch item failed"))
