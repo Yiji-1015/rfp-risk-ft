@@ -39,6 +39,8 @@ from scripts.labeling.claude_client import (
     SYSTEM_PROMPT,
     render_anchor_block,
 )
+from pydantic import ValidationError
+
 from scripts.labeling.label_schema import LabelResult
 
 DEFAULT_ANCHOR_POOL = ROOT / "data" / "anchors" / "anchor_pool_v3.jsonl"
@@ -218,8 +220,24 @@ def cmd_download(args: argparse.Namespace) -> None:
                 text_blocks = [
                     c.text for c in message.content if getattr(c, "type", "") == "text"
                 ]
-                if text_blocks:
-                    label_obj = LabelResult.model_validate_json(text_blocks[0])
+                # 한 건의 스키마 위반이 전체 다운로드를 중단시키면 안 된다.
+                # API 호출은 이미 과금됐으므로 실패 건도 원문과 함께 기록해
+                # 재시도와 원인 분석이 가능하게 한다.
+                failure = None
+                label_obj = None
+                if not text_blocks:
+                    failure = ("EmptyOutput", "구조화 출력 text 블록 없음", "")
+                else:
+                    try:
+                        label_obj = LabelResult.model_validate_json(text_blocks[0])
+                    except ValidationError as exc:
+                        failure = (
+                            "ValidationError",
+                            " ".join(str(exc).split())[:400],
+                            text_blocks[0][:2000],
+                        )
+
+                if failure is None:
                     record = {
                         "requirement_uid": uid,
                         "status": "ok",
@@ -232,11 +250,18 @@ def cmd_download(args: argparse.Namespace) -> None:
                             "cache_read_input_tokens": getattr(message.usage, "cache_read_input_tokens", 0),
                         },
                     }
-                    out_f.write(json.dumps(record, ensure_ascii=False) + "\n")
                     success_count += 1
                 else:
-                    out_f.write(json.dumps({"requirement_uid": uid, "status": "error", "error": "구조화 출력 text 블록 없음"}, ensure_ascii=False) + "\n")
+                    error_type, error_msg, raw = failure
+                    record = {
+                        "requirement_uid": uid,
+                        "status": "error",
+                        "error_type": error_type,
+                        "error": error_msg,
+                        "raw_output": raw,
+                    }
                     error_count += 1
+                out_f.write(json.dumps(record, ensure_ascii=False) + "\n")
             else:
                 err_msg = str(getattr(result.result, "error", "Batch item failed"))
                 out_f.write(json.dumps({"requirement_uid": uid, "status": "error", "error": err_msg}, ensure_ascii=False) + "\n")
