@@ -8,6 +8,7 @@ EXPECTED_NOTEBOOKS = {
     "00_project_overview.ipynb",
     "01_dataset_pipeline.ipynb",
     "02_labeling_experiment.ipynb",
+    "03_requirements_eda.ipynb",
 }
 
 

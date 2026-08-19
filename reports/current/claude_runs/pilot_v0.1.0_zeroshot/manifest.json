@@ -1,0 +1,18 @@
+{
+  "execute": true,
+  "input": "C:\\Users\\nodap\\Desktop\\portfolio\\rfp-risk-ft\\data\\samples\\labeling_pilot_sample_v0.1.0.jsonl",
+  "sample_count": 40,
+  "strategy": "zero-shot",
+  "schema_version": "2.0.0",
+  "prompt_version": "claude-rfp-risk-v2",
+  "parameters": {
+    "model": "claude-sonnet-5",
+    "effort": "medium",
+    "thinking": "adaptive",
+    "max_tokens": 16000,
+    "cache_ttl": "5m",
+    "timeout_seconds": 120.0,
+    "max_retries": 2,
+    "structured_output": true
+  }
+}

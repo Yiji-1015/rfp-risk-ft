@@ -3,6 +3,8 @@
 import os
 from unittest.mock import patch
 
+import pytest
+
 from scripts.labeling.llm_token_tracker import (
     TokenTracker,
     TokenUsage,
@@ -85,3 +87,22 @@ def test_load_pricing_usd_with_rate_converts_to_krw():
     assert pricing.currency == "KRW"
     assert pricing.input_price_per_1m == 140.0
     assert pricing.output_price_per_1m == 560.0
+
+
+def test_load_pricing_accepts_thousands_separator_in_rate():
+    """환율은 고시값을 그대로 붙여넣기 쉬우므로 '1,416.61' 형태를 허용한다."""
+    env = {
+        "LLM_INPUT_PRICE_PER_1M_USD": "2",
+        "LLM_OUTPUT_PRICE_PER_1M_USD": "10",
+        "USD_KRW_RATE": "1,416.61",
+    }
+    with patch.dict(os.environ, env, clear=True):
+        pricing = load_pricing_from_env()
+    assert pricing.usd_krw_rate == 1416.61
+    assert abs(pricing.input_price_per_1m - 2833.22) < 1e-9
+
+
+def test_load_pricing_rejects_non_numeric_value_with_the_variable_name():
+    with patch.dict(os.environ, {"USD_KRW_RATE": "1400원"}, clear=True):
+        with pytest.raises(ValueError, match="USD_KRW_RATE"):
+            load_pricing_from_env()

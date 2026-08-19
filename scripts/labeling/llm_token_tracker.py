@@ -133,10 +133,21 @@ def _read_int(obj: Any, attr: str, nested_attr: str | None = None) -> int:
 
 
 def _float_env(name: str) -> float:
+    """환경변수를 실수로 읽는다.
+
+    환율과 단가는 고시값을 그대로 붙여넣는 경우가 많아 `1,416.61`처럼
+    천 단위 쉼표가 섞인다. 쉼표와 공백은 제거하고 읽는다.
+    """
     raw = os.getenv(name)
-    if raw is None or raw == "":
+    if raw is None:
         return 0.0
-    return float(raw)
+    cleaned = raw.strip().replace(",", "").replace("_", "")
+    if not cleaned:
+        return 0.0
+    try:
+        return float(cleaned)
+    except ValueError as exc:
+        raise ValueError(f"{name} 값을 숫자로 읽을 수 없습니다: {raw!r}") from exc
 
 
 @dataclass

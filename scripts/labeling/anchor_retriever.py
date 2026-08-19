@@ -3,21 +3,45 @@
 RFP 요구사항 데이터 누수 방지형 Pure TF-IDF 앵커 검색기 (Anchor Retriever)
 
 기능:
-1. Pure TF-IDF (단어 n-gram + 자소/문자 n-gram) 기반 코사인 유사도 연산
+1. Pure TF-IDF (어절 1~2gram + 문자 3~4gram 결합) 기반 코사인 유사도 연산
 2. 🔒 데이터 누수 방지: Target 요구사항과 동일한 document_id의 앵커는 자동으로 계산에서 제외
 3. Top-K 유사 앵커 및 유사도 점수 반환
+4. 층화 검색: 라벨별 1개씩 균형 인출 (결정 14)
+5. 프롬프트 설명용 공통 핵심 어휘 추출 (결정 12)
 """
 
 import sys
-from typing import List, Dict, Any, Tuple
+from typing import Any, Dict, List, Sequence, Tuple
 
 # Windows 콘솔 utf-8 인코딩 대응
 if hasattr(sys.stdout, 'reconfigure'):
     sys.stdout.reconfigure(encoding='utf-8')
 
 import numpy as np
+from scipy.sparse import hstack
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+
+# 결정 9: 어절 n-gram만으로는 한국어 띄어쓰기 변형과 영문 코드(K-RMF, 250TB)를 놓친다.
+WORD_NGRAM_RANGE = (1, 2)
+CHAR_NGRAM_RANGE = (3, 4)
+
+DEFAULT_LABELS = ("통상수용", "견적반영", "계약·질의검토")
+
+RETRIEVER_VERSION = "tfidf-word-char-v1"
+
+
+def retriever_config() -> Dict[str, Any]:
+    """run manifest에 남길 검색기 설정 (§11.15 실행 조건 보존)."""
+    return {
+        "retriever_version": RETRIEVER_VERSION,
+        "word_ngram_range": list(WORD_NGRAM_RANGE),
+        "char_ngram_range": list(CHAR_NGRAM_RANGE),
+        "char_analyzer": "char_wb",
+        "sublinear_tf": True,
+        "similarity": "cosine",
+        "same_document_masking": True,
+    }
 
 
 class PureTfidfAnchorRetriever:
@@ -29,35 +53,76 @@ class PureTfidfAnchorRetriever:
                각 객체는 minimum ['requirement_uid', 'document_id', 'requirement_name', 'raw_requirement_text'] 포함 필수
         """
         self.anchor_pool = anchor_pool
-        
-        # 한국어 특성을 고려해 어절 (1~2gram) 및 문자 (3~4gram) 혼합 TF-IDF 구축
-        self.vectorizer = TfidfVectorizer(
-            ngram_range=(1, 2),
+
+        # 어절 표현: 계약 문구의 어휘 일치를 잡는다.
+        self.word_vectorizer = TfidfVectorizer(
+            ngram_range=WORD_NGRAM_RANGE,
             analyzer='word',
             sublinear_tf=True,  # TF 값의 로그 스케일링으로 지나친 단어 빈도 편향 완화
             min_df=1
         )
-        
+        # 문자 표현: 띄어쓰기 변형, 조사 변화, 영문·숫자 코드를 잡는다.
+        self.char_vectorizer = TfidfVectorizer(
+            ngram_range=CHAR_NGRAM_RANGE,
+            analyzer='char_wb',
+            sublinear_tf=True,
+            min_df=1
+        )
+
         # 앵커 풀 텍스트 표현 결합 (요구사항명 + 본문)
         self.anchor_texts = [
             f"{a.get('requirement_name', '')} {a.get('raw_requirement_text', '')}"
             for a in anchor_pool
         ]
-        
+
         # 앵커 풀 TF-IDF 희소 행렬 계산
+        # 두 블록 각각이 L2 정규화되므로, 결합 벡터의 코사인 유사도는
+        # 어절 유사도와 문자 유사도의 평균과 같다 (가중치 50:50).
         if self.anchor_texts:
-            self.anchor_matrix = self.vectorizer.fit_transform(self.anchor_texts)
+            self.anchor_word_matrix = self.word_vectorizer.fit_transform(self.anchor_texts)
+            self.anchor_char_matrix = self.char_vectorizer.fit_transform(self.anchor_texts)
+            self.anchor_matrix = hstack(
+                [self.anchor_word_matrix, self.anchor_char_matrix]
+            ).tocsr()
         else:
+            self.anchor_word_matrix = None
+            self.anchor_char_matrix = None
             self.anchor_matrix = None
 
+    @staticmethod
+    def _target_text(target_req: Dict[str, Any]) -> str:
+        return (
+            f"{target_req.get('requirement_name', '')} "
+            f"{target_req.get('raw_requirement_text', '')}"
+        )
+
+    def _masked_similarities(self, target_req: Dict[str, Any]) -> np.ndarray:
+        """Target과 앵커 풀의 코사인 유사도. 동일 문서 앵커는 -1.0으로 마스킹."""
+        target_text = self._target_text(target_req)
+        target_vec = hstack(
+            [
+                self.word_vectorizer.transform([target_text]),
+                self.char_vectorizer.transform([target_text]),
+            ]
+        ).tocsr()
+
+        similarities = cosine_similarity(target_vec, self.anchor_matrix)[0]
+
+        # 🔒 [데이터 누수 방지]: Target과 동일한 document_id를 가진 앵커는 유사도를 -1.0으로 마스킹
+        target_doc_id = target_req.get("document_id")
+        for idx, anchor in enumerate(self.anchor_pool):
+            if anchor.get("document_id") == target_doc_id:
+                similarities[idx] = -1.0
+        return similarities
+
     def get_top_k_anchors(
-        self, 
-        target_req: Dict[str, Any], 
+        self,
+        target_req: Dict[str, Any],
         top_k: int = 3
     ) -> List[Tuple[Dict[str, Any], float]]:
         """
         Target 요구사항과 유사한 Top-K 앵커를 검색 (동일 문서 출처 자동 제외)
-        
+
         :param target_req: 검색 대상 요구사항 객체
         :param top_k: 반환할 앵커 개수
         :return: [(anchor_object, similarity_score), ...]
@@ -65,24 +130,12 @@ class PureTfidfAnchorRetriever:
         if self.anchor_matrix is None or len(self.anchor_pool) == 0:
             return []
 
-        target_doc_id = target_req.get("document_id")
-        target_text = f"{target_req.get('requirement_name', '')} {target_req.get('raw_requirement_text', '')}"
-        
-        # 1. Target 텍스트를 TF-IDF 벡터로 변환
-        target_vec = self.vectorizer.transform([target_text])
-        
-        # 2. 앵커 풀 전체와의 코사인 유사도 계산 (1D numpy array)
-        similarities = cosine_similarity(target_vec, self.anchor_matrix)[0]
-        
-        # 3. 🔒 [데이터 누수 방지]: Target과 동일한 document_id를 가진 앵커는 유사도를 -1.0으로 마스킹
-        for idx, anchor in enumerate(self.anchor_pool):
-            if anchor.get("document_id") == target_doc_id:
-                similarities[idx] = -1.0
-                
-        # 4. 유사도 기준 내림차순 정렬
+        similarities = self._masked_similarities(target_req)
+
+        # 유사도 기준 내림차순 정렬
         sorted_indices = np.argsort(similarities)[::-1]
-        
-        # 5. 마스킹되지 않은(유사도 > 0) 상위 top_k 앵커 추출
+
+        # 마스킹되지 않은(유사도 > 0) 상위 top_k 앵커 추출
         results = []
         for idx in sorted_indices:
             score = float(similarities[idx])
@@ -91,53 +144,43 @@ class PureTfidfAnchorRetriever:
             results.append((self.anchor_pool[idx], score))
             if len(results) >= top_k:
                 break
-                
+
         return results
 
     def get_stratified_top_k_anchors(
         self,
         target_req: Dict[str, Any],
-        target_labels: List[str] = None
+        target_labels: Sequence[str] = None
     ) -> List[Tuple[Dict[str, Any], float]]:
         """
         학술 선행연구 기반 층화 퓨샷 검색 (Balanced Stratified Retrieval)
-        
+
         '통상수용', '견적반영', '계약·질의검토' 각 라벨별로 가장 유사한 앵커를 1개씩(총 3개) 균형 추출
-        
+
         :param target_req: 검색 대상 요구사항 객체
         :param target_labels: 뽑아올 라벨 카테고리 리스트 (기본: ['통상수용', '견적반영', '계약·질의검토'])
         :return: [(anchor_object, similarity_score), ...] (라벨당 1개씩 균형 세트)
         """
         if target_labels is None:
-            target_labels = ["통상수용", "견적반영", "계약·질의검토"]
+            target_labels = list(DEFAULT_LABELS)
 
         if self.anchor_matrix is None or len(self.anchor_pool) == 0:
             return []
 
-        target_doc_id = target_req.get("document_id")
-        target_text = f"{target_req.get('requirement_name', '')} {target_req.get('raw_requirement_text', '')}"
-        
-        target_vec = self.vectorizer.transform([target_text])
-        similarities = cosine_similarity(target_vec, self.anchor_matrix)[0]
-
-        # 🔒 동일 document_id 마스킹
-        masked_sims = similarities.copy()
-        for idx, anchor in enumerate(self.anchor_pool):
-            if anchor.get("document_id") == target_doc_id:
-                masked_sims[idx] = -1.0
+        masked_sims = self._masked_similarities(target_req)
 
         # 라벨별 최고 유사도 앵커 1개씩 선별
         stratified_results = []
-        
+
         for label in target_labels:
             best_idx = -1
             best_score = -1.0
-            
+
             for idx, anchor in enumerate(self.anchor_pool):
                 score = masked_sims[idx]
                 if score <= 0:
                     continue
-                
+
                 # 앵커의 라벨 파악
                 anc_label = (
                     anchor.get("primary_action") or
@@ -145,14 +188,14 @@ class PureTfidfAnchorRetriever:
                     anchor.get("few_shot_result", {}).get("primary_action") or
                     anchor.get("pilot_result", {}).get("primary_action")
                 )
-                
+
                 if anc_label == label and score > best_score:
                     best_score = score
                     best_idx = idx
-            
+
             if best_idx != -1:
                 stratified_results.append((self.anchor_pool[best_idx], best_score))
-        
+
         # 만약 특정 라벨의 앵커가 부족하여 3개가 미달인 경우 일반 Top-K로 보충
         if len(stratified_results) < len(target_labels):
             existing_uids = {anc['requirement_uid'] for anc, _ in stratified_results}
@@ -165,3 +208,75 @@ class PureTfidfAnchorRetriever:
                         break
 
         return stratified_results
+
+    def get_overlap_terms(
+        self,
+        target_req: Dict[str, Any],
+        anchor_index: int,
+        top_n: int = 5,
+    ) -> List[str]:
+        """
+        결정 12: 앵커가 왜 인출됐는지 프롬프트에 설명하기 위한 공통 핵심 어휘.
+
+        어절 벡터만 사용한다. 문자 n-gram은 사람이 읽을 수 없는 조각이라
+        프롬프트에 넣으면 오히려 잡음이 된다.
+        """
+        if self.anchor_word_matrix is None:
+            return []
+        if not 0 <= anchor_index < len(self.anchor_pool):
+            return []
+
+        target_vec = self.word_vectorizer.transform([self._target_text(target_req)])
+        anchor_vec = self.anchor_word_matrix[anchor_index]
+
+        # 양쪽 모두에서 비중이 큰 어휘 = 가중치 곱이 큰 어휘
+        shared = target_vec.multiply(anchor_vec).tocoo()
+        if shared.nnz == 0:
+            return []
+
+        vocabulary = self.word_vectorizer.get_feature_names_out()
+        ranked = sorted(zip(shared.col, shared.data), key=lambda item: -item[1])
+        return [str(vocabulary[col]) for col, _ in ranked[:top_n]]
+
+    def retrieve(
+        self,
+        target_req: Dict[str, Any],
+        *,
+        strategy: str,
+        top_k: int = 3,
+        overlap_terms: int = 5,
+    ) -> List[Dict[str, Any]]:
+        """
+        전략별 앵커 인출 결과를 프롬프트·기록용 dict 목록으로 반환한다.
+
+        :param strategy: 'similarity' (결정 13) 또는 'stratified' (결정 14)
+        """
+        if strategy == "similarity":
+            selected = self.get_top_k_anchors(target_req, top_k=top_k)
+        elif strategy == "stratified":
+            selected = self.get_stratified_top_k_anchors(target_req)
+        else:
+            raise ValueError(f"지원하지 않는 앵커 검색 전략: {strategy}")
+
+        index_by_uid = {
+            anchor["requirement_uid"]: idx
+            for idx, anchor in enumerate(self.anchor_pool)
+        }
+        rendered = []
+        for anchor, score in selected:
+            idx = index_by_uid[anchor["requirement_uid"]]
+            rendered.append(
+                {
+                    "requirement_uid": anchor["requirement_uid"],
+                    "document_id": anchor.get("document_id"),
+                    "requirement_name": anchor.get("requirement_name", ""),
+                    "raw_requirement_text": anchor.get("raw_requirement_text", ""),
+                    "primary_action": anchor.get("primary_action"),
+                    "reasoning": anchor.get("reasoning", ""),
+                    "similarity": round(float(score), 4),
+                    "overlap_terms": self.get_overlap_terms(
+                        target_req, idx, top_n=overlap_terms
+                    ),
+                }
+            )
+        return rendered
