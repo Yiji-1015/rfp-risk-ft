@@ -1,0 +1,178 @@
+{
+  "batch_id": "msgbatch_01MoLwxQoqvcYPVR5orNnVBt",
+  "status": "in_progress",
+  "created_at": "2026-08-19T13:09:45.724678+00:00",
+  "request_count": 4,
+  "input_path": "C:\\Users\\nodap\\Desktop\\portfolio\\rfp-risk-ft\\data\\samples\\batch_retry_v0.2.0.jsonl",
+  "anchor_pool_meta": {
+    "path": "C:\\Users\\nodap\\Desktop\\portfolio\\rfp-risk-ft\\data\\anchors\\anchor_pool_v2.jsonl",
+    "pool_version": "anchor_pool_v2",
+    "sha256": "1439f6d950f35ab44ef64268bf6ccb642372e74880c48602706f7121e45a68ca",
+    "total_rows": 100,
+    "reviewed_count": 100,
+    "label_counts": {
+      "견적반영": 25,
+      "계약·질의검토": 31,
+      "통상수용": 44
+    },
+    "document_count": 10,
+    "labels_without_anchor": []
+  },
+  "traces": {
+    "defense_intelligent_platform:INR-004": [
+      {
+        "requirement_uid": "korail_genai_isp_ismp:CSR-003",
+        "primary_action": "통상수용",
+        "similarity": 0.0889,
+        "overlap_terms": [
+          "연동",
+          "여부",
+          "네트워크",
+          "설계",
+          "방안"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:SER-001",
+        "primary_action": "견적반영",
+        "similarity": 0.0758,
+        "overlap_terms": [
+          "상태",
+          "등을 기준으로",
+          "동작 상태",
+          "기준으로",
+          "동작"
+        ]
+      },
+      {
+        "requirement_uid": "korail_genai_isp_ismp:SER-001",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0967,
+        "overlap_terms": [
+          "방안 제시",
+          "제시하여야",
+          "정보보호",
+          "속성",
+          "제시"
+        ]
+      }
+    ],
+    "kangwon_land_genai:SIR-002": [
+      {
+        "requirement_uid": "koen_ai_infrastructure:FUN-013",
+        "primary_action": "통상수용",
+        "similarity": 0.1081,
+        "overlap_terms": [
+          "자동",
+          "문서의",
+          "문서",
+          "사용자",
+          "정보"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-011",
+        "primary_action": "견적반영",
+        "similarity": 0.0717,
+        "overlap_terms": [
+          "자동",
+          "삭제",
+          "연계",
+          "권한",
+          "변경"
+        ]
+      },
+      {
+        "requirement_uid": "kac_ai_work_platform:SER-006",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.1523,
+        "overlap_terms": [
+          "drm",
+          "자동",
+          "복호화",
+          "연동을",
+          "문서"
+        ]
+      }
+    ],
+    "koen_ai_infrastructure:FUN-002": [
+      {
+        "requirement_uid": "korail_genai_isp_ismp:CSR-003",
+        "primary_action": "통상수용",
+        "similarity": 0.0839,
+        "overlap_terms": [
+          "처리",
+          "ai",
+          "서비스가",
+          "업무",
+          "연계"
+        ]
+      },
+      {
+        "requirement_uid": "defense_intelligent_platform:SFR-037",
+        "primary_action": "견적반영",
+        "similarity": 0.1309,
+        "overlap_terms": [
+          "ai",
+          "mcp",
+          "기반 ai",
+          "서비스",
+          "기능"
+        ]
+      },
+      {
+        "requirement_uid": "ccrs_ai_platform:SFR-001",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.101,
+        "overlap_terms": [
+          "ai 서비스",
+          "구조로",
+          "ai",
+          "서비스",
+          "기능"
+        ]
+      }
+    ],
+    "mfds_drug_ai_review:PER-006": [
+      {
+        "requirement_uid": "kangwon_land_genai:TER-001",
+        "primary_action": "통상수용",
+        "similarity": 0.0528,
+        "overlap_terms": [
+          "오류",
+          "있는"
+        ]
+      },
+      {
+        "requirement_uid": "kexim_ai_platform:DAR-001",
+        "primary_action": "견적반영",
+        "similarity": 0.0669,
+        "overlap_terms": [
+          "오류에",
+          "오류",
+          "있도록",
+          "있는",
+          "대한"
+        ]
+      },
+      {
+        "requirement_uid": "kac_ai_work_platform:AIF-001",
+        "primary_action": "계약·질의검토",
+        "similarity": 0.0761,
+        "overlap_terms": [
+          "사용자가",
+          "입력한",
+          "즉시",
+          "입력",
+          "있는"
+        ]
+      }
+    ]
+  },
+  "sample_uids": [
+    "defense_intelligent_platform:INR-004",
+    "kangwon_land_genai:SIR-002",
+    "koen_ai_infrastructure:FUN-002",
+    "mfds_drug_ai_review:PER-006"
+  ]
+}

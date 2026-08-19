@@ -2,7 +2,7 @@
 
 공공 AI·IT 구축 RFP의 요구사항을 추출하고, 제안 견적과 계약 검토가 필요한 조항을 분류하는 연구 프로젝트다.
 
-현재 기준 데이터셋은 10개 RFP에서 추출한 `requirements_v0.2.0`이다. 연구 의사결정 이력은 [`docs/history/`](docs/history/), 전체 방향은 [`docs/PROJECT_DIRECTION.md`](docs/PROJECT_DIRECTION.md)를 따른다.
+현재 기준 데이터셋은 10개 RFP에서 추출한 `requirements_v0.2.0` 1,024건이며, 전수 라벨링이 완료됐다(통상수용 50.3% / 계약·질의검토 26.4% / 견적반영 23.3%). 연구 의사결정 이력은 [`docs/history/`](docs/history/), 전체 방향은 [`docs/PROJECT_DIRECTION.md`](docs/PROJECT_DIRECTION.md)를 따른다.
 
 ## 빠른 시작
 
@@ -38,7 +38,7 @@ python -m scripts.labeling.run_claude_labeling --limit 3 --execute
 python -m scripts.labeling.run_claude_labeling --strategy fewshot-stratified --limit 3
 ```
 
-few-shot 전략은 `data/anchors/anchor_pool_v1.jsonl`의 앵커 풀을 사용한다(20건, 결정 22). 형식은 [`data/anchors/README.md`](data/anchors/README.md)를 따른다. dry-run에서도 풀을 검증하고 실제 주입될 앵커의 라벨 분포를 미리 보여주므로, 유료 실행 전에 앵커 편향을 눈으로 확인할 수 있다.
+few-shot 전략은 `data/anchors/anchor_pool_v2.jsonl`의 동결 앵커 풀을 사용한다(100건, 10개 문서). 풀은 전수 라벨링 전에 확정하며 실행 중 변경하지 않는다. 형식은 [`data/anchors/README.md`](data/anchors/README.md)를 따른다. dry-run에서도 풀을 검증하고 실제 주입될 앵커의 라벨 분포를 미리 보여주므로, 유료 실행 전에 앵커 편향을 눈으로 확인할 수 있다.
 
 ## 디렉터리
 
@@ -62,6 +62,10 @@ few-shot 전략은 `data/anchors/anchor_pool_v1.jsonl`의 앵커 풀을 사용�
 2. `01_dataset_pipeline.ipynb`: 데이터셋 로드와 가벼운 EDA
 3. `02_labeling_experiment.ipynb`: 라벨 검증과 토큰 비용 계산 예제
 4. `03_requirements_eda.ipynb`: 판단 요소, 문맥 의존성, 조건부 유사 사례와 파일럿 커버리지 분석
+5. `04_anchor_pool_analysis.ipynb`: 앵커 풀 구성과 층화 인출 시뮬레이션
+6. `05_execution_mode_comparison.ipynb`: 동기 vs 배치 실행 경로 비교
+
+비교·분석은 스크립트가 아니라 노트북으로 만든다.
 
 ## 라벨 스키마
 
@@ -85,5 +89,7 @@ few-shot 전략은 `data/anchors/anchor_pool_v1.jsonl`의 앵커 풀을 사용�
 - 현재 판단 근거는 `reports/current/`에 둔다.
 - 이전 실험 결과는 삭제하거나 덮어쓰지 않고 `reports/archive/`에 둔다.
 - `.env`, API 키, 캐시, 모델 바이너리는 커밋하지 않는다.
+
+실행 절차는 [`docs/PIPELINE.md`](docs/PIPELINE.md)에 있다. 원본 RFP에서 라벨 데이터셋까지의 단계별 명령, 앵커 풀 구축 조건, 실행 조건 고정 사항, 비용 실측을 담고 있다.
 
 연구 설계와 확정 결정은 `docs/`의 현재 문서를, 데이터 재생성 방법은 [`data/README.md`](data/README.md)를 참고한다.
