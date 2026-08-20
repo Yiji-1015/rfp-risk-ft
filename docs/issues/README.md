@@ -36,6 +36,6 @@
 | [003](003-document-label-imbalance.md) | 문서별 라벨 분포 편차 | 수용 | 결함이 아니라 RFP의 성질. fold 기준선 병기로 대응 |
 | [004](004-execution-path-confounding.md) | 실행 경로 교란 | 수용 | 동기 100건이 한 문서에 몰려 경로 효과를 측정할 수 없다 |
 | [005](005-rare-label-values.md) | 희소 라벨 값 | 미해결 | `외부인증` 3건 등 학습이 불가능한 값이 있다 |
-| [006](006-cross-document-duplication.md) | 문서 간 요구사항 중복 | 완화 | 동일 본문·동일 명칭이 문서를 넘어 반복된다 |
+| [006](006-cross-document-duplication.md) | 문서 간 요구사항 중복 | 미해결 | 12.0%가 다른 문서에 근접중복. 문서 단위 분할로 안 막힌다 |
 | [007](007-missing-deliverable-column.md) | `산출정보` 열 누락 | 수용 | 넣어도 35.5%만 얻고 문서 편중이 심하다 |
 | [008](008-anchor-retrieval-similarity.md) | 앵커 인출 유사도 낮음 | 미해결 | 유사도 중앙값 0.090으로 "유사 사례"가 아니다 |
