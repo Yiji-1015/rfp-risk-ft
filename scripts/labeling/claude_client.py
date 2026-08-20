@@ -77,14 +77,24 @@ build_difficulty: 발주기관이 업무 지식·데이터·정답 기준을 모
 6. requirement_uid는 입력값을 그대로 복사한다.
 """
 
-# 앵커 블록은 입력마다 달라지므로 캐시되는 system 블록이 아니라 user 메시지에 넣는다.
-# system 프롬프트가 전략과 무관하게 동일해야 zero-shot과 few-shot이 통제 비교가 된다.
+# 앵커 블록의 기본 위치는 user 메시지다. 동적 인출은 입력마다 앵커가 달라져서
+# system에 넣으면 캐시 프리픽스가 매 건 깨지고, system이 전략과 무관하게 동일해야
+# zero-shot과 few-shot이 통제 비교가 되기 때문이다(결정 18).
+# 앵커가 고정된 전략만 예외로 system 블록에 실어 캐시한다(결정 29).
 ANCHOR_BLOCK_VERSION = "anchor-block-v1"
+# 고정 앵커는 유사도로 뽑은 것이 아니므로 인출 근거 줄을 붙이지 않는다. 붙이면
+# 사실과 다를 뿐 아니라 대상마다 값이 달라져 캐시 프리픽스가 깨진다(결정 29).
+CONSTANT_ANCHOR_BLOCK_VERSION = "anchor-block-const-v1"
 
 ANCHOR_BLOCK_HEADER = """[참고 사례]
 아래는 다른 기관 RFP에서 이미 검토가 끝난 요구사항과 그 판정이다. 판정 기준의 눈높이를 맞추는 용도로만 쓴다.
 사례와 문구가 비슷해도 제공 주체, 무상 범위, 수량 상한, 검수 기준, 책임 범위가 다르면 판정은 달라야 한다.
 사례의 판정을 그대로 따라가지 말고, 아래 대상 요구사항의 원문에 근거해 판단한다.
+"""
+
+CONSTANT_ANCHOR_BLOCK_HEADER = """[판정 기준 사례]
+아래 세 사례는 모든 요구사항에 동일하게 제시되는 눈금이다. 대상과 유사해서 고른 것이 아니다.
+세 라벨이 각각 어느 수준에서 갈리는지만 참고하고, 판정은 대상 요구사항의 원문에 근거해 내린다.
 """
 
 
@@ -120,13 +130,27 @@ class ClaudeLabelingResult:
     metadata: dict[str, Any]
 
 
-def render_anchor_block(anchors: Sequence[dict[str, Any]]) -> str:
-    """결정 12: 앵커와 함께 인출 근거(유사도·공통 어휘)를 프롬프트에 노출한다."""
-    lines = [ANCHOR_BLOCK_HEADER]
+def render_anchor_block(
+    anchors: Sequence[dict[str, Any]],
+    *,
+    show_retrieval_evidence: bool = True,
+) -> str:
+    """결정 12: 앵커와 함께 인출 근거(유사도·공통 어휘)를 프롬프트에 노출한다.
+
+    :param show_retrieval_evidence: 인출 근거 줄을 붙일지 여부. 고정 앵커는 검색으로
+        뽑은 것이 아니라 유사도·공통 어휘가 의미 없고, 대상마다 값이 달라지면
+        캐시 프리픽스도 깨지므로 False로 둔다(결정 29).
+    """
+    header = ANCHOR_BLOCK_HEADER if show_retrieval_evidence else CONSTANT_ANCHOR_BLOCK_HEADER
+    lines = [header]
     for order, anchor in enumerate(anchors, 1):
-        overlap = ", ".join(anchor.get("overlap_terms") or []) or "없음"
+        if show_retrieval_evidence:
+            overlap = ", ".join(anchor.get("overlap_terms") or []) or "없음"
+            caption = f"사례 {order} (유사도 {anchor.get('similarity', 0):.3f} / 공통 어휘: {overlap})"
+        else:
+            caption = f"사례 {order} (판정 {anchor.get('primary_action', '')})"
         lines.append(
-            f"\n사례 {order} (유사도 {anchor.get('similarity', 0):.3f} / 공통 어휘: {overlap})\n"
+            f"\n{caption}\n"
             f"요구사항명: {anchor.get('requirement_name', '')}\n"
             f"내용: {anchor.get('raw_requirement_text', '')}\n"
             f"판정: {anchor.get('primary_action', '')}\n"
@@ -176,27 +200,45 @@ class ClaudeLabelingClient:
         requirement_name: str,
         requirement_text: str,
         anchors: Sequence[dict[str, Any]] | None = None,
+        cache_anchors: bool = False,
     ) -> ClaudeLabelingResult:
+        """
+        :param cache_anchors: 앵커를 캐시되는 system 블록에 넣을지 여부.
+
+            기본값은 False다. 동적 인출(유사도·층화)은 입력마다 앵커가 달라지므로
+            system에 넣으면 매 건 캐시 프리픽스가 깨진다(결정 18). 앵커가 고정된
+            전략에서만 True로 두면 앵커 블록이 캐시되어 입력 비용의 90%가 빠진다.
+        """
         cache_control = {"type": "ephemeral", "ttl": self.settings.cache_ttl}
         target_block = (
             f"[요구사항 ID]: {requirement_uid}\n"
             f"[요구사항명]: {requirement_name}\n"
             f"[요구사항 내용]:\n{requirement_text}"
         )
-        if anchors:
+        use_system_anchors = bool(anchors) and cache_anchors
+        if use_system_anchors:
+            user_content = f"[대상 요구사항]\n{target_block}"
+        elif anchors:
             user_content = f"{render_anchor_block(anchors)}\n\n[대상 요구사항]\n{target_block}"
         else:
             user_content = target_block
+        # 브레이크포인트를 둘로 나눈다. 기본 프롬프트 블록은 전략과 무관하게 동일하므로
+        # zero-shot 실행과 캐시를 공유하고, 앵커 블록은 그 뒤에서 따로 캐시된다.
+        system_blocks: list[dict[str, Any]] = [
+            {"type": "text", "text": SYSTEM_PROMPT, "cache_control": cache_control}
+        ]
+        if use_system_anchors:
+            system_blocks.append(
+                {
+                    "type": "text",
+                    "text": render_anchor_block(anchors, show_retrieval_evidence=False),
+                    "cache_control": cache_control,
+                }
+            )
         request: dict[str, Any] = {
             "model": self.settings.model,
             "max_tokens": self.settings.max_tokens,
-            "system": [
-                {
-                    "type": "text",
-                    "text": SYSTEM_PROMPT,
-                    "cache_control": cache_control,
-                }
-            ],
+            "system": system_blocks,
             "messages": [{"role": "user", "content": user_content}],
             "output_format": LabelResult,
         }
@@ -235,7 +277,14 @@ class ClaudeLabelingClient:
             "schema_version": SCHEMA_VERSION,
             "prompt_version": PROMPT_VERSION,
             "anchor_count": len(anchors or ()),
-            "anchor_block_version": ANCHOR_BLOCK_VERSION if anchors else None,
+            "anchor_block_version": (
+                None
+                if not anchors
+                else CONSTANT_ANCHOR_BLOCK_VERSION
+                if use_system_anchors
+                else ANCHOR_BLOCK_VERSION
+            ),
+            "anchors_cached_in_system": use_system_anchors,
             "parameters": {
                 "effort": (
                     self.settings.effort

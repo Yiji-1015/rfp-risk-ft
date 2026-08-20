@@ -14,6 +14,7 @@ from typing import Any, Sequence
 from scripts.labeling.anchor_pool import AnchorPoolError, load_anchor_pool
 from scripts.labeling.claude_client import (
     ANCHOR_BLOCK_VERSION,
+    CONSTANT_ANCHOR_BLOCK_VERSION,
     DEFAULT_MODEL,
     HAIKU_MODEL,
     PROMPT_VERSION,
@@ -29,11 +30,17 @@ DEFAULT_ANCHOR_POOL = ROOT / "data" / "anchors" / "anchor_pool_v1.jsonl"
 ZERO_SHOT = "zero-shot"
 FEWSHOT_SIMILARITY = "fewshot-similarity"
 FEWSHOT_STRATIFIED = "fewshot-stratified"
-STRATEGIES = (ZERO_SHOT, FEWSHOT_SIMILARITY, FEWSHOT_STRATIFIED)
+FEWSHOT_GLOBAL = "fewshot-global"
+STRATEGIES = (ZERO_SHOT, FEWSHOT_SIMILARITY, FEWSHOT_STRATIFIED, FEWSHOT_GLOBAL)
 RETRIEVAL_BY_STRATEGY = {
     FEWSHOT_SIMILARITY: "similarity",
     FEWSHOT_STRATIFIED: "stratified",
+    FEWSHOT_GLOBAL: "global",
 }
+
+# 앵커가 입력과 무관하게 고정된 전략만 앵커 블록을 캐시되는 system 블록에 싣는다.
+# 동적 인출은 매 건 앵커가 달라져서 캐시 프리픽스가 깨지므로 넣으면 손해다(결정 29).
+CACHEABLE_ANCHOR_STRATEGIES = frozenset({FEWSHOT_GLOBAL})
 
 
 def _load_retriever_module():
@@ -57,7 +64,8 @@ def build_parser() -> argparse.ArgumentParser:
         default=ZERO_SHOT,
         help=(
             "라벨링 전략. fewshot-similarity는 유사도 Top-k(결정 13), "
-            "fewshot-stratified는 라벨별 1:1:1 층화 인출(결정 14)."
+            "fewshot-stratified는 라벨별 1:1:1 층화 인출(결정 14), "
+            "fewshot-global은 모든 입력에 같은 고정 앵커(결정 28)."
         ),
     )
     parser.add_argument("--anchor-pool", type=Path, default=DEFAULT_ANCHOR_POOL)
@@ -146,9 +154,19 @@ def make_manifest(
     }
     if args.strategy != ZERO_SHOT:
         manifest["anchoring"] = {
-            "anchor_block_version": ANCHOR_BLOCK_VERSION,
+            "anchor_block_version": (
+                CONSTANT_ANCHOR_BLOCK_VERSION
+                if args.strategy in CACHEABLE_ANCHOR_STRATEGIES
+                else ANCHOR_BLOCK_VERSION
+            ),
             "retrieval": RETRIEVAL_BY_STRATEGY[args.strategy],
+            "anchors_cached_in_system": args.strategy in CACHEABLE_ANCHOR_STRATEGIES,
             "top_k": args.anchor_top_k if args.strategy == FEWSHOT_SIMILARITY else 1,
+            "global_anchors": (
+                _load_retriever_module().GLOBAL_ANCHORS
+                if args.strategy == FEWSHOT_GLOBAL
+                else None
+            ),
             "retriever": retriever_config(),
             "anchor_pool": anchor_pool_metadata,
         }
@@ -270,7 +288,7 @@ def _completed_uids(path: Path) -> set[str]:
 def build_retriever(args: argparse.Namespace) -> tuple[Any, dict[str, Any]]:
     """검토완료 앵커만 담은 검색기와 manifest용 풀 메타데이터를 만든다."""
     pool, metadata = load_anchor_pool(args.anchor_pool)
-    if args.strategy == FEWSHOT_STRATIFIED and metadata["labels_without_anchor"]:
+    if args.strategy in (FEWSHOT_STRATIFIED, FEWSHOT_GLOBAL) and metadata["labels_without_anchor"]:
         # 층화 인출이 성립하지 않으면 결정 14가 막으려던 다수 라벨 편향으로 되돌아간다.
         raise AnchorPoolError(
             "층화 인출에 필요한 라벨의 앵커가 없습니다: "
@@ -333,6 +351,7 @@ def execute_run(
                     requirement_name=sample["requirement_name"],
                     requirement_text=sample["raw_requirement_text"],
                     anchors=anchors,
+                    cache_anchors=args.strategy in CACHEABLE_ANCHOR_STRATEGIES,
                 )
                 record = {
                     "status": "ok",

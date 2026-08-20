@@ -37,6 +37,8 @@ from scripts.labeling.claude_client import (
     PROMPT_VERSION,
     SCHEMA_VERSION,
     SYSTEM_PROMPT,
+    ANCHOR_BLOCK_VERSION,
+    CONSTANT_ANCHOR_BLOCK_VERSION,
     render_anchor_block,
 )
 from pydantic import ValidationError
@@ -57,11 +59,18 @@ def get_anthropic_client() -> Any:
     return Anthropic(api_key=api_key)
 
 
+# 앵커가 입력과 무관하게 고정된 인출 방식만 앵커 블록을 캐시되는 system 블록에 싣는다.
+# 동적 인출은 건마다 앵커가 달라져 캐시 프리픽스가 매번 깨지므로 넣으면 손해다(결정 29).
+CACHEABLE_RETRIEVALS = frozenset({"global"})
+
+
 def build_batch_requests(
     samples: list[dict[str, Any]],
     retriever: PureTfidfAnchorRetriever,
+    retrieval: str = "stratified",
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     requests = []
+    cache_anchors = retrieval in CACHEABLE_RETRIEVALS
     traces = {}
     label_schema = LabelResult.model_json_schema()
 
@@ -70,8 +79,7 @@ def build_batch_requests(
         name = r["requirement_name"]
         text = r["raw_requirement_text"]
 
-        # Stratified 1:1:1 anchor retrieval (same-document masked)
-        anchors = retriever.retrieve(r, strategy="stratified")
+        anchors = retriever.retrieve(r, strategy=retrieval)
         traces[uid] = [
             {
                 "requirement_uid": a["requirement_uid"],
@@ -83,7 +91,30 @@ def build_batch_requests(
         ]
 
         target_block = f"[요구사항 ID]: {uid}\n[요구사항명]: {name}\n[요구사항 내용]:\n{text}"
-        user_content = f"{render_anchor_block(anchors)}\n\n[대상 요구사항]\n{target_block}"
+        # 브레이크포인트를 둘로 나눈다. 기본 프롬프트 블록은 인출 방식과 무관하게 동일해서
+        # 다른 전략의 실행과 캐시를 공유하고, 앵커 블록은 그 뒤에서 따로 캐시된다.
+        system_blocks: list[dict[str, Any]] = [
+            {
+                "type": "text",
+                "text": SYSTEM_PROMPT,
+                "cache_control": {"type": "ephemeral", "ttl": "5m"},
+            }
+        ]
+        if cache_anchors:
+            user_content = f"[대상 요구사항]\n{target_block}"
+            system_blocks.append(
+                {
+                    "type": "text",
+                    "text": render_anchor_block(
+                        anchors, show_retrieval_evidence=False
+                    ),
+                    "cache_control": {"type": "ephemeral", "ttl": "5m"},
+                }
+            )
+        else:
+            user_content = (
+                f"{render_anchor_block(anchors)}\n\n[대상 요구사항]\n{target_block}"
+            )
 
         params = {
             "model": DEFAULT_MODEL,
@@ -91,17 +122,11 @@ def build_batch_requests(
             "thinking": {"type": "adaptive"},
             "output_config": {
                 "effort": "medium",
-                # 동기 실행(messages.parse)과 같은 메커니즘을 쓴다. tool use로 우회하면
-                # 모델이 받는 과제 프레이밍이 달라져 같은 데이터셋 안에 두 방식이 섞인다.
+                # 동기 실행(messages.parse)이 내부적으로 만드는 것과 같은 필드다.
+                # 배치에는 SDK 헬퍼가 없으므로 요청 본문에 직접 넣는다.
                 "format": {"type": "json_schema", "schema": label_schema},
             },
-            "system": [
-                {
-                    "type": "text",
-                    "text": SYSTEM_PROMPT,
-                    "cache_control": {"type": "ephemeral", "ttl": "5m"},
-                }
-            ],
+            "system": system_blocks,
             "messages": [{"role": "user", "content": user_content}],
         }
 
@@ -129,7 +154,7 @@ def cmd_submit(args: argparse.Namespace) -> None:
     samples = all_samples[start_idx:end_idx]
 
     print(f"총 추출 표본: {len(samples)}건 ({start_idx + 1}번 ~ {min(end_idx, len(all_samples))}번)")
-    requests, traces = build_batch_requests(samples, retriever)
+    requests, traces = build_batch_requests(samples, retriever, retrieval=args.retrieval)
 
     if not args.execute:
         print(f"\n[dry-run] {len(requests)}건의 배치 요청 생성 완료 (네트워크 호출 생략)")
@@ -147,6 +172,13 @@ def cmd_submit(args: argparse.Namespace) -> None:
         "status": batch.processing_status,
         "created_at": batch.created_at.isoformat() if hasattr(batch.created_at, "isoformat") else str(batch.created_at),
         "request_count": len(requests),
+        "retrieval": args.retrieval,
+        "anchor_block_version": (
+            CONSTANT_ANCHOR_BLOCK_VERSION
+            if args.retrieval in CACHEABLE_RETRIEVALS
+            else ANCHOR_BLOCK_VERSION
+        ),
+        "anchors_cached_in_system": args.retrieval in CACHEABLE_RETRIEVALS,
         "input_path": str(args.input.resolve()),
         "anchor_pool_meta": pool_meta,
         "traces": traces,
@@ -286,6 +318,12 @@ def main():
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--batch-dir", type=Path)
     parser.add_argument("--execute", action="store_true", help="실제 API 호출")
+    parser.add_argument(
+        "--retrieval",
+        choices=["stratified", "similarity", "global"],
+        default="stratified",
+        help="앵커 인출 방식. global만 앵커 블록이 system에 실려 캐시된다.",
+    )
 
     args = parser.parse_args()
 

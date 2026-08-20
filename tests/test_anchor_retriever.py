@@ -117,6 +117,56 @@ def test_retrieve_exposes_similarity_and_overlap_terms():
     assert any("무상" in term for term in matched["overlap_terms"])
 
 
+def test_global_retrieval_renders_identically_for_different_targets(monkeypatch):
+    """
+    결정 29: 고정 앵커는 대상이 달라도 렌더링 결과가 바이트 단위로 같아야 한다.
+
+    같지 않으면 앵커 블록을 system에 올려도 캐시 프리픽스가 매 건 깨져
+    캐시가 붙지 않는다. 유사도·공통 어휘가 대상별로 계산되면 여기서 깨진다.
+    """
+    from scripts.labeling import anchor_retriever
+    from scripts.labeling.claude_client import render_anchor_block
+
+    monkeypatch.setattr(
+        anchor_retriever,
+        "GLOBAL_ANCHORS",
+        {
+            "통상수용": ["doc_c:R-1"],
+            "견적반영": ["doc_a:R-1"],
+            "계약·질의검토": ["doc_b:R-1"],
+        },
+    )
+    retriever = PureTfidfAnchorRetriever(POOL)
+
+    first = retriever.retrieve(_target(doc="doc_y"), strategy="global")
+    second = retriever.retrieve(
+        _target(doc="doc_z", name="상주 인력", text="상주 인력 3명을 배치한다."),
+        strategy="global",
+    )
+
+    assert [a["requirement_uid"] for a in first] == [a["requirement_uid"] for a in second]
+    # 공통 어휘를 계산하면 대상마다 달라지므로 고정 앵커에서는 비운다.
+    assert all(a["overlap_terms"] == [] for a in first)
+    assert render_anchor_block(
+        first, show_retrieval_evidence=False
+    ) == render_anchor_block(second, show_retrieval_evidence=False)
+
+
+def test_global_retrieval_masks_same_document_anchors(monkeypatch):
+    """동일 문서 앵커는 고정 전략에서도 차단한다. 같은 라벨의 다음 순위로 대체된다."""
+    from scripts.labeling import anchor_retriever
+
+    monkeypatch.setattr(
+        anchor_retriever,
+        "GLOBAL_ANCHORS",
+        {"계약·질의검토": ["doc_b:R-1", "doc_a:R-2"]},
+    )
+    retriever = PureTfidfAnchorRetriever(POOL)
+
+    rendered = retriever.retrieve(_target(doc="doc_b"), strategy="global")
+
+    assert [a["requirement_uid"] for a in rendered] == ["doc_a:R-2"]
+
 def test_retrieve_rejects_unknown_strategy():
     retriever = PureTfidfAnchorRetriever(POOL)
 

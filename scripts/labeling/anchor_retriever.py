@@ -28,6 +28,29 @@ CHAR_NGRAM_RANGE = (3, 4)
 
 DEFAULT_LABELS = ("통상수용", "견적반영", "계약·질의검토")
 
+
+# 결정 28: global few-shot 비교용 고정 앵커.
+# 층화 인출의 실측 유사도 중앙값이 0.090이라 "유사 사례 검색"이 아니라
+# "판정 기준 캘리브레이션"에 가깝다는 가설을 검증하기 위한 조건이다.
+# 모든 입력에 같은 3건을 주입하되, 동일 문서 차단(결정 10)은 유지한다.
+#
+# 1순위는 사람 확정 앵커에서 라벨별 대표를 고른다. 2순위는 1순위와 다른 문서에서
+# 고르므로, 타깃 문서가 1순위와 겹쳐도 라벨당 1건은 항상 확보된다.
+GLOBAL_ANCHORS = {
+    "통상수용": [
+        "defense_intelligent_platform:QUR-001",  # 산출물 17종이지만 표준 절차라 통상 공수
+        "korail_genai_isp_ismp:CSR-003",         # 현황분석·연동 검토는 일반 컨설팅 범위
+    ],
+    "견적반영": [
+        "kexim_ai_platform:SER-001",             # 고급 AI 개발 공수지만 범위가 닫혀 있음
+        "mfds_drug_ai_review:SFR-001",           # 외부 인증체계 연동 공수
+    ],
+    "계약·질의검토": [
+        "kac_ai_work_platform:AIP-001",          # 라이선스·공급 가능성 미확인
+        "genai_incident_response:SFR-001",       # 120B 모델 조달 가능성 미확인
+    ],
+}
+
 RETRIEVER_VERSION = "tfidf-word-char-v1"
 
 
@@ -209,6 +232,27 @@ class PureTfidfAnchorRetriever:
 
         return stratified_results
 
+    def get_global_anchors(
+        self,
+        target_req: Dict[str, Any],
+    ) -> List[Tuple[Dict[str, Any], float]]:
+        """모든 입력에 같은 앵커를 주입한다. 유사도 계산을 하지 않는다.
+
+        동일 문서 앵커는 차단하고 같은 라벨의 다음 순위로 대체한다.
+        검색을 하지 않으므로 similarity는 기록용 0.0으로 둔다.
+        """
+        by_uid = {a["requirement_uid"]: a for a in self.anchor_pool}
+        target_doc = target_req.get("document_id")
+        selected = []
+        for label, uids in GLOBAL_ANCHORS.items():
+            for uid in uids:
+                anchor = by_uid.get(uid)
+                if anchor is None or anchor.get("document_id") == target_doc:
+                    continue
+                selected.append((anchor, 0.0))
+                break
+        return selected
+
     def get_overlap_terms(
         self,
         target_req: Dict[str, Any],
@@ -249,12 +293,14 @@ class PureTfidfAnchorRetriever:
         """
         전략별 앵커 인출 결과를 프롬프트·기록용 dict 목록으로 반환한다.
 
-        :param strategy: 'similarity' (결정 13) 또는 'stratified' (결정 14)
+        :param strategy: 'similarity'(결정 13) / 'stratified'(결정 14) / 'global'(결정 28)
         """
         if strategy == "similarity":
             selected = self.get_top_k_anchors(target_req, top_k=top_k)
         elif strategy == "stratified":
             selected = self.get_stratified_top_k_anchors(target_req)
+        elif strategy == "global":
+            selected = self.get_global_anchors(target_req)
         else:
             raise ValueError(f"지원하지 않는 앵커 검색 전략: {strategy}")
 
@@ -262,6 +308,9 @@ class PureTfidfAnchorRetriever:
             anchor["requirement_uid"]: idx
             for idx, anchor in enumerate(self.anchor_pool)
         }
+        # 고정 앵커는 대상과의 유사도로 뽑은 것이 아니다. 공통 어휘를 계산해 붙이면
+        # 사실과 다르고, 대상마다 값이 달라져 프롬프트 캐시도 깨진다(결정 29).
+        include_overlap = strategy != "global"
         rendered = []
         for anchor, score in selected:
             idx = index_by_uid[anchor["requirement_uid"]]
@@ -274,8 +323,10 @@ class PureTfidfAnchorRetriever:
                     "primary_action": anchor.get("primary_action"),
                     "reasoning": anchor.get("reasoning", ""),
                     "similarity": round(float(score), 4),
-                    "overlap_terms": self.get_overlap_terms(
-                        target_req, idx, top_n=overlap_terms
+                    "overlap_terms": (
+                        self.get_overlap_terms(target_req, idx, top_n=overlap_terms)
+                        if include_overlap
+                        else []
                     ),
                 }
             )

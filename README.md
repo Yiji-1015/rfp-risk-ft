@@ -33,10 +33,13 @@ python -m scripts.labeling.run_claude_labeling --limit 3 --execute
 | `zero-shot` (기본) | 없음 |
 | `fewshot-similarity` | 유사도 Top-k |
 | `fewshot-stratified` | 라벨별 1개씩 균형 인출 |
+| `fewshot-global` | 모든 입력에 같은 고정 앵커 3건 |
 
 ```powershell
 python -m scripts.labeling.run_claude_labeling --strategy fewshot-stratified --limit 3
 ```
+
+`fewshot-global`만 앵커 블록이 캐시되는 system 블록에 실린다. 앵커가 입력과 무관하게 고정되어야 캐시 프리픽스가 유지되기 때문이다. 동적 인출은 건마다 앵커가 달라져 system에 올리면 오히려 손해다(결정 29). 전수 1,024건 기준 배치 입력 비용이 6,912원에서 2,619원으로 줄어든다.
 
 few-shot 전략은 `data/anchors/anchor_pool_v2.jsonl`의 동결 앵커 풀을 사용한다(100건, 10개 문서). 풀은 전수 라벨링 전에 확정하며 실행 중 변경하지 않는다. 형식은 [`data/anchors/README.md`](data/anchors/README.md)를 따른다. dry-run에서도 풀을 검증하고 실제 주입될 앵커의 라벨 분포를 미리 보여주므로, 유료 실행 전에 앵커 편향을 눈으로 확인할 수 있다.
 
@@ -63,7 +66,7 @@ few-shot 전략은 `data/anchors/anchor_pool_v2.jsonl`의 동결 앵커 풀을 �
 3. `02_labeling_experiment.ipynb`: 라벨 검증과 토큰 비용 계산 예제
 4. `03_requirements_eda.ipynb`: 판단 요소, 문맥 의존성, 조건부 유사 사례와 파일럿 커버리지 분석
 5. `04_anchor_pool_analysis.ipynb`: 앵커 풀 구성과 층화 인출 시뮬레이션
-6. `05_execution_mode_comparison.ipynb`: 동기 vs 배치 실행 경로 비교
+6. `05_run_comparison.ipynb`: 실행 경로와 앵커링 전략 비교
 
 비교·분석은 스크립트가 아니라 노트북으로 만든다.
 

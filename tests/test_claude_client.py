@@ -189,6 +189,68 @@ def test_anchors_go_into_the_user_message_not_the_cached_system_block():
     assert result.metadata["anchor_block_version"] == "anchor-block-v1"
 
 
+def test_cache_anchors_moves_the_anchor_block_into_a_second_system_block():
+    """
+    결정 29: 앵커가 입력과 무관하게 고정된 전략에서만 앵커 블록을 system으로 올린다.
+
+    블록을 둘로 나누는 것이 핵심이다. 첫 블록(기본 프롬프트)은 zero-shot 실행과
+    바이트 단위로 같으므로 캐시 프리픽스를 공유하고, 앵커는 그 뒤에서 따로 캐시된다.
+    한 블록으로 합치면 앵커를 쓰지 않는 실행과 캐시를 공유하지 못한다.
+    """
+    zero_shot_messages = FakeMessages(fake_response())
+    ClaudeLabelingClient(
+        client=SimpleNamespace(messages=zero_shot_messages)
+    ).label_requirement(
+        requirement_uid="doc:SFR-001",
+        requirement_name="검수",
+        requirement_text="세부 기준은 추후 협의한다.",
+    )
+
+    cached_messages = FakeMessages(fake_response())
+    result = ClaudeLabelingClient(
+        client=SimpleNamespace(messages=cached_messages)
+    ).label_requirement(
+        requirement_uid="doc:SFR-001",
+        requirement_name="검수",
+        requirement_text="세부 기준은 추후 협의한다.",
+        anchors=ANCHORS,
+        cache_anchors=True,
+    )
+
+    system = cached_messages.kwargs["system"]
+    assert len(system) == 2
+    assert system[0] == zero_shot_messages.kwargs["system"][0]
+    # 고정 앵커는 유사도로 뽑은 것이 아니므로 인출 근거 없는 전용 헤더를 쓴다.
+    assert "판정 기준 사례" in system[1]["text"]
+    assert "유사도" not in system[1]["text"]
+    assert "공통 어휘" not in system[1]["text"]
+    # 두 블록 모두 캐시 대상이어야 앵커까지 캐시 읽기로 과금된다.
+    assert all(block["cache_control"]["type"] == "ephemeral" for block in system)
+
+    # 앵커가 system으로 갔으니 user 메시지에는 대상 요구사항만 남는다.
+    content = cached_messages.kwargs["messages"][0]["content"]
+    assert "판정 기준 사례" not in content
+    assert content.startswith("[대상 요구사항]")
+
+    assert result.metadata["anchors_cached_in_system"] is True
+    assert result.metadata["anchor_block_version"] == "anchor-block-const-v1"
+
+
+def test_dynamic_anchors_are_not_cached_in_system_by_default():
+    """기본값은 False다. 동적 인출을 system에 올리면 매 건 캐시가 깨진다."""
+    messages = FakeMessages(fake_response())
+    result = ClaudeLabelingClient(
+        client=SimpleNamespace(messages=messages)
+    ).label_requirement(
+        requirement_uid="doc:SFR-001",
+        requirement_name="검수",
+        requirement_text="세부 기준은 추후 협의한다.",
+        anchors=ANCHORS,
+    )
+
+    assert len(messages.kwargs["system"]) == 1
+    assert result.metadata["anchors_cached_in_system"] is False
+
 def test_non_terminal_response_is_rejected():
     client = ClaudeLabelingClient(
         settings=ClaudeSettings(),

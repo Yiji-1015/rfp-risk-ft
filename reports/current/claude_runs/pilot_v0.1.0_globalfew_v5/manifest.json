@@ -1,0 +1,66 @@
+{
+  "execute": true,
+  "input": "C:\\Users\\nodap\\Desktop\\portfolio\\rfp-risk-ft\\data\\samples\\labeling_pilot_sample_v0.1.0.jsonl",
+  "sample_count": 40,
+  "strategy": "fewshot-global",
+  "schema_version": "4.0.0",
+  "prompt_version": "claude-rfp-risk-v5",
+  "parameters": {
+    "model": "claude-sonnet-5",
+    "effort": "medium",
+    "thinking": "adaptive",
+    "max_tokens": 16000,
+    "cache_ttl": "5m",
+    "timeout_seconds": 120.0,
+    "max_retries": 2,
+    "structured_output": true
+  },
+  "anchoring": {
+    "anchor_block_version": "anchor-block-v1",
+    "retrieval": "global",
+    "top_k": 1,
+    "global_anchors": {
+      "통상수용": [
+        "defense_intelligent_platform:QUR-001",
+        "korail_genai_isp_ismp:CSR-003"
+      ],
+      "견적반영": [
+        "kexim_ai_platform:SER-001",
+        "mfds_drug_ai_review:SFR-001"
+      ],
+      "계약·질의검토": [
+        "kac_ai_work_platform:AIP-001",
+        "genai_incident_response:SFR-001"
+      ]
+    },
+    "retriever": {
+      "retriever_version": "tfidf-word-char-v1",
+      "word_ngram_range": [
+        1,
+        2
+      ],
+      "char_ngram_range": [
+        3,
+        4
+      ],
+      "char_analyzer": "char_wb",
+      "sublinear_tf": true,
+      "similarity": "cosine",
+      "same_document_masking": true
+    },
+    "anchor_pool": {
+      "path": "C:\\Users\\nodap\\Desktop\\portfolio\\rfp-risk-ft\\data\\anchors\\anchor_pool_v2.jsonl",
+      "pool_version": "anchor_pool_v2",
+      "sha256": "1439f6d950f35ab44ef64268bf6ccb642372e74880c48602706f7121e45a68ca",
+      "total_rows": 100,
+      "reviewed_count": 100,
+      "label_counts": {
+        "견적반영": 25,
+        "계약·질의검토": 31,
+        "통상수용": 44
+      },
+      "document_count": 10,
+      "labels_without_anchor": []
+    }
+  }
+}
