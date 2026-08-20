@@ -212,7 +212,16 @@ python -m scripts.labeling.build_label_dataset
 유무로 추측해야 했다. 이제 모든 행이 같은 키를 갖고 `execution_path`와 `source_run`을
 직접 들고 있다.
 
+이 파일은 **동결 데이터셋**이다. `load_label_dataset()`이 읽을 때마다 SHA-256을
+대조하고 값 도메인을 검사한다. 바꿔야 하면 파일을 고치는 게 아니라 새 버전을 만들고
+`FROZEN_SHA256`을 갱신하며, 그 판단은 `docs/history/`에 남긴다.
+
+```bash
+python -m scripts.labeling.label_dataset      # 상태 확인
+```
+
 분석은 [`notebooks/06_label_eda.ipynb`](../notebooks/06_label_eda.ipynb)에서 한다.
+데이터 자체의 알려진 문제는 [`issues/`](issues/)에 있다.
 
 ---
 

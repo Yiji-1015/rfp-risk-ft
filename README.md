@@ -50,7 +50,7 @@ few-shot 전략은 `data/anchors/anchor_pool_v2.jsonl`의 동결 앵커 풀을 �
 | `RFP_data/` | 원본 PDF·HWP·HWPX와 분석용 Markdown |
 | `data/` | 생성 데이터셋, 전처리 표본, 사람 검수 자료 |
 | `data/anchors/` | 감사·동결된 few-shot 앵커 풀 |
-| `data/labels/` | 정리된 라벨 데이터셋 (균일 스키마, 규칙 보정) |
+| `data/labels/` | **확정(동결) 라벨 데이터셋** — 분석은 모두 여기서 출발한다 |
 | `scripts/data/` | 요구사항 추출·전처리·표본·EDA |
 | `scripts/labeling/` | 라벨 스키마, 검색, LLM 실험, 토큰 비용 추적 |
 | `scripts/utilities/` | API 환경 점검과 유지보수 도구 |
@@ -59,6 +59,7 @@ few-shot 전략은 `data/anchors/anchor_pool_v2.jsonl`의 동결 앵커 풀을 �
 | `reports/current/claude_runs/` | 라벨링 실행별 manifest와 결과 |
 | `reports/archive/` | 재현성을 위해 보존한 과거 결과 |
 | `tests/` | 단위·구조 검증 |
+| `docs/issues/` | 알려진 데이터 문제 목록 |
 
 ## 노트북
 
@@ -70,7 +71,15 @@ few-shot 전략은 `data/anchors/anchor_pool_v2.jsonl`의 동결 앵커 풀을 �
 6. `05_run_comparison.ipynb`: 실행 경로와 앵커링 전략 비교
 7. `06_label_eda.ipynb`: 전수 라벨 분포, 고정 규칙 위반 감사, 문서별 fold 난이도
 
-비교·분석은 스크립트가 아니라 노트북으로 만든다.
+비교·분석은 스크립트가 아니라 노트북으로 만든다. 라벨을 쓰는 노트북은
+`load_label_dataset()`으로만 읽는다. 로더가 SHA-256을 대조하므로 분석이 어느 시점의
+라벨을 봤는지가 출력에 남고, 파일이 조용히 바뀌면 실패한다.
+
+```powershell
+python -m scripts.labeling.label_dataset      # 확정 데이터셋 상태 확인
+```
+
+데이터 자체의 알려진 문제는 [`docs/issues/`](docs/issues/)에 정리돼 있다.
 
 ## 라벨 스키마
 
