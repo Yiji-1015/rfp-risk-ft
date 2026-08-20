@@ -67,6 +67,7 @@ few-shot 전략은 `data/anchors/anchor_pool_v2.jsonl`의 동결 앵커 풀을 �
 4. `03_requirements_eda.ipynb`: 판단 요소, 문맥 의존성, 조건부 유사 사례와 파일럿 커버리지 분석
 5. `04_anchor_pool_analysis.ipynb`: 앵커 풀 구성과 층화 인출 시뮬레이션
 6. `05_run_comparison.ipynb`: 실행 경로와 앵커링 전략 비교
+7. `06_label_eda.ipynb`: 전수 라벨 분포, 고정 규칙 위반 감사, 문서별 fold 난이도
 
 비교·분석은 스크립트가 아니라 노트북으로 만든다.
 

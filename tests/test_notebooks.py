@@ -11,6 +11,7 @@ EXPECTED_NOTEBOOKS = {
     "03_requirements_eda.ipynb",
     "04_anchor_pool_analysis.ipynb",
     "05_run_comparison.ipynb",
+    "06_label_eda.ipynb",
 }
 
 
