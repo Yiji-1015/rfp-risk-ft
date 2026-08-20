@@ -15,7 +15,7 @@
 
 | # | 제목 | 상태 | 한 줄 |
 |---|---|---|---|
-| [001](001-requirement-type-fragmentation.md) | `requirement_type` 표기 분열 | 미해결 | 60종으로 쪼개져 유형별 분석이 불가능하다 |
+| [001](001-requirement-type-fragmentation.md) | `requirement_type` 표기 분열 | **해결** | 60종 → 정본 12종. `label_dataset_v2` |
 | [002](002-missing-source-fields.md) | 원본 결측 필드 | 수용 | `agency` 67건, `requirement_type` 101건이 문서 단위로 통째 비었다 |
 | [003](003-document-label-imbalance.md) | 문서별 라벨 분포 편차 | 미해결 | 통상수용 비율이 28.4%~79.2%로 2.8배 갈린다 |
 | [004](004-execution-path-confounding.md) | 실행 경로 교란 | 수용 | 동기 100건이 한 문서에 몰려 경로 효과를 측정할 수 없다 |

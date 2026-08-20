@@ -196,7 +196,7 @@ python -m scripts.labeling.run_claude_batch --submit --execute \
 python -m scripts.labeling.build_label_dataset
 ```
 
-산출물은 `data/labels/label_dataset_v1.jsonl`(1,024건)과 같은 이름의 `_manifest.json`이다.
+산출물은 `data/labels/label_dataset_v2.jsonl`(1,024건)과 같은 이름의 `_manifest.json`이다.
 실행 디렉터리 세 곳에서 직접 읽으므로 언제든 다시 만들 수 있고, 원본은 건드리지 않는다.
 
 정리하는 것은 둘이다.
@@ -206,6 +206,11 @@ python -m scripts.labeling.build_label_dataset
 규칙 쪽을 지지한다.** 한 건(`koen_ai_infrastructure:CON-004`)은 모델이 reasoning 안에서
 스스로 정정해놓고 필드를 고치지 않은 경우다. 모델 원본은 `primary_action_model`에,
 보정 여부는 `rule_corrected`에 남기므로 나중에 감사할 수 있다.
+
+**요구사항 유형 정규화.** 원본 `requirement_type`은 60종이다. 같은 유형이 표기만 달라
+흩어지면 유형 효과와 문서 효과가 분리되지 않는다(→ [issues/001](issues/001-requirement-type-fragmentation.md)).
+공공 SW 표준 11분류 + `컨설팅`으로 묶어 `requirement_type_normalized`(12종)와 판단 근거
+`requirement_type_source`를 추가한다. 원본 표기는 지우지 않는다.
 
 **균일 스키마와 명시적 출처.** 기존 병합 파일은 동기 실행분만 요구사항 원문을 갖고
 배치분은 라벨만 가져서, 문서·유형을 쓰려면 매번 조인해야 하고 실행 경로는 `input` 필드
@@ -278,7 +283,7 @@ Sonnet 5 도입가($2/$10 per MTok, 2026-08-31까지) 기준, 환율 1,416원.
 | `data/samples/` | 파일럿·표준조항·앵커후보 표본 |
 | `reports/current/claude_runs/*/manifest.json` | 실행 조건 (재현의 기준) |
 | `reports/current/claude_runs/*/results.jsonl` | 건별 라벨과 토큰 사용량 |
-| `data/labels/label_dataset_v1.jsonl` | 정리된 라벨 데이터셋 (균일 스키마, 규칙 보정) |
+| `data/labels/label_dataset_v2.jsonl` | 확정(동결) 라벨 데이터셋 |
 
 ---
 

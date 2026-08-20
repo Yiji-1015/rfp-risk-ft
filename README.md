@@ -81,6 +81,9 @@ python -m scripts.labeling.label_dataset      # 확정 데이터셋 상태 확�
 
 데이터 자체의 알려진 문제는 [`docs/issues/`](docs/issues/)에 정리돼 있다.
 
+요구사항 유형은 원본 표기 60종을 공공 SW 표준 11분류 + `컨설팅`으로 정규화한
+`requirement_type_normalized`(12종)를 쓴다. 원본 표기와 판단 근거도 함께 남는다(결정 32).
+
 ## 라벨 스키마
 
 주 라벨은 가격 산정 가능성이다(§5.1).

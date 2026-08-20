@@ -9,6 +9,8 @@
 1. 고정 규칙(`derive_primary_action`) 위반을 보정한다. 모델이 보조 축과 어긋나는
    주 라벨을 낸 행이 있다. 원본은 `primary_action_model`에 남긴다.
 2. 실행 경로와 출처 실행을 명시 필드로 기록한다. 추측할 필요가 없어진다.
+3. 요구사항 유형을 정본 분류로 정규화한다. 원본 표기 60종은 문서와 얽혀 있어
+   유형별 분석이 성립하지 않는다(docs/issues/001). 원본 표기는 그대로 남긴다.
 
 원본 실행 결과는 건드리지 않는다. 이 스크립트는 언제든 다시 돌릴 수 있다.
 """
@@ -28,10 +30,11 @@ from scripts.labeling.label_schema import (
     SCHEMA_VERSION,
     derive_primary_action,
 )
+from scripts.labeling.requirement_taxonomy import normalize_requirement_type
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_REQUIREMENTS = ROOT / "data" / "processed" / "requirements_v0.2.0.jsonl"
-DEFAULT_OUTPUT = ROOT / "data" / "labels" / "label_dataset_v1.jsonl"
+DEFAULT_OUTPUT = ROOT / "data" / "labels" / "label_dataset_v2.jsonl"
 RUNS_DIR = ROOT / "reports" / "current" / "claude_runs"
 
 # 전수 1,024건을 만든 실행들. Chunk 1 재실행 배치를 취소해서 경로가 섞여 있다(결정 27).
@@ -108,10 +111,16 @@ def build_rows(
                     }
                 )
 
+            canonical_type, type_source = normalize_requirement_type(
+                requirement.get("requirement_type"), requirement["requirement_id"]
+            )
+
             rows.append(
                 {
                     "requirement_uid": uid,
                     **{f: requirement[f] for f in REQUIREMENT_FIELDS},
+                    "requirement_type_normalized": canonical_type,
+                    "requirement_type_source": type_source,
                     "primary_action": derived,
                     "primary_action_model": label.primary_action,
                     "rule_corrected": corrected,
@@ -171,6 +180,12 @@ def main() -> None:
             for name, path in SOURCE_RUNS
         ],
         "execution_path_counts": dict(Counter(r["execution_path"] for r in rows)),
+        "requirement_type_counts": dict(
+            Counter(r["requirement_type_normalized"] for r in rows)
+        ),
+        "requirement_type_source_counts": dict(
+            Counter(r["requirement_type_source"] for r in rows)
+        ),
         "primary_action_counts": dict(Counter(r["primary_action"] for r in rows)),
         "rule_corrections": corrections,
         "output_sha256": sha256_of(args.output),
@@ -183,6 +198,7 @@ def main() -> None:
     print(f"라벨 데이터셋 {len(rows)}건 -> {args.output}")
     print(f"  실행 경로: {manifest['execution_path_counts']}")
     print(f"  주 라벨:   {manifest['primary_action_counts']}")
+    print(f"  유형 근거: {manifest['requirement_type_source_counts']}")
     print(f"  규칙 보정: {len(corrections)}건")
     for c in corrections:
         print(f"    {c['requirement_uid']}: {c['model']} -> {c['rule']} "

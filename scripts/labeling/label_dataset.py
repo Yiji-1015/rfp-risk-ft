@@ -21,12 +21,13 @@ from scripts.labeling.label_schema import (
     PRIMARY_ACTIONS,
     SCHEMA_VERSION,
 )
+from scripts.labeling.requirement_taxonomy import CANONICAL_TYPES, UNKNOWN
 
 ROOT = Path(__file__).resolve().parents[2]
 
-DATASET_VERSION = "label_dataset_v1"
-DEFAULT_PATH = ROOT / "data" / "labels" / "label_dataset_v1.jsonl"
-FROZEN_SHA256 = "58b499d402dfd00eb9e94cf6455cbe887756087b539295b24a249b41988f109d"
+DATASET_VERSION = "label_dataset_v2"
+DEFAULT_PATH = ROOT / "data" / "labels" / "label_dataset_v2.jsonl"
+FROZEN_SHA256 = "2c63df5676517aec9ad7805e83dedc96189469c9c66d0a3548066edd5cf2c29c"
 EXPECTED_ROWS = 1024
 
 COST_BASES = ("없음", "고급·전문인력", "장비·인프라", "라이선스", "외부인증", "외주·전문기관", "복합")
@@ -49,7 +50,11 @@ REQUIRED_FIELDS = (
     "execution_path",
     "source_run",
     "schema_version",
+    "requirement_type_normalized",
+    "requirement_type_source",
 )
+
+TYPE_SOURCES = ("text", "prefix", "none")
 
 # 값이 비어 있어도 통과시키는 필드. 원본 RFP에 해당 항목이 없어서 생긴 결측이며
 # 데이터셋 결함이 아니라 원본의 사정이다. docs/issues/002를 본다.
@@ -128,6 +133,12 @@ def load_label_dataset(
         for blocker in row["blockers"]:
             if blocker not in BLOCKER_TYPES:
                 _fail(f"{uid}: 알 수 없는 blocker {blocker!r}")
+        if row["requirement_type_normalized"] not in (*CANONICAL_TYPES, UNKNOWN):
+            _fail(
+                f"{uid}: 알 수 없는 정본 유형 {row['requirement_type_normalized']!r}"
+            )
+        if row["requirement_type_source"] not in TYPE_SOURCES:
+            _fail(f"{uid}: 알 수 없는 유형 근거 {row['requirement_type_source']!r}")
         if row["schema_version"] != SCHEMA_VERSION:
             _fail(
                 f"{uid}: 스키마 버전이 {row['schema_version']}입니다. "
@@ -144,6 +155,16 @@ def load_label_dataset(
         "label_counts": dict(Counter(r["primary_action"] for r in rows)),
         "execution_path_counts": dict(Counter(r["execution_path"] for r in rows)),
         "rule_corrected_count": sum(1 for r in rows if r["rule_corrected"]),
+        "requirement_type_counts": dict(
+            Counter(r["requirement_type_normalized"] for r in rows)
+        ),
+        "requirement_type_source_counts": dict(
+            Counter(r["requirement_type_source"] for r in rows)
+        ),
+        # 정본에 실리지 못한 행. 새 표기가 들어오면 여기서 드러난다.
+        "unmapped_type_count": sum(
+            1 for r in rows if r["requirement_type_normalized"] == UNKNOWN
+        ),
         "nullable_missing": {
             f: sum(1 for r in rows if not r.get(f)) for f in NULLABLE_FIELDS
         },
