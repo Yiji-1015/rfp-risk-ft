@@ -18,9 +18,11 @@
       ↓  sample_100_anchor_candidates.py + 3회 스크리닝
 [4] 앵커 풀                  data/anchors/anchor_pool_v2.jsonl          (100건, 동결)
       ↓  run_claude_batch.py (층화 퓨샷)
-[5] 라벨 데이터셋            reports/current/claude_runs/labels_*.jsonl (1,024건)
+[5] 라벨링 실행 결과          reports/current/claude_runs/*/results.jsonl (1,024건)
+      ↓  build_label_dataset.py
+[6] 라벨 데이터셋            data/labels/label_dataset_v1.jsonl         (1,024건)
       ↓  (예정)
-[6] ML 비교 실험
+[7] ML 비교 실험
 ```
 
 각 단계는 앞 단계의 산출물만 있으면 독립적으로 재실행할 수 있다.
@@ -34,7 +36,14 @@ PDF·HWP·HWPX를 분석용 Markdown으로 변환해 `RFP_data/md/`에 둔다. �
 변환 시 손실되기 쉬운 것: 표 셀 병합, 각주, 부정문, 제공 주체. 원본과 대조 검사가 필요하다(§11.2).
 
 **알려진 결함**: 원본 요구사항 표의 `산출정보` 열이 현재 데이터셋에 반영되지 않았다.
-산출물 목록은 견적의 직접 근거이므로 `v0.3.0` 재생성 시 포함해야 한다.
+다만 실측하면 **이득이 크지 않다.** 열이 존재하는 요구사항이 642건이고 그중 실제로
+값이 채워진 것은 364건이라, 전수 1,024건 대비 **35.5%만 얻는다.** 게다가 문서 편중이
+심하다(신용회복위원회 95.8% / 침해대응 89.6% / 식약처 34.4% / 국방·한국공항공사·인천공항 0%).
+문서 단위 fold 설계에서는 문서와 상관된 특징을 새로 넣는 셈이라 fold 난이도 편차를 키운다.
+
+따라서 `v0.3.0` 재생성과 전수 재라벨링(약 9,000원)의 근거로는 약하다. 필요하다면
+추출만 먼저 하고, 프롬프트에 넣은 100건 파일럿(약 800원)이 결정 23의 반복 기준선
+92.5% 안에 드는지로 판단한다.
 
 ---
 
@@ -179,6 +188,34 @@ python -m scripts.labeling.run_claude_batch --submit --execute \
 
 ---
 
+## 6단계. 라벨 데이터셋 정리
+
+실행 결과를 그대로 쓰지 않고 균일한 스키마로 한 번 정리한다.
+
+```bash
+python -m scripts.labeling.build_label_dataset
+```
+
+산출물은 `data/labels/label_dataset_v1.jsonl`(1,024건)과 같은 이름의 `_manifest.json`이다.
+실행 디렉터리 세 곳에서 직접 읽으므로 언제든 다시 만들 수 있고, 원본은 건드리지 않는다.
+
+정리하는 것은 둘이다.
+
+**고정 규칙 위반 보정.** 모델은 네 값을 한 번에 생성하므로 `derive_primary_action()`의
+규칙을 어길 수 있다. 실측 6건(0.6%)이었고, `reasoning`을 읽으면 **6건 모두 근거 문장이
+규칙 쪽을 지지한다.** 한 건(`koen_ai_infrastructure:CON-004`)은 모델이 reasoning 안에서
+스스로 정정해놓고 필드를 고치지 않은 경우다. 모델 원본은 `primary_action_model`에,
+보정 여부는 `rule_corrected`에 남기므로 나중에 감사할 수 있다.
+
+**균일 스키마와 명시적 출처.** 기존 병합 파일은 동기 실행분만 요구사항 원문을 갖고
+배치분은 라벨만 가져서, 문서·유형을 쓰려면 매번 조인해야 하고 실행 경로는 `input` 필드
+유무로 추측해야 했다. 이제 모든 행이 같은 키를 갖고 `execution_path`와 `source_run`을
+직접 들고 있다.
+
+분석은 [`notebooks/06_label_eda.ipynb`](../notebooks/06_label_eda.ipynb)에서 한다.
+
+---
+
 ## 실행 조건 고정 사항
 
 모든 라벨링 실행에서 아래를 동일하게 유지한다. 하나라도 다르면 통제 비교가 깨진다(§9.3).
@@ -232,7 +269,7 @@ Sonnet 5 도입가($2/$10 per MTok, 2026-08-31까지) 기준, 환율 1,416원.
 | `data/samples/` | 파일럿·표준조항·앵커후보 표본 |
 | `reports/current/claude_runs/*/manifest.json` | 실행 조건 (재현의 기준) |
 | `reports/current/claude_runs/*/results.jsonl` | 건별 라벨과 토큰 사용량 |
-| `reports/current/claude_runs/labels_*.jsonl` | 통합 라벨 데이터셋 |
+| `data/labels/label_dataset_v1.jsonl` | 정리된 라벨 데이터셋 (균일 스키마, 규칙 보정) |
 
 ---
 

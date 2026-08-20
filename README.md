@@ -50,6 +50,7 @@ few-shot 전략은 `data/anchors/anchor_pool_v2.jsonl`의 동결 앵커 풀을 �
 | `RFP_data/` | 원본 PDF·HWP·HWPX와 분석용 Markdown |
 | `data/` | 생성 데이터셋, 전처리 표본, 사람 검수 자료 |
 | `data/anchors/` | 감사·동결된 few-shot 앵커 풀 |
+| `data/labels/` | 정리된 라벨 데이터셋 (균일 스키마, 규칙 보정) |
 | `scripts/data/` | 요구사항 추출·전처리·표본·EDA |
 | `scripts/labeling/` | 라벨 스키마, 검색, LLM 실험, 토큰 비용 추적 |
 | `scripts/utilities/` | API 환경 점검과 유지보수 도구 |
