@@ -9,6 +9,7 @@
 
 | 문서 | 역할 |
 |---|---|
+| [`docs/guides/`](docs/guides/) | **학습용 가이드** — 개념 중심 요약. 처음이면 여기부터 |
 | [`docs/PROJECT_DIRECTION.md`](docs/PROJECT_DIRECTION.md) | 연구 설계와 범위 |
 | [`docs/PIPELINE.md`](docs/PIPELINE.md) | 원본 RFP → 라벨 데이터셋 실행 절차 |
 | [`docs/WORKLOG.md`](docs/WORKLOG.md) | 날짜별 진행 상황과 현재 위치 |
