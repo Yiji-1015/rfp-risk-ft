@@ -1,0 +1,111 @@
+{
+  "built_at": "2026-08-25T06:46:34+00:00",
+  "row_count": 1024,
+  "schema_version": "4.0.0",
+  "requirements_source": {
+    "path": "data\\processed\\requirements_v0.3.0.jsonl",
+    "sha256": "4f7a17c3e3ee6eb36a04b0cb4c327baa7e6901a5ec7ed3abd48632fe1ffa81fb"
+  },
+  "source_runs": [
+    {
+      "name": "full_requirements_v0.2.0_fewshot_v5",
+      "execution_path": "동기",
+      "row_count": 100
+    },
+    {
+      "name": "batch_full_101_1024",
+      "execution_path": "배치",
+      "row_count": 920
+    },
+    {
+      "name": "batch_retry_4",
+      "execution_path": "배치",
+      "row_count": 4
+    }
+  ],
+  "execution_path_counts": {
+    "동기": 100,
+    "배치": 924
+  },
+  "requirement_type_counts": {
+    "컨설팅": 22,
+    "제약사항": 62,
+    "데이터": 77,
+    "시스템장비구성": 78,
+    "인터페이스": 48,
+    "성능": 45,
+    "프로젝트관리": 151,
+    "프로젝트지원": 71,
+    "품질": 64,
+    "보안": 88,
+    "기능": 277,
+    "테스트": 41
+  },
+  "requirement_type_source_counts": {
+    "text": 1024
+  },
+  "primary_action_counts": {
+    "통상수용": 512,
+    "계약·질의검토": 270,
+    "견적반영": 242
+  },
+  "rule_corrections": [
+    {
+      "requirement_uid": "defense_intelligent_platform:ECR-029",
+      "source_run": "batch_full_101_1024",
+      "model": "견적반영",
+      "rule": "계약·질의검토",
+      "blockers": [
+        "라이선스·공급"
+      ],
+      "cost_basis": "장비·인프라",
+      "reasoning": "VDI 관리·운영서버, All Flash 스토리지, SAN/L3/L4 스위치 등 구체적 고사양 장비 일체 구축은 장비·인프라 원가가 명확한 견적반영 사항이며, VDI솔루션과 상호인증된 솔루션 요구 및 특정 규격의 스위치·스토리지는 조달 가능 공급자가 제한될 수 있어 사전 확인이 필요하다."
+    },
+    {
+      "requirement_uid": "koen_ai_infrastructure:CON-004",
+      "source_run": "batch_full_101_1024",
+      "model": "계약·질의검토",
+      "rule": "통상수용",
+      "blockers": [],
+      "cost_basis": "없음",
+      "reasoning": "접근·로그·품질·운영 기준 수립은 통상적인 ISP·ISMP 컨설팅 범위의 정책·절차 정의로 blocker나 추가 원가 요인이 없어 통상수용에 해당한다.,오타 정정: 원인은 계약·질의검토가 아니라 통상수용이다."
+    },
+    {
+      "requirement_uid": "defense_intelligent_platform:ECR-006",
+      "source_run": "batch_full_101_1024",
+      "model": "통상수용",
+      "rule": "견적반영",
+      "blockers": [],
+      "cost_basis": "장비·인프라",
+      "reasoning": "L4 스위치, WAS/DB 클러스터링, I/O 채널 다중화 등은 표준 인프라 아키텍처 구성으로 장비·인프라 비용이 통상적으로 반영되며 구체적 성능수치 목표나 공급자 제한 규격이 없어 blocker는 아니다."
+    },
+    {
+      "requirement_uid": "koen_ai_infrastructure:PMR-022",
+      "source_run": "batch_full_101_1024",
+      "model": "통상수용",
+      "rule": "견적반영",
+      "blockers": [],
+      "cost_basis": "장비·인프라",
+      "reasoning": "사업자가 준비하는 정보화기기·S/W 등 통상 작업장 환경 구축 비용이며, 반출입 승인·보안규정·원상복구 등은 공공사업 표준 보안 절차로 blocker가 아님. PC·장비 구매 비용만 견적에 반영하면 됨."
+    },
+    {
+      "requirement_uid": "mfds_drug_ai_review:SFR-057",
+      "source_run": "batch_full_101_1024",
+      "model": "통상수용",
+      "rule": "견적반영",
+      "blockers": [],
+      "cost_basis": "라이선스",
+      "reasoning": "SSO 연계, 첨부파일 관리, 알림톡·SMS·메일 발송 등은 표준적인 공통기능이며 MGov 연계와 카카오·SMS 발송은 통상적인 외부 서비스 이용료(라이선스성 비용)로 견적에 반영 가능해 blocker는 아니다. 기본 수행팀 범위에서 처리 가능한 통상수용 사안이다."
+    },
+    {
+      "requirement_uid": "kac_ai_work_platform:PSR-005",
+      "source_run": "batch_full_101_1024",
+      "model": "통상수용",
+      "rule": "견적반영",
+      "blockers": [],
+      "cost_basis": "장비·인프라",
+      "reasoning": "장소·서버는 발주기관 제공, 개발도구·비품은 제안사가 준비하는 통상적인 개발환경 구성으로 blocker는 없으나 도구·비품 조달 비용이 발생해 견적에 소규모 장비·인프라 비용으로 반영한다."
+    }
+  ],
+  "output_sha256": "cacd75695b01b2d6a51bc2933041488c375c4212e7d43bb7dd113321cb7c7684"
+}

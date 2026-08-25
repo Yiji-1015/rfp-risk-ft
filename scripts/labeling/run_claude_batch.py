@@ -2,7 +2,7 @@
 
 사용법:
   # 1. 배치 생성 및 제출
-  python -m scripts.labeling.run_claude_batch --submit --input data/processed/requirements_v0.2.0.jsonl --start 101 --limit 100 --output-dir reports/current/claude_runs/batch_chunk2
+  python -m scripts.labeling.run_claude_batch --submit --input data/processed/requirements_v0.3.0.jsonl --start 101 --limit 100 --output-dir reports/current/claude_runs/batch_chunk2
 
   # 2. 배치 진행 상태 확인
   python -m scripts.labeling.run_claude_batch --status --batch-dir reports/current/claude_runs/batch_chunk2
@@ -46,7 +46,7 @@ from pydantic import ValidationError
 from scripts.labeling.label_schema import LabelResult
 
 DEFAULT_ANCHOR_POOL = ROOT / "data" / "anchors" / "anchor_pool_v3.jsonl"
-DEFAULT_INPUT = ROOT / "data" / "processed" / "requirements_v0.2.0.jsonl"
+DEFAULT_INPUT = ROOT / "data" / "processed" / "requirements_v0.3.0.jsonl"
 
 
 def get_anthropic_client() -> Any:

@@ -6,6 +6,7 @@ from sklearn.metrics import f1_score, fbeta_score
 from scripts.evaluation import baselines
 from scripts.evaluation.baselines import (
     CHAR_BALANCED,
+    CHAR_TYPE_BALANCED,
     CHAR_UNWEIGHTED,
     DUMMY,
     LABELS,
@@ -13,6 +14,7 @@ from scripts.evaluation.baselines import (
     REVIEW_WEIGHT_CANDIDATES,
     SVM_BALANCED,
     WORD_CHAR_BALANCED,
+    WORD_CHAR_TYPE_BALANCED,
     WORD_CHAR_COMPLEMENT_NB,
     Comparison,
     ModelSpec,
@@ -67,6 +69,16 @@ def word_char_results(rows):
 @pytest.fixture(scope="module")
 def complement_nb_results(rows):
     return run_lodo(rows, WORD_CHAR_COMPLEMENT_NB)
+
+
+@pytest.fixture(scope="module")
+def type_feature_results(rows):
+    return run_lodo(rows, CHAR_TYPE_BALANCED)
+
+
+@pytest.fixture(scope="module")
+def full_feature_results(rows):
+    return run_lodo(rows, WORD_CHAR_TYPE_BALANCED)
 
 
 @pytest.fixture(scope="module")
@@ -262,6 +274,16 @@ def test_word_char_gain_is_noise_and_complement_nb_is_worse(
     assert abs(sum(deltas) / len(deltas)) < 0.01
     assert sum(delta > 0 for delta in deltas) == 5
     assert summarize(complement_nb_results)["macro_f1"]["fold_mean"] < 0.55
+
+
+def test_requirement_type_is_combined_with_text_in_the_same_lodo(
+    type_feature_results, full_feature_results
+):
+    assert CHAR_TYPE_BALANCED.include_requirement_type
+    assert WORD_CHAR_TYPE_BALANCED.include_requirement_type
+    assert WORD_CHAR_TYPE_BALANCED.combine_word_char
+    assert len(type_feature_results) == len(full_feature_results) == 10
+    assert sum(result.test_size for result in type_feature_results) == 924
 
 
 def test_review_weight_is_selected_on_validation_for_each_fold(rows, tuned_svm_run):

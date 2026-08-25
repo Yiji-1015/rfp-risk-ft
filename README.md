@@ -4,7 +4,7 @@
 분류하는 연구 프로젝트다.
 
 10개 RFP에서 요구사항 1,024건을 추출해 Claude로 전수 라벨링했고, 그 결과를 동결해
-`label_dataset_v2`로 확정했다. 다음 단계는 이 라벨로 전통 ML과 경량 인코더를 학습해
+`label_dataset_v3`로 확정했다. 다음 단계는 이 라벨로 전통 ML과 경량 인코더를 학습해
 **비싼 모델이 정말 필요한지** 비교하는 것이다.
 
 | 문서 | 역할 |
@@ -32,7 +32,7 @@ python -m scripts.labeling.label_dataset
 
 ## 라벨 데이터셋
 
-분석과 실험은 모두 `data/labels/label_dataset_v2.jsonl`에서 출발한다.
+분석과 실험은 모두 `data/labels/label_dataset_v3.jsonl`에서 출발한다.
 
 | 항목 | 값 |
 |---|---|
@@ -43,6 +43,7 @@ python -m scripts.labeling.label_dataset
 
 `agency` 필드는 문서 1건에서 비어 있다. 원본 RFP에 해당 항목이 없어서이며
 데이터 결함이 아니다([issues/002](docs/issues/002-missing-source-fields.md)).
+남동발전 101건의 요구사항 유형은 원문 구역 제목을 근거로 채웠다.
 
 ### 동결과 감사
 
@@ -160,7 +161,7 @@ system에 올리면 오히려 손해다(결정 29).
 | 06 | `06_label_eda.ipynb` | 라벨 분포, 규칙 감사, fold 난이도, 문구 반복 |
 | 07 | `07_baseline_comparison.ipynb` | TF-IDF 기준선 6종, 통제 비교, macro F1 해부 |
 | 08 | `08_embedding_comparison.ipynb` | 동결 E5 임베딩과 TF-IDF 통제 비교 |
-| 09 | `09_model_summary.ipynb` | 실험 모델 10종 종합표·그래프와 최종 모델 해석 |
+| 09 | `09_model_summary.ipynb` | 실험 모델 12종 종합표·그래프와 최종 모델 해석 |
 
 비교·분석은 스크립트가 아니라 노트북으로 만든다. 노트북은 사용법만 보여주고
 실제 로직은 `scripts/` 모듈이 기준이다.
@@ -207,6 +208,8 @@ python -m scripts.evaluation.baselines
 | E5-small + balanced Logistic | 0.544 | 0.622 | 0.474 | 0.443 | 0.453 |
 | E5-small + balanced LinearSVC | 0.546 | 0.636 | 0.483 | 0.425 | 0.444 |
 | **word+char TF-IDF Logistic** | **0.603** | **0.666** | 0.600 | **0.532** | **0.553** |
+| char TF-IDF + 요구사항 유형 | 0.549 | 0.616 | 0.538 | 0.445 | 0.482 |
+| word+char TF-IDF + 요구사항 유형 | 0.558 | 0.623 | 0.552 | 0.490 | 0.511 |
 | word+char TF-IDF ComplementNB | 0.505 | 0.610 | 0.692 | 0.351 | 0.436 |
 
 동결 앵커 100건은 라벨 생성 때 이미 예시로 쓰였으므로 검증·평가에서 제외한다(결정 25).
@@ -229,6 +232,11 @@ fold 중 2개에서만 TF-IDF를 이겼고 계약 recall도 0.071 낮았다. 따
 높지만, 문자 단독 대비 차이는 +0.003(-0.050~+0.067), 우세 5/10이라 잡음이다. 복잡도만
 늘고 재현되는 개선이 아니므로 현재 권장 기준선은 문자 단독 Logistic 0.601을 유지한다.
 같은 결합 입력의 ComplementNB는 macro F1 0.505, 계약 recall 0.351로 탈락했다.
+
+정규화한 요구사항 유형을 one-hot으로 붙이면 문자 모델은 0.601→0.549(우세 2/10),
+단어+문자 모델은 0.603→0.558(우세 1/10)로 모두 낮아졌다. 유형은 문서별 라벨 분포와
+강하게 얽혀 있어 처음 보는 문서에서는 안정적인 신호가 되지 않았다. 유형 단독 모델은
+실사용 후보가 아니므로 만들지 않았다.
 
 모델을 USB `E:`에 저장해 실행하는 명령은 다음과 같다. 모델 파일 약 470MB는 USB에,
 재생성 가능한 임베딩 약 1.5MB는 Git 제외된 `data/processed/`에 저장된다.

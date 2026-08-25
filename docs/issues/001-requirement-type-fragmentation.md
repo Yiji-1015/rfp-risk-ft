@@ -1,6 +1,6 @@
 # 001. `requirement_type` 표기 분열
 
-**상태**: 해결 (`label_dataset_v2`, 결정 32)
+**상태**: 해결 (`label_dataset_v3`, 결정 32 및 2026-08-25 기록)
 
 > 학습 입력이 요구사항 원문뿐이라면 유형은 특징이 아니다(→ [README](README.md)의 전제).
 > 그래도 정규화가 필요한 이유는 **분석과 층화** 때문이다. 유형별 경향을 못 읽으면
@@ -49,10 +49,10 @@
 컨설팅은 표준에 없지만 ISP·ISMP 요구사항은 판정 기준이 뚜렷이 다르고 프롬프트에도
 별도 보정 블록이 있어(결정 21) 합치면 정보가 사라진다.
 
-`label_dataset_v2`에 두 필드가 추가됐다.
+`label_dataset_v3`에 두 필드가 들어 있다.
 
 - `requirement_type_normalized` — 정본 유형 (60종 → **12종**, 미매핑 0건)
-- `requirement_type_source` — 판단 근거 (`text` 923 / `prefix` 101 / `none` 0)
+- `requirement_type_source` — 판단 근거 (`text` 1,024 / `prefix` 0 / `none` 0)
 
 원본 `requirement_type`은 **지우지 않고 그대로 둔다.** 매핑을 나중에 재검증할 수 있어야 한다.
 

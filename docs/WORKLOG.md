@@ -1,6 +1,6 @@
 # 진행 로그
 
-> 기준일: 2026-08-23
+> 기준일: 2026-08-25
 
 날짜별로 **무엇을 했고 지금 어디까지 왔는지**를 요약한다.
 각 결정의 상세한 근거는 [`history/`](history/)에, 실행 절차는 [`PIPELINE.md`](PIPELINE.md)에 있다.
@@ -12,13 +12,13 @@
 
 ```
 [완료] 원본 RFP 10건 → Markdown 변환
-[완료] 요구사항 추출 1,024건 (requirements_v0.2.0)
+[완료] 요구사항 추출 1,024건 (requirements_v0.3.0)
 [완료] 라벨 스키마 설계 v4.0.0 — 가격 산정 가능성 기준
 [완료] 앵커 풀 구축·동결 (anchor_pool_v2, 100건)
 [완료] 전수 라벨링 1,024건 (Claude Sonnet 5, 층화 few-shot)
-[완료] 라벨 데이터셋 정리·동결 (label_dataset_v2)
+[완료] 라벨 데이터셋 정리·동결 (label_dataset_v3)
 [완료] fold 분할 설계 — LODO 10겹 (학습 8 / 검증 1 / 평가 1 문서)
-[진행] ML 비교 — Dummy·TF-IDF Logistic·LinearSVC 완료 / 임베딩·경량 인코더 남음
+[진행] ML 비교 — Dummy·TF-IDF·LinearSVC·E5·유형 결합 완료 / 경량 인코더 파인튜닝 미룸
 ```
 
 **지금 할 수 있는 것**: `load_label_dataset()`으로 확정 라벨 1,024건을 읽어 분석·학습에 쓴다.
@@ -220,7 +220,8 @@ macro F1은 0.579 → 0.576으로 내렸다. recall이 오른 fold도 3/10뿐이
 
 같은 결합 TF-IDF의 ComplementNB는 macro F1 0.505, 계약 recall 0.351로 명확히 낮았다.
 평균 최고 숫자만 따라 모델을 교체하지 않고, 주 기준선은 단순한 문자 TF-IDF balanced
-Logistic 0.601을 유지한다. 전체 10종 비교는 `notebooks/09_model_summary.ipynb`에 있다.
+Logistic 0.601을 유지한다. 요구사항 유형 결합 2종도 기준선을 넘지 못했다. 전체 12종
+비교는 `notebooks/09_model_summary.ipynb`에 있다.
 
 ---
 

@@ -25,9 +25,9 @@ from scripts.labeling.requirement_taxonomy import CANONICAL_TYPES, UNKNOWN
 
 ROOT = Path(__file__).resolve().parents[2]
 
-DATASET_VERSION = "label_dataset_v2"
-DEFAULT_PATH = ROOT / "data" / "labels" / "label_dataset_v2.jsonl"
-FROZEN_SHA256 = "2c63df5676517aec9ad7805e83dedc96189469c9c66d0a3548066edd5cf2c29c"
+DATASET_VERSION = "label_dataset_v3"
+DEFAULT_PATH = ROOT / "data" / "labels" / "label_dataset_v3.jsonl"
+FROZEN_SHA256 = "cacd75695b01b2d6a51bc2933041488c375c4212e7d43bb7dd113321cb7c7684"
 EXPECTED_ROWS = 1024
 
 COST_BASES = ("없음", "고급·전문인력", "장비·인프라", "라이선스", "외부인증", "외주·전문기관", "복합")
@@ -56,8 +56,7 @@ REQUIRED_FIELDS = (
 
 TYPE_SOURCES = ("text", "prefix", "none")
 
-# 값이 비어 있어도 통과시키는 필드. 원본 RFP에 해당 항목이 없어서 생긴 결측이며
-# 데이터셋 결함이 아니라 원본의 사정이다. docs/issues/002를 본다.
+# 값이 비어 있어도 통과시키는 필드. 일부 원본 RFP에 해당 항목이 없다.
 NULLABLE_FIELDS = ("agency", "domain", "requirement_type")
 
 

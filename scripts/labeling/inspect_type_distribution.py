@@ -31,7 +31,7 @@ PREFIX_NAMES = {
 
 
 def main():
-    p_reqs = ROOT / "data" / "processed" / "requirements_v0.2.0.jsonl"
+    p_reqs = ROOT / "data" / "processed" / "requirements_v0.3.0.jsonl"
     reqs = [json.loads(l) for l in p_reqs.read_text(encoding="utf-8").splitlines() if l.strip()]
 
     print(f"=== 1. 전체 1,024건 요구사항 유형(ID Prefix) 분포 ===")

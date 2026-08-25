@@ -1,6 +1,6 @@
 # 알려진 데이터 문제
 
-`label_dataset_v2`(1,024건)에 남아 있는 문제를 하나씩 기록한다. 전처리·정리 과정에서
+`label_dataset_v3`(1,024건)에 남아 있는 문제를 하나씩 기록한다. 전처리·정리 과정에서
 발견했지만 **고치지 않기로 했거나, 고치려면 판단이 필요한 것들**이다.
 
 각 문서는 같은 형식을 따른다.
@@ -31,8 +31,8 @@
 
 | # | 제목 | 상태 | 한 줄 |
 |---|---|---|---|
-| [001](001-requirement-type-fragmentation.md) | `requirement_type` 표기 분열 | **해결** | 60종 → 정본 12종. `label_dataset_v2` |
-| [002](002-missing-source-fields.md) | 원본 결측 필드 | 수용 | 문서 단위로 통째 비었다. 특징으로 안 쓰면 무관 |
+| [001](001-requirement-type-fragmentation.md) | `requirement_type` 표기 분열 | **해결** | 60종 → 정본 12종. `label_dataset_v3` |
+| [002](002-missing-source-fields.md) | 원본 결측 필드 | 완화 | 유형 결측 해결. 기관 결측 67건만 남음 |
 | [003](003-document-label-imbalance.md) | 문서별 라벨 분포 편차 | 수용 | 결함이 아니라 RFP의 성질. fold 기준선 병기로 대응 |
 | [004](004-execution-path-confounding.md) | 실행 경로 교란 | 수용 | 동기 100건이 한 문서에 몰려 경로 효과를 측정할 수 없다 |
 | [005](005-rare-label-values.md) | 희소 라벨 값 | 미해결 | `외부인증` 3건 등 학습이 불가능한 값이 있다 |

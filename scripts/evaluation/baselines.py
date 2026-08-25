@@ -68,6 +68,7 @@ from typing import Any, Sequence
 
 import numpy as np
 from sklearn.dummy import DummyClassifier
+from sklearn.preprocessing import FunctionTransformer, OneHotEncoder
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import ComplementNB
@@ -132,6 +133,7 @@ class ModelSpec:
     sublinear_tf: bool = True
     classifier: str = "logistic"  # logistic | svm | complement_nb | dummy
     combine_word_char: bool = False
+    include_requirement_type: bool = False
     C: float = 1.0
     class_weight: str | dict[str, float] | None = "balanced"
     review_weight_multiplier: float = 1.0
@@ -188,7 +190,42 @@ class ModelSpec:
             clf = ComplementNB()
         else:
             raise ValueError(f"알 수 없는 분류기: {self.classifier!r}")
-        return Pipeline([("tfidf", vectorizer), ("clf", clf)])
+        if self.include_requirement_type:
+            vectorizer = FeatureUnion(
+                [
+                    (
+                        "text",
+                        Pipeline(
+                            [
+                                ("select", FunctionTransformer(_select_text)),
+                                ("tfidf", vectorizer),
+                            ]
+                        ),
+                    ),
+                    (
+                        "type",
+                        Pipeline(
+                            [
+                                ("select", FunctionTransformer(_select_type)),
+                                ("onehot", OneHotEncoder(handle_unknown="ignore")),
+                            ]
+                        ),
+                    ),
+                ]
+            )
+        return Pipeline([("features", vectorizer), ("clf", clf)])
+
+
+def _select_text(rows: Sequence[dict[str, Any]]) -> list[str]:
+    return [row["raw_requirement_text"] for row in rows]
+
+
+def _select_type(rows: Sequence[dict[str, Any]]) -> list[list[str]]:
+    return [[row["requirement_type_normalized"]] for row in rows]
+
+
+def _model_input(spec: ModelSpec, rows: Sequence[dict[str, Any]]) -> Any:
+    return rows if spec.include_requirement_type else _select_text(rows)
 
 
 @dataclass(frozen=True)
@@ -297,7 +334,7 @@ def _fit_pipeline(spec: ModelSpec, rows: Sequence[dict[str, Any]]) -> Pipeline:
     fitted_spec = replace(spec, class_weight=_resolved_class_weight(spec, labels))
 
     pipeline = fitted_spec.build()
-    pipeline.fit([r["raw_requirement_text"] for r in rows], labels)
+    pipeline.fit(_model_input(spec, rows), labels)
     return pipeline
 
 
@@ -323,7 +360,7 @@ def evaluate_fold(
     train_rows = fit_rows + validation_rows if use_nine_documents else fit_rows
 
     pipeline = _fit_pipeline(spec, train_rows)
-    pred = list(pipeline.predict([r["raw_requirement_text"] for r in test_rows]))
+    pred = list(pipeline.predict(_model_input(spec, test_rows)))
 
     return _fold_result_from_predictions(
         fold,
@@ -463,7 +500,7 @@ def _select_review_weight(
         candidate = replace(spec, review_weight_multiplier=multiplier)
         pipeline = _fit_pipeline(candidate, fit_rows)
         pred = list(
-            pipeline.predict([r["raw_requirement_text"] for r in validation_rows])
+            pipeline.predict(_model_input(candidate, validation_rows))
         )
         ranks[multiplier] = _selection_rank(gold, pred, multiplier)
     return max(REVIEW_WEIGHT_CANDIDATES, key=ranks.__getitem__)
@@ -560,6 +597,15 @@ WORD_BALANCED = ModelSpec(
 WORD_CHAR_BALANCED = ModelSpec(
     name="word 1-2 + char 3-4gram + balanced", combine_word_char=True
 )
+CHAR_TYPE_BALANCED = ModelSpec(
+    name="char 3-4gram + 요구사항 유형 + balanced",
+    include_requirement_type=True,
+)
+WORD_CHAR_TYPE_BALANCED = ModelSpec(
+    name="word 1-2 + char 3-4gram + 요구사항 유형 + balanced",
+    combine_word_char=True,
+    include_requirement_type=True,
+)
 WORD_CHAR_COMPLEMENT_NB = ModelSpec(
     name="word 1-2 + char 3-4gram + ComplementNB",
     classifier="complement_nb",
@@ -589,6 +635,8 @@ def _main() -> None:
             CHAR_BALANCED,
             SVM_BALANCED,
             WORD_CHAR_BALANCED,
+            CHAR_TYPE_BALANCED,
+            WORD_CHAR_TYPE_BALANCED,
             WORD_CHAR_COMPLEMENT_NB,
         )
     ]

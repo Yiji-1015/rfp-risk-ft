@@ -17,6 +17,29 @@ from scripts.data.build_dataset import (
 
 
 class RequirementIndexAuditTests(unittest.TestCase):
+    def test_fills_type_from_document_section_mapping_when_table_omits_it(self):
+        markdown = """
+<table>
+<tr><td>요구사항 고유번호</td><td>FUN-001</td></tr>
+<tr><td>요구사항 명칭</td><td>검색</td></tr>
+<tr><td>요구사항 내용</td><td>검색 기능을 제공한다.</td></tr>
+</table>
+"""
+        with TemporaryDirectory() as tmp:
+            path = Path(tmp) / "source.md"
+            path.write_text(markdown, encoding="utf-8")
+            rows = extract_document(
+                path,
+                {
+                    "document_id": "doc",
+                    "agency": "기관",
+                    "domain": "도메인",
+                    "requirement_types_by_prefix": {"FUN": "기능 요구사항"},
+                },
+            )
+
+        self.assertEqual(rows[0]["requirement_type"], "기능 요구사항")
+
     def test_extracts_ids_only_from_requirement_index_section(self):
         markdown = """
 ## 2. 요구사항 목록

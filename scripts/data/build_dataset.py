@@ -26,7 +26,7 @@ SOURCE_DIR = ROOT / "RFP_data" / "md"
 OUTPUT_DIR = ROOT / "data" / "processed"
 REVIEW_DIR = ROOT / "data" / "review"
 REPORT_DIR = ROOT / "reports" / "current"
-VERSION = "v0.2.0"
+VERSION = "v0.3.0"
 DATASET_VERSION = f"requirements_{VERSION}"
 
 ID_RE = re.compile(r"(?<![A-Z0-9])([A-Z]{2,8}(?:-+[A-Z0-9]{2,8})+)(?![A-Z0-9])")
@@ -51,6 +51,20 @@ DOCUMENTS = {
         "document_id": "koen_ai_infrastructure",
         "agency": "한국남동발전",
         "domain": "에너지·발전",
+        # 상세표에는 유형 칸이 없지만 원문 구역 제목이 ID 접두어별 유형을 명시한다.
+        "requirement_types_by_prefix": {
+            "CON": "컨설팅 요구사항",
+            "FUN": "기능 요구사항",
+            "DAT": "데이터 요구사항",
+            "INT": "인터페이스 요구사항",
+            "PER": "성능 요구사항",
+            "SER": "보안 요구사항",
+            "QUR": "품질 요구사항",
+            "COR": "제약 요구사항",
+            "TST": "테스트 요구사항",
+            "PMR": "프로젝트 관리 요구사항",
+            "PSR": "프로젝트 지원 요구사항",
+        },
     },
     "붙임2. 제안요청서(AI 플랫폼(KEXIM AI) 구축)_F.md": {
         "document_id": "kexim_ai_platform",
@@ -520,6 +534,10 @@ def extract_document(path: Path, metadata: dict[str, str | None]) -> list[dict]:
             requirement_type = find_labeled_value(
                 table.rows, {"요구사항분류", "요구사항구분", "구분"}
             )
+            if not requirement_type:
+                requirement_type = metadata.get(
+                    "requirement_types_by_prefix", {}
+                ).get(requirement_id.split("-", 1)[0])
             body = find_labeled_value(
                 table.rows,
                 {

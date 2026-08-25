@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-RFP 요구사항 동결 데이터셋 v0.2.0 EDA 스크립트
+RFP 요구사항 동결 데이터셋 v0.3.0 EDA 스크립트
 
 수행 작업:
 1. 문서별 및 원문/정규화 요구사항 유형별 행 수 집계
 2. 본문 문자 길이, 단어 수, 공백 분할 토큰 길이 분포 통계 (min, max, mean, median, P90, P95, P99)
 3. 중첩표(' | ') 포함 행, 승인된 특이 ID(canonical != source_id) 원문 예외 행, 최단/최장 본문 사례 추출
-4. JSON 결과(reports/current/eda_v0.2.0.json)와 Markdown 보고서
-   (reports/current/eda_v0.2.0.md) 생성
+4. JSON 결과(reports/current/eda_v0.3.0.json)와 Markdown 보고서
+   (reports/current/eda_v0.3.0.md) 생성
 """
 
 import json
@@ -192,7 +192,7 @@ def analyze_dataset(records: List[Dict[str, Any]]) -> Dict[str, Any]:
     ]
 
     return {
-        "dataset_version": records[0].get("dataset_version", "v0.2.0") if records else "v0.2.0",
+        "dataset_version": records[0].get("dataset_version", "requirements_v0.3.0") if records else "requirements_v0.3.0",
         "total_records": total_count,
         "document_counts": doc_counts,
         "raw_type_counts": raw_type_counts,
@@ -211,10 +211,12 @@ def analyze_dataset(records: List[Dict[str, Any]]) -> Dict[str, Any]:
 
 def generate_markdown_report(eda_result: Dict[str, Any]) -> str:
     """Markdown 종합 보고서 텍스트 생성"""
+    dataset_version = eda_result["dataset_version"]
+    version = dataset_version.removeprefix("requirements_")
     lines = []
-    lines.append(f"# 요구사항 데이터셋 v0.2.0 EDA 보고서")
+    lines.append(f"# 요구사항 데이터셋 {version} EDA 보고서")
     lines.append("")
-    lines.append(f"- **동결 데이터셋**: `data/processed/requirements_v0.2.0.jsonl`")
+    lines.append(f"- **동결 데이터셋**: `data/processed/{dataset_version}.jsonl`")
     lines.append(f"- **총 행 수**: {eda_result['total_records']:,} 행 (요구사항 ID 1개 = 1행)")
     lines.append(f"- **대상 문서 수**: {len(eda_result['document_counts'])} 개")
     lines.append(f"- **중첩표 포함 행 수**: {eda_result['nested_table_count']} 행")
@@ -278,7 +280,7 @@ def generate_markdown_report(eda_result: Dict[str, Any]) -> str:
     lines.append("")
     lines.append("### 4.1 승인된 원문 예외 ID (Canonical ID != Source ID)")
     lines.append("")
-    lines.append("> 이 항목은 결함이 아니라 원문 오타/불일치의 추적성을 보존하기 위해 `requirements_v0.2.0` 데이터셋 및 `extraction_freeze_v0.2.0.md`에 명시적으로 의도하여 남긴 승인 예외(Policy Resolved) 항목입니다.")
+    lines.append(f"> 이 항목은 결함이 아니라 원문 오타/불일치의 추적성을 보존하기 위해 `{dataset_version}` 데이터셋에 명시적으로 의도하여 남긴 승인 예외(Policy Resolved) 항목입니다.")
     lines.append("")
     if eda_result['id_mismatches']:
         lines.append("| requirement_uid | Canonical `requirement_id` | Source `source_requirement_id` | 요구사항명 | 비고 |")
@@ -316,15 +318,17 @@ def generate_markdown_report(eda_result: Dict[str, Any]) -> str:
 def generate_jupyter_notebook(eda_result: Dict[str, Any]) -> Dict[str, Any]:
     """EDA 결과를 포함하는 주피터 노트북 (.ipynb) JSON 데이터 생성"""
     cells = []
+    dataset_version = eda_result["dataset_version"]
+    version = dataset_version.removeprefix("requirements_")
     
     # 셀 1: 제목 및 개요
     cells.append({
         "cell_type": "markdown",
         "metadata": {},
         "source": [
-            "# RFP 요구사항 데이터셋 v0.2.0 EDA 노트북\n",
+            f"# RFP 요구사항 데이터셋 {version} EDA 노트북\n",
             "\n",
-            "이 노트북은 `data/processed/requirements_v0.2.0.jsonl` (총 1,024행) 동결 데이터셋의 문서별/유형별 분포, 본문 길이, 중첩표 및 승인된 원문 예외 ID를 탐색하고 시각화합니다."
+            f"이 노트북은 `data/processed/{dataset_version}.jsonl` (총 1,024행) 동결 데이터셋의 문서별/유형별 분포, 본문 길이, 중첩표 및 승인된 원문 예외 ID를 탐색하고 시각화합니다."
         ]
     })
     
@@ -346,9 +350,9 @@ def generate_jupyter_notebook(eda_result: Dict[str, Any]) -> Dict[str, Any]:
             "plt.rcParams['font.family'] = 'Malgun Gothic' if os.name == 'nt' else 'AppleGothic'\n",
             "plt.rcParams['axes.unicode_minus'] = False\n",
             "\n",
-            "dataset_path = Path('../data/processed/requirements_v0.2.0.jsonl')\n",
+            f"dataset_path = Path('../data/processed/{dataset_version}.jsonl')\n",
             "if not dataset_path.exists():\n",
-            "    dataset_path = Path('data/processed/requirements_v0.2.0.jsonl')\n",
+            f"    dataset_path = Path('data/processed/{dataset_version}.jsonl')\n",
             "\n",
             "df = pd.read_json(dataset_path, lines=True)\n",
             "\n",
@@ -517,7 +521,7 @@ def generate_jupyter_notebook(eda_result: Dict[str, Any]) -> Dict[str, Any]:
 
 def main():
     root_dir = Path(__file__).resolve().parents[2]
-    dataset_path = root_dir / "data" / "processed" / "requirements_v0.2.0.jsonl"
+    dataset_path = root_dir / "data" / "processed" / "requirements_v0.3.0.jsonl"
     
     if not dataset_path.exists():
         print(f"오류: 데이터셋 파일을 찾을 수 없습니다 -> {dataset_path}")
@@ -529,14 +533,15 @@ def main():
     # 1. JSON 보고서 저장
     reports_dir = root_dir / "reports" / "current"
     reports_dir.mkdir(parents=True, exist_ok=True)
-    json_path = reports_dir / "eda_v0.2.0.json"
+    version = eda_result["dataset_version"].removeprefix("requirements_")
+    json_path = reports_dir / f"eda_{version}.json"
     with open(json_path, 'w', encoding='utf-8') as f:
         json.dump(eda_result, f, ensure_ascii=False, indent=2)
     print(f"JSON 보고서 생성 완료: {json_path}")
     
     # 2. Markdown 보고서 저장
     md_report = generate_markdown_report(eda_result)
-    md_path = reports_dir / "eda_v0.2.0.md"
+    md_path = reports_dir / f"eda_{version}.md"
     with open(md_path, 'w', encoding='utf-8') as f:
         f.write(md_report)
     print(f"Markdown 보고서 생성 완료: {md_path}")

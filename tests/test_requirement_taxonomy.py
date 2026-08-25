@@ -45,7 +45,7 @@ def test_text_wins_over_prefix_when_they_disagree():
 
 
 def test_missing_type_falls_back_to_prefix():
-    """koen_ai_infrastructure 101건은 표기가 없다. 접두어 충돌이 없어 대체가 안전하다."""
+    """표기가 없는 행은 접두어로 대체한다."""
     assert normalize_requirement_type(None, "FUN-001") == ("기능", "prefix")
     assert normalize_requirement_type(None, "TST-001") == ("테스트", "prefix")
     assert normalize_requirement_type("", "DAT-001") == ("데이터", "prefix")
@@ -81,7 +81,6 @@ def test_frozen_dataset_is_fully_mapped():
 
     assert meta["unmapped_type_count"] == 0
     assert set(meta["requirement_type_counts"]) <= set(CANONICAL_TYPES)
-    # 표기가 없는 문서는 koen 하나뿐이고 그 건수가 101이다.
-    assert meta["requirement_type_source_counts"] == {"text": 923, "prefix": 101}
-    assert all(r["requirement_type"] or True for r in rows)  # 원본 표기는 보존한다
+    assert meta["requirement_type_source_counts"] == {"text": 1024}
+    assert all(r["requirement_type"] for r in rows)
     assert "requirement_type" in rows[0], "원본 표기를 지우면 매핑을 재검증할 수 없다"

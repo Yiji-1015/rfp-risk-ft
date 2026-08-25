@@ -17,8 +17,7 @@ TER·SER·QUR·COR·PMR·PSR)와 1:1로 대응해서 검증이 쉽다. 여기에
     ECR -> 시스템장비구성(5개 문서) 이지만 kexim에서는 ECM
     SER -> 보안(9개 문서) 이지만 kexim에서는 서비스
 
-접두어는 표기가 아예 없는 문서(`koen_ai_infrastructure` 101건)에서만 대체로 쓴다.
-그 문서는 접두어 충돌이 없어 안전하다.
+접두어는 표기가 없는 이전 데이터나 새 문서의 안전한 대체 경로로만 쓴다.
 """
 
 from __future__ import annotations
@@ -69,6 +68,7 @@ TEXT_TO_CANONICAL: dict[str, CanonicalType] = {
     "품질": "품질",
     "품질관리": "품질",
     "제약사항": "제약사항",
+    "제약": "제약사항",
     "안전": "제약사항",              # SAR-001~ 안전보건관리체계. 법규 준수 제약
     "프로젝트관리": "프로젝트관리",
     "거버넌스및PMO": "프로젝트관리",  # GOV-001~ AI 거버넌스·위험관리 체계 수립
@@ -76,7 +76,7 @@ TEXT_TO_CANONICAL: dict[str, CanonicalType] = {
     "컨설팅": "컨설팅",
 }
 
-# 표기가 없는 문서에서만 쓰는 대체 경로. 현재는 koen_ai_infrastructure 뿐이다.
+# 표기가 없는 행에서만 쓰는 대체 경로.
 PREFIX_TO_CANONICAL: dict[str, CanonicalType] = {
     "SFR": "기능",
     "FUN": "기능",

@@ -102,11 +102,10 @@ def test_row_count_change_is_rejected(tmp_path):
 
 def test_nullable_fields_are_tolerated():
     """
-    agency 67건과 requirement_type 101건이 비어 있다. 원본 RFP에 그 항목이 없어서지
-    데이터셋 결함이 아니므로 통과시키되 메타에 세어 남긴다(docs/issues/002).
+    agency 67건은 비어 있다. 허용하되 메타에 세어 남긴다(docs/issues/002).
     """
     _, meta = load_label_dataset()
 
     assert meta['nullable_missing']['agency'] == 67
-    assert meta['nullable_missing']['requirement_type'] == 101
+    assert meta['nullable_missing']['requirement_type'] == 0
     assert meta['nullable_missing']['domain'] == 0

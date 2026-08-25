@@ -33,8 +33,8 @@ from scripts.labeling.label_schema import (
 from scripts.labeling.requirement_taxonomy import normalize_requirement_type
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_REQUIREMENTS = ROOT / "data" / "processed" / "requirements_v0.2.0.jsonl"
-DEFAULT_OUTPUT = ROOT / "data" / "labels" / "label_dataset_v2.jsonl"
+DEFAULT_REQUIREMENTS = ROOT / "data" / "processed" / "requirements_v0.3.0.jsonl"
+DEFAULT_OUTPUT = ROOT / "data" / "labels" / "label_dataset_v3.jsonl"
 RUNS_DIR = ROOT / "reports" / "current" / "claude_runs"
 
 # 전수 1,024건을 만든 실행들. Chunk 1 재실행 배치를 취소해서 경로가 섞여 있다(결정 27).
@@ -171,7 +171,11 @@ def main() -> None:
         "row_count": len(rows),
         "schema_version": SCHEMA_VERSION,
         "requirements_source": {
-            "path": str(args.requirements),
+            "path": str(
+                args.requirements.relative_to(ROOT)
+                if args.requirements.is_relative_to(ROOT)
+                else args.requirements
+            ),
             "sha256": sha256_of(args.requirements),
         },
         "source_runs": [

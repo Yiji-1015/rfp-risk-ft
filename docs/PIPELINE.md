@@ -1,7 +1,7 @@
 # 라벨 데이터셋 생성 절차
 
-> 기준일: 2026-08-20
-> 대상: `requirements_v0.2.0` 1,024건 → 라벨 데이터셋
+> 기준일: 2026-08-25
+> 대상: `requirements_v0.3.0` 1,024건 → 라벨 데이터셋
 
 > **문서 역할:** 원본 RFP에서 라벨 데이터셋까지 **재현 가능한 실행 순서**를 기록한다.
 > 연구 설계의 근거는 [`PROJECT_DIRECTION.md`](PROJECT_DIRECTION.md), 각 선택의 이유는
@@ -14,13 +14,13 @@
       ↓  (수동 변환)
 [2] 분석용 Markdown          RFP_data/md/*.md
       ↓  build_dataset.py
-[3] 요구사항 데이터셋         data/processed/requirements_v0.2.0.jsonl   (1,024건)
+[3] 요구사항 데이터셋         data/processed/requirements_v0.3.0.jsonl   (1,024건)
       ↓  sample_100_anchor_candidates.py + 3회 스크리닝
 [4] 앵커 풀                  data/anchors/anchor_pool_v2.jsonl          (100건, 동결)
       ↓  run_claude_batch.py (층화 퓨샷)
 [5] 라벨링 실행 결과          reports/current/claude_runs/*/results.jsonl (1,024건)
       ↓  build_label_dataset.py
-[6] 라벨 데이터셋            data/labels/label_dataset_v2.jsonl         (1,024건)
+[6] 라벨 데이터셋            data/labels/label_dataset_v3.jsonl         (1,024건)
       ↓  (예정)
 [7] ML 비교 실험
 ```
@@ -146,7 +146,7 @@ manifest와 앵커 인출 미리보기가 출력된다. **유료 실행 전에 �
 
 ```bash
 python -m scripts.labeling.run_claude_batch --submit --execute \
-  --input data/processed/requirements_v0.2.0.jsonl \
+  --input data/processed/requirements_v0.3.0.jsonl \
   --anchor-pool data/anchors/anchor_pool_v2.jsonl \
   --start 1 --limit 1024 \
   --output-dir reports/current/claude_runs/batch_full
@@ -196,7 +196,7 @@ python -m scripts.labeling.run_claude_batch --submit --execute \
 python -m scripts.labeling.build_label_dataset
 ```
 
-산출물은 `data/labels/label_dataset_v2.jsonl`(1,024건)과 같은 이름의 `_manifest.json`이다.
+산출물은 `data/labels/label_dataset_v3.jsonl`(1,024건)과 같은 이름의 `_manifest.json`이다.
 실행 디렉터리 세 곳에서 직접 읽으므로 언제든 다시 만들 수 있고, 원본은 건드리지 않는다.
 
 정리하는 것은 셋이다.
@@ -278,12 +278,12 @@ Sonnet 5 도입가($2/$10 per MTok, 2026-08-31까지) 기준, 환율 1,416원.
 
 | 경로 | 내용 |
 |---|---|
-| `data/processed/requirements_v0.2.0.jsonl` | 요구사항 데이터셋 (Git 제외, 재생성 가능) |
+| `data/processed/requirements_v0.3.0.jsonl` | 요구사항 데이터셋 (Git 제외, 재생성 가능) |
 | `data/anchors/anchor_pool_v2.jsonl` | 동결된 앵커 풀 |
 | `data/samples/` | 파일럿·표준조항·앵커후보 표본 |
 | `reports/current/claude_runs/*/manifest.json` | 실행 조건 (재현의 기준) |
 | `reports/current/claude_runs/*/results.jsonl` | 건별 라벨과 토큰 사용량 |
-| `data/labels/label_dataset_v2.jsonl` | 확정(동결) 라벨 데이터셋 |
+| `data/labels/label_dataset_v3.jsonl` | 확정(동결) 라벨 데이터셋 |
 
 ---
 
