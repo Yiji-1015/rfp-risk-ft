@@ -158,7 +158,9 @@ system에 올리면 오히려 손해다(결정 29).
 | 04 | `04_anchor_pool_analysis.ipynb` | 앵커 풀 구성과 인출 시뮬레이션 |
 | 05 | `05_run_comparison.ipynb` | 실행 경로와 앵커링 전략 비교 |
 | 06 | `06_label_eda.ipynb` | 라벨 분포, 규칙 감사, fold 난이도, 문구 반복 |
-| 07 | `07_baseline_comparison.ipynb` | 기준선 4종, 통제 비교, macro F1 해부, 세 갈래 점수 |
+| 07 | `07_baseline_comparison.ipynb` | TF-IDF 기준선 6종, 통제 비교, macro F1 해부 |
+| 08 | `08_embedding_comparison.ipynb` | 동결 E5 임베딩과 TF-IDF 통제 비교 |
+| 09 | `09_model_summary.ipynb` | 실험 모델 10종 종합표·그래프와 최종 모델 해석 |
 
 비교·분석은 스크립트가 아니라 노트북으로 만든다. 노트북은 사용법만 보여주고
 실제 로직은 `scripts/` 모듈이 기준이다.
@@ -183,8 +185,8 @@ system에 올리면 오히려 손해다(결정 29).
 
 ```
 1. DummyClassifier              최저 기준 (최빈 클래스만 찍기)          [완료]
-2. TF-IDF + Logistic / SVM      주 기준선 — 문자 n-gram               [Logistic 완료]
-3. 사전학습 문장 임베딩 + ML      의미 표현이 단어 겹침보다 나은가        [남음]
+2. TF-IDF + Logistic / SVM      주 기준선 — 문자 n-gram               [완료]
+3. 사전학습 문장 임베딩 + ML      의미 표현이 단어 겹침보다 나은가        [완료]
 4. 경량 한국어 인코더 파인튜닝    GPU 예산 대비 추가 이득이 있는가        [미룸]
 ```
 
@@ -194,30 +196,63 @@ system에 올리면 오히려 손해다(결정 29).
 python -m scripts.evaluation.baselines
 ```
 
-| 설정 | macro F1 | 정확도 | 계약recall |
-|---|---:|---:|---:|
-| Dummy (최빈) | 0.213 | 0.491 | **0.000** |
-| word 1-2gram + balanced | 0.581 | 0.640 | 0.532 |
-| char 3-4gram, weight 없음 | 0.524 | 0.625 | 0.374 |
-| **char 3-4gram + balanced** | **0.602** | 0.667 | 0.533 |
+| 설정 | macro F1 | 정확도 | 계약 precision | 계약 recall | 계약 F1 |
+|---|---:|---:|---:|---:|---:|
+| Dummy (최빈) | 0.219 | 0.506 | 0.000 | **0.000** | 0.000 |
+| word 1-2gram + balanced | 0.581 | 0.639 | 0.533 | 0.507 | 0.512 |
+| char 3-4gram, weight 없음 | 0.520 | 0.629 | **0.763** | 0.346 | 0.453 |
+| **char 3-4gram + balanced** | **0.601** | **0.664** | 0.592 | **0.514** | **0.537** |
+| LinearSVC + balanced | 0.579 | 0.658 | 0.607 | 0.494 | 0.534 |
+| LinearSVC + 검증 weight | 0.576 | 0.654 | 0.597 | 0.509 | **0.537** |
+| E5-small + balanced Logistic | 0.544 | 0.622 | 0.474 | 0.443 | 0.453 |
+| E5-small + balanced LinearSVC | 0.546 | 0.636 | 0.483 | 0.425 | 0.444 |
+| **word+char TF-IDF Logistic** | **0.603** | **0.666** | 0.600 | **0.532** | **0.553** |
+| word+char TF-IDF ComplementNB | 0.505 | 0.610 | 0.692 | 0.351 | 0.436 |
 
-Dummy는 정확도 0.491을 내면서 `계약·질의검토` recall이 **0.000**이다. 세 클래스 중 둘을
+동결 앵커 100건은 라벨 생성 때 이미 예시로 쓰였으므로 검증·평가에서 제외한다(결정 25).
+따라서 데이터셋은 1,024건이지만 평가 합계는 **924건**이다.
+
+Dummy는 정확도 0.506을 내면서 `계약·질의검토` recall이 **0.000**이다. 세 클래스 중 둘을
 아예 예측하지 않기 때문이다. §11.9가 경고한 "정확도가 높아도 중요한 조항을 놓친다"가
 첫 실행에서 그대로 나왔다. 그래서 주 지표는 macro F1이고 정확도는 보조다(§10.2).
+
+LinearSVC는 Logistic보다 macro F1이 0.021, 계약 recall이 0.020 낮았다. 검증 문서의 계약
+F2로 검토 가중치 `1.0 / 1.25 / 1.5 / 2.0`을 fold마다 골라도 recall은 0.015만 회복했고
+macro F1은 0.003 낮아졌다. 현재 기준선은 `char 3-4gram + balanced Logistic`을 유지한다.
+
+동결 `multilingual-e5-small` 384차원 임베딩으로 **입력 표현만** 바꿔도 Logistic은 macro
+F1 0.544, LinearSVC는 0.546으로 기준선보다 각각 0.057, 0.054 낮았다. Logistic은 10개
+fold 중 2개에서만 TF-IDF를 이겼고 계약 recall도 0.071 낮았다. 따라서 이 데이터에서는
+현재의 고정 E5 임베딩보다 문자 TF-IDF가 낫다.
+
+단어 1~2gram과 문자 3~4gram을 결합한 Logistic은 평균 macro F1 0.603으로 숫자상 가장
+높지만, 문자 단독 대비 차이는 +0.003(-0.050~+0.067), 우세 5/10이라 잡음이다. 복잡도만
+늘고 재현되는 개선이 아니므로 현재 권장 기준선은 문자 단독 Logistic 0.601을 유지한다.
+같은 결합 입력의 ComplementNB는 macro F1 0.505, 계약 recall 0.351로 탈락했다.
+
+모델을 USB `E:`에 저장해 실행하는 명령은 다음과 같다. 모델 파일 약 470MB는 USB에,
+재생성 가능한 임베딩 약 1.5MB는 Git 제외된 `data/processed/`에 저장된다.
+
+```powershell
+python -m scripts.evaluation.embeddings --model-cache E:\rfp-models
+```
 
 **효과와 잡음을 가르는 기준.** 문서가 10개뿐이라 fold 분산이 커서, 평균만 보면 잡음을
 효과로 착각한다. 평균 차이가 fold별 편차 폭에 비해 작으면 효과가 아니다.
 
 | 비교 | 평균 | 편차 폭 | 우세 | 판정 |
 |---|---:|---:|---:|---|
-| `class_weight` 없음 → balanced | **+0.078** | 0.257 | 8/10 | 효과 |
-| 표현 word → char | +0.020 | 0.161 | 7/10 | 판정 보류 |
-| 학습 문서 8 → 9 | +0.002 | 0.082 | 6/10 | 잡음 |
+| `class_weight` 없음 → balanced | **+0.080** | 0.254 | 9/10 | 효과 |
+| 표현 word → char | +0.020 | 0.205 | 7/10 | 판정 보류 |
+| 학습 문서 8 → 9 | +0.001 | 0.105 | 6/10 | 잡음 |
+| 표현 char → word+char | +0.003 | 0.117 | 5/10 | 잡음 |
 
-크기 차이가 40배다. **어느 파라미터를 먼저 만질지는 이 비교로 정한다.** 그리드서치로
+크기 차이가 약 80배다. **어느 파라미터를 먼저 만질지는 이 비교로 정한다.** 그리드서치로
 최고 조합만 뽑으면 이 순서가 보이지 않는다(§9.3).
 
 상세와 해석은 [`notebooks/07_baseline_comparison.ipynb`](notebooks/07_baseline_comparison.ipynb),
+[`notebooks/08_embedding_comparison.ipynb`](notebooks/08_embedding_comparison.ipynb),
+[`notebooks/09_model_summary.ipynb`](notebooks/09_model_summary.ipynb),
 근거는 [`docs/history/decisions-04.md`](docs/history/decisions-04.md).
 
 ### 평가 분할 — 확정
@@ -233,11 +268,11 @@ fold 표와 진단이 출력된다. API 키도 네트워크도 필요 없다.
 
 fold별로 기준선을 **둘** 낸다. 학습 최빈을 찍는 `Dummy`는 배포 가능한 모델이고,
 평가 문서 안의 최빈 비율인 `oracle`은 그 fold가 얼마나 쉬운지의 눈금이다. 문서마다 최빈
-클래스가 달라 4개 fold에서 둘이 갈린다. 집계는 fold 평균과 건수 가중을 둘 다 낸다.
+클래스가 달라 2개 fold에서 둘이 갈린다. 집계는 fold 평균과 건수 가중을 둘 다 낸다.
 
-**issues/003과 006은 독립이 아니다.** fold 기준선과 반복 문구 노출률의 상관이 **r = 0.856**
-이다. 어려운 문서(defense·ccrs·genai)는 반복 노출이 0~4%인데 쉬운 문서(koen·korail·mfds)는
-18~23%다. 쉬운 fold가 표준 문구라는 공짜 점수까지 더 받는다. 두 교란이 겹치므로 fold 점수에는
+**issues/003과 006은 독립이 아니다.** 실제 학습 8문서 기준 반복 노출률과 fold 기준선의
+상관은 **r = 0.635**다. 어려운 문서(defense·ccrs·genai)는 반복 노출이 0~4.5%이고,
+쉬운 문서(koen·mfds)는 20~24%다. 두 교란이 겹치므로 fold 점수에는
 두 값을 항상 함께 적는다.
 
 ### 남은 결정

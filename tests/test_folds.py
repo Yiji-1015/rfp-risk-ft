@@ -2,8 +2,10 @@ import pytest
 
 from scripts.evaluation.duplication import cross_document_similarity
 from scripts.evaluation.folds import (
+    _repeat_flags,
     aggregate,
     diagnose_all,
+    evaluation_excluded_uids,
     make_lodo_folds,
 )
 from scripts.labeling.label_dataset import load_label_dataset
@@ -78,6 +80,35 @@ def test_folds_do_not_depend_on_input_row_order():
     assert make_lodo_folds(rows) == make_lodo_folds(list(reversed(rows)))
 
 
+def test_frozen_anchors_are_train_only_and_never_scored():
+    """결정 25: 이미 라벨 예시로 쓰인 100건은 처음 보는 평가 사례가 아니다."""
+    rows, _ = load_label_dataset()
+    excluded = evaluation_excluded_uids()
+    evaluated = set()
+
+    assert len(excluded) == 100
+    for fold in make_lodo_folds(rows):
+        fit, validation, test = fold.split(rows)
+        assert not excluded.intersection(r["requirement_uid"] for r in validation)
+        assert not excluded.intersection(r["requirement_uid"] for r in test)
+        assert excluded.intersection(r["requirement_uid"] for r in fit)
+        evaluated.update(r["requirement_uid"] for r in test)
+
+    assert len(evaluated) == len(rows) - len(excluded) == 924
+
+
+def test_repeat_exposure_uses_fit_documents_not_the_validation_document():
+    rows = _rows([("a", 1), ("b", 1), ("c", 1), ("d", 1)])
+    rows[0]["raw_requirement_text"] = "검증 문서에만 똑같이 존재하는 특별 문구"
+    rows[1]["raw_requirement_text"] = "검증 문서에만 똑같이 존재하는 특별 문구"
+    rows[2]["raw_requirement_text"] = "완전히 다른 학습 요구사항 하나"
+    rows[3]["raw_requirement_text"] = "완전히 다른 학습 요구사항 둘"
+    fold = make_lodo_folds(rows)[0]  # a=평가, b=검증, c·d=학습
+
+    assert cross_document_similarity(rows).is_repeat[0]
+    assert not _repeat_flags(fold, rows, 0.6)["a:R-000"]
+
+
 def test_fit_excludes_the_validation_document_but_train_keeps_it():
     """
     §9.3의 통제 비교는 분할을 고정하고 모델만 바꾸는 것이다. early stopping이
@@ -101,9 +132,9 @@ def test_too_few_documents_fails_loudly():
 def test_the_two_baselines_are_not_the_same_number():
     """
     배포 가능한 Dummy(학습 최빈을 찍음)와 oracle(평가 문서 안의 최빈)은 다른 값이다.
-    문서마다 최빈 클래스가 달라서 defense·ccrs·genai는 `견적반영`, kangwon은
-    `계약·질의검토`가 최빈이다. 두 값을 하나로 합쳐 보고하면 모델이 기준선을
-    넘었는지 판단이 흐려진다.
+    앵커를 제외한 평가 모집단에서는 ccrs·genai의 최빈이 `견적반영`이라 학습 최빈
+    `통상수용`과 갈린다. 두 값을 하나로 합쳐 보고하면 모델이 기준선을 넘었는지
+    판단이 흐려진다.
     """
     rows, _ = load_label_dataset()
     diagnostics = diagnose_all(rows)
@@ -117,9 +148,7 @@ def test_the_two_baselines_are_not_the_same_number():
     }
     assert diverging == {
         "ccrs_ai_platform",
-        "defense_intelligent_platform",
         "genai_incident_response",
-        "kangwon_land_genai",
     }
 
     # oracle은 정의상 그 문서 안의 최빈이므로 어떤 예측기도 이보다 잘 찍을 수 없다.

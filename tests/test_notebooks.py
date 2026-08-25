@@ -13,6 +13,8 @@ EXPECTED_NOTEBOOKS = {
     "05_run_comparison.ipynb",
     "06_label_eda.ipynb",
     "07_baseline_comparison.ipynb",
+    "08_embedding_comparison.ipynb",
+    "09_model_summary.ipynb",
 }
 
 

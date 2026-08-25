@@ -318,9 +318,10 @@ LLM, temperature, 출력 스키마, 입력 순서와 실행 조건은 기록하�
 ### 9.2 기준선과 비교 모델
 
 - 최저 기준: DummyClassifier
-- 주 기준선: 문자+단어 TF-IDF + Logistic Regression
-- 강한 선형 비교: 문자+단어 TF-IDF + Linear SVM
-- 추가 비교: Naive Bayes, 순서형 분류, 필요 시 LightGBM/XGBoost
+- 주 기준선: 문자 3~4gram TF-IDF + balanced Logistic Regression
+- 표현 비교: 단어 1~2gram, 문자+단어 결합 TF-IDF
+- 강한 선형 비교: 같은 문자 TF-IDF + Linear SVM
+- 추가 비교: Complement Naive Bayes 완료, 순서형 분류는 필요 시 검토
 - 의미 표현 비교: 사전학습 문장 임베딩 + Logistic Regression/SVM
 - 최종 비교: 경량 한국어 인코더 파인튜닝
 
@@ -380,10 +381,11 @@ LLM, temperature, 출력 스키마, 입력 순서와 실행 조건은 기록하�
   §9.3의 통제 비교는 분할을 고정하고 모델만 바꾸는 것이라, 학습량이 다르면 결과 차이에
   학습량 차이가 섞인다
 - fold별로 기준선 **둘**을 병기한다 — 학습 최빈을 찍는 Dummy(배포 가능)와 평가 문서 안의
-  최빈 비율(oracle, 난이도 눈금). 문서마다 최빈 클래스가 달라 4개 fold에서 두 값이 갈린다
+  최빈 비율(oracle, 난이도 눈금). 앵커 제외 후 2개 fold에서 두 값이 갈린다
 - 집계는 fold 단순 평균과 건수 가중을 **둘 다** 낸다(issues/003)
 - fold별 반복 문구 노출률을 함께 적고, 점수를 전체 / 반복 제외 / 반복만으로 낸다(issues/006)
-- 평가 문서 라벨의 앵커 사용 금지
+- 평가 문서 라벨의 앵커 사용 금지. 동결 앵커 100건은 검증·평가에서도 제외하므로
+  데이터셋 1,024건 중 평가 합계는 924건이다(결정 25)
 
 구현은 `scripts/evaluation/folds.py`이고 `python -m scripts.evaluation.folds`로 fold 표를
 출력한다. 근거는 `history/decisions-04.md`.
@@ -641,31 +643,47 @@ API 모델 버전과 제공자의 업데이트로 같은 프롬프트 결과가 
 
 ### 13.7 ML 비교 실험 — 진행 중
 
-Dummy → TF-IDF 선형 → 임베딩 ML → 경량 인코더 순. **Dummy와 TF-IDF + Logistic까지 완료**
-(2026-08-23 10:20). 기본 설정은 문자 3~4gram + `class_weight="balanced"`이고 LODO fold
-평균 macro F1 0.602다(Dummy 0.213).
+Dummy → TF-IDF 선형 → 임베딩 ML → 경량 인코더 순. **동결 문장 임베딩 ML까지 완료**
+(2026-08-25). 기본 설정은 문자 3~4gram + `class_weight="balanced"` Logistic이고 LODO
+fold 평균 macro F1 0.601이다(Dummy 0.219). 같은 분할에서 동결 `multilingual-e5-small`
+384차원 입력은 Logistic 0.544, LinearSVC 0.546이었다. 동결 앵커 100건을 제외해 각
+문서의 비앵커 요구사항 총 924건만 검증·평가한다.
 
 측정으로 정한 것 둘.
 
-- `class_weight`가 지금까지 만진 것 중 가장 큰 효과다(평균 +0.078, 8/10 fold 우세)
-- 학습 문서 8 → 9는 잡음이다(평균 +0.002, 방향 불일정). 13.6의 8문서 통일을 뒷받침한다
+- `class_weight`가 지금까지 만진 것 중 가장 큰 효과다(평균 +0.080, 9/10 fold 우세)
+- 학습 문서 8 → 9는 잡음이다(평균 +0.001, 방향 불일정). 13.6의 8문서 통일을 뒷받침한다
 
-`word → char`는 평균 +0.020에 편차 폭 0.161로 **판정을 보류했다.** §9.2가 문자 n-gram을
+`word → char`는 평균 +0.020에 편차 폭 0.205로 **판정을 보류했다.** §9.2가 문자 n-gram을
 "반드시 포함"으로 둔 근거가 이 데이터에서는 그만큼 강하지 않다. 방향은 일정하므로
 표본이 늘면 달라질 수 있어 단정하지 않고 기록만 남긴다.
 
-남은 것 — LinearSVC, 하이퍼파라미터 선택, 사전학습 임베딩. 하이퍼파라미터를 고르기
+검증 문서에서 계약 F2로 검토 클래스 가중치 `1.0 / 1.25 / 1.5 / 2.0배`를 선택한
+LinearSVC도 macro F1 0.576, 계약 recall 0.509로 기준선을 넘지 못했다.
+
+E5 Logistic은 TF-IDF Logistic보다 macro F1이 평균 0.057, 계약 recall이 0.071 낮았고
+macro F1이 오른 fold는 2/10뿐이었다. 따라서 고정 E5 의미 표현도 현재 기준선을 넘지
+못했다. 인코더를 학습하는 파인튜닝과는 다른 결과다.
+
+단어 1~2gram과 문자 3~4gram을 결합한 Logistic은 macro F1 0.603, 계약 recall 0.532로
+평균은 가장 높았지만 문자 단독 대비 macro F1 차이가 +0.003(-0.050~+0.067), 우세 5/10이라
+잡음이다. ComplementNB는 같은 결합 입력에서 macro F1 0.505, 계약 recall 0.351로 낮았다.
+재현되는 이득이 없어 주 기준선은 더 단순한 문자 TF-IDF Logistic 0.601을 유지한다.
+
+남은 것 — 하이퍼파라미터 선택, 경량 인코더 파인튜닝. 하이퍼파라미터를 고르기
 시작하면 **선택을 어디서 할지**가 선결이다(§14.2).
 
-구현은 `scripts/evaluation/baselines.py`, 해석은 `notebooks/07_baseline_comparison.ipynb`다.
+구현은 `scripts/evaluation/baselines.py`와 `scripts/evaluation/embeddings.py`, 해석은
+`notebooks/07_baseline_comparison.ipynb`, `notebooks/08_embedding_comparison.ipynb`,
+`notebooks/09_model_summary.ipynb`다.
 
 **선결 1 — fold 분할 설계 — 완료 (2026-08-23).** LODO 10겹으로 확정했다(§10.1).
 `scripts/evaluation/folds.py`가 fold 생성과 fold별 진단(기준선 둘, 반복 노출률, 희소 값
 누락)을 담당한다.
 
-측정하면서 새로 안 것: **issues/003과 006은 독립이 아니다.** fold 기준선과 반복 문구
-노출률의 상관이 **r = 0.856**이다. 쉬운 문서(koen·korail·mfds)가 표준 문구라는 공짜
-점수까지 더 받는다. 두 교란이 상쇄되지 않고 겹치므로 fold 점수에는 두 값을 항상 함께 적는다.
+측정하면서 새로 안 것: **issues/003과 006은 독립이 아니다.** 실제 학습 8문서 기준
+반복 노출률과 fold 기준선의 상관은 **r = 0.635**다. 쉬운 문서(koen·mfds)가 표준 문구라는
+공짜 점수까지 더 받는다. 두 교란이 상쇄되지 않고 겹치므로 두 값을 항상 함께 적는다.
 
 **선결 2 — 파인튜닝 타깃 범위(§12 수정 여부). 남은 결정.** 스키마 v4로 학습 타깃 후보가 4개가 됐다(`primary_action`, `blockers`, `domain_dependency`, `build_difficulty`). 다중 헤드 인코더로 보조 축을 함께 예측하면 라벨뿐 아니라 판정 근거를 산출할 수 있다. 다만 §12가 "처음부터 다중 과제 파인튜닝"을 제외 범위로 두고 있어 §12 수정 여부를 먼저 결정해야 한다.
 

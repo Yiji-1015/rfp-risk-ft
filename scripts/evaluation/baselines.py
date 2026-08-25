@@ -7,18 +7,18 @@
 
 한 숫자로는 이 문제를 읽을 수 없다. 같은 예측이 지표에 따라 반대로 보인다.
 
-mfds 문서(192건)에서 실제로 관측한 값이다.
+앵커를 제외한 mfds 평가 문서(181건)에서 실제로 관측한 값이다.
 
-    통상수용   137건  F1 0.823
-    견적반영    25건  F1 0.196
-    계약·질의검토 30건  F1 0.510
+    통상수용   128건  F1 0.818
+    견적반영    24건  F1 0.200
+    계약·질의검토 29건  F1 0.500
 
-    macro F1 = (0.823 + 0.196 + 0.510) / 3 = 0.510   <- 클래스마다 1/3씩
-    accuracy = 0.698                                  <- 137건짜리가 지배
+    macro F1 = (0.818 + 0.200 + 0.500) / 3 = 0.506   <- 클래스마다 1/3씩
+    accuracy = 0.691                                  <- 128건짜리가 지배
 
-**macro F1은 건수를 무시한다.** 137건짜리 클래스와 25건짜리 클래스가 똑같은 무게다.
-그래서 전체의 13%인 `견적반영`을 놓치면 그것만으로 0.19가 깎인다. accuracy로 보면
-같은 예측이 0.698로 준수해 보인다. §10.2가 accuracy를 보조 지표로만 쓰겠다고 한 이유다.
+**macro F1은 건수를 무시한다.** 128건짜리 클래스와 24건짜리 클래스가 똑같은 무게다.
+그래서 전체의 13%인 `견적반영`을 놓치면 그것만으로 약 0.20이 깎인다. accuracy로 보면
+같은 예측이 0.691로 준수해 보인다. §10.2가 accuracy를 보조 지표로만 쓰겠다고 한 이유다.
 
 micro F1은 단일 라벨 다중분류에서 accuracy와 항상 같으므로 따로 내지 않는다.
 
@@ -30,9 +30,9 @@ micro F1은 단일 라벨 다중분류에서 accuracy와 항상 같으므로 따
 fold 점수는 그 자체로 비교할 수 없다. 두 가지가 fold마다 다르기 때문이다.
 
 1. **난이도** — 다수 클래스만 찍어도 koen은 79.2%, defense는 34.3%다(issues/003)
-2. **점수 구성** — 표준 문구 반복 노출이 mfds 22.9%, ccrs 0.0%다(issues/006)
+2. **점수 구성** — 표준 문구 반복 노출이 mfds 23.8%, ccrs 0.0%다(issues/006)
 
-그리고 이 둘은 **독립이 아니다.** 상관이 r = 0.856이라 쉬운 fold가 공짜 점수까지 더
+그리고 이 둘은 **독립이 아니다.** 상관이 r = 0.635라 쉬운 fold가 공짜 점수까지 더
 받는다(2026-08-23 결정). 하나만 할인하면 과대평가, 각각 따로 할인하면 이중 할인이 된다.
 그래서 `FoldResult`는 점수와 두 진단값을 **한 덩어리로** 들고 다닌다. 점수만 떼어내
 비교하는 일이 실수로라도 일어나지 않게 하기 위해서다.
@@ -54,24 +54,33 @@ fold 점수는 그 자체로 비교할 수 없다. 두 가지가 fold마다 다�
 문서가 10개뿐이라 fold 간 분산이 크다는 점도 함께 본다. 평균 차이가 fold별 분산보다
 작으면 그것은 효과가 아니라 잡음이다. 실측 예가 둘 있다.
 
-    학습 8문서 -> 9문서      평균 +0.002, fold별 -0.046 ~ +0.037   -> 잡음
-    class_weight None -> balanced  평균 +0.078, 8/10 fold에서 우세  -> 효과
+    학습 8문서 -> 9문서      평균 +0.001, fold별 -0.059 ~ +0.046   -> 잡음
+    class_weight None -> balanced  평균 +0.080, 9/10 fold에서 우세  -> 효과
 
-**둘의 크기 차이가 40배다.** 어느 파라미터를 먼저 만질지는 이런 크기 비교로 정한다.
+**둘의 크기 차이가 약 80배다.** 어느 파라미터를 먼저 만질지는 이런 크기 비교로 정한다.
 """
 
 from __future__ import annotations
 
 from collections import Counter
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Any, Sequence
 
+import numpy as np
 from sklearn.dummy import DummyClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score, f1_score, recall_score
-from sklearn.pipeline import Pipeline
+from sklearn.naive_bayes import ComplementNB
+from sklearn.metrics import (
+    accuracy_score,
+    f1_score,
+    fbeta_score,
+    precision_score,
+    recall_score,
+)
+from sklearn.pipeline import FeatureUnion, Pipeline
 from sklearn.svm import LinearSVC
+from sklearn.utils.class_weight import compute_class_weight
 
 from scripts.evaluation.duplication import DEFAULT_THRESHOLD
 from scripts.evaluation.folds import (
@@ -91,6 +100,7 @@ REVIEW_LABEL = "계약·질의검토"
 # 재현을 위해 고정한다. 선형 모델은 seed에 거의 흔들리지 않지만, 기록에 남는 값과
 # 다시 돌린 값이 어긋나면 원인을 찾는 데 시간이 든다.
 RANDOM_STATE = 42
+REVIEW_WEIGHT_CANDIDATES: tuple[float, ...] = (1.0, 1.25, 1.5, 2.0)
 
 
 @dataclass(frozen=True)
@@ -112,6 +122,7 @@ class ModelSpec:
     싶은지의 선언**이다. 켜면 소수 클래스 쪽으로 결정 경계가 밀려 accuracy는 내려가고
     macro F1과 소수 클래스 recall은 올라간다. 그래서 다른 파라미터와 같은 그리드에
     섞어 "최고 점수"로 고르면 안 된다. 목적을 먼저 정하고 나서 고르는 값이다.
+    ComplementNB는 이 옵션을 지원하지 않아 해당 spec에서는 `None`으로 둔다.
     """
 
     name: str
@@ -119,9 +130,11 @@ class ModelSpec:
     ngram_range: tuple[int, int] = (3, 4)
     min_df: int = 2
     sublinear_tf: bool = True
-    classifier: str = "logistic"  # logistic | svm | dummy
+    classifier: str = "logistic"  # logistic | svm | complement_nb | dummy
+    combine_word_char: bool = False
     C: float = 1.0
-    class_weight: str | None = "balanced"
+    class_weight: str | dict[str, float] | None = "balanced"
+    review_weight_multiplier: float = 1.0
 
     def build(self) -> Pipeline:
         if self.classifier == "dummy":
@@ -134,11 +147,29 @@ class ModelSpec:
                 ]
             )
 
-        vectorizer = TfidfVectorizer(
+        char_vectorizer = TfidfVectorizer(
             analyzer=self.analyzer,
             ngram_range=self.ngram_range,
             min_df=self.min_df,
             sublinear_tf=self.sublinear_tf,
+        )
+        vectorizer = (
+            FeatureUnion(
+                [
+                    (
+                        "word",
+                        TfidfVectorizer(
+                            analyzer="word",
+                            ngram_range=(1, 2),
+                            min_df=self.min_df,
+                            sublinear_tf=self.sublinear_tf,
+                        ),
+                    ),
+                    ("char", char_vectorizer),
+                ]
+            )
+            if self.combine_word_char
+            else char_vectorizer
         )
         if self.classifier == "logistic":
             clf = LogisticRegression(
@@ -153,6 +184,8 @@ class ModelSpec:
                 class_weight=self.class_weight,
                 random_state=RANDOM_STATE,
             )
+        elif self.classifier == "complement_nb":
+            clf = ComplementNB()
         else:
             raise ValueError(f"알 수 없는 분류기: {self.classifier!r}")
         return Pipeline([("tfidf", vectorizer), ("clf", clf)])
@@ -176,6 +209,8 @@ class FoldResult:
     accuracy: float
     per_class_f1: dict[str, float]
     review_recall: float
+    review_precision: float
+    review_weight_multiplier: float
 
     # 이 fold를 어떻게 읽어야 하는가 (folds.py의 진단값)
     trained_majority_accuracy: float
@@ -187,7 +222,7 @@ class FoldResult:
     macro_f1_repeat_only: float | None
 
     # 세 갈래 점수를 읽을 때 **반드시 함께 봐야 하는 건수**. 반복 문구 부분집합은
-    # fold에 따라 1건(genai)에서 44건(mfds)까지 흔들린다. 1건짜리에서 나온 0.000이나
+    # fold에 따라 1건(incheon)에서 43건(mfds)까지 흔들린다. 1건짜리에서 나온 0.000이나
     # 1.000은 성능이 아니라 표본 크기의 산물이다. 비율만 적어두면 이 사실이 보이지
     # 않으므로 건수를 필드로 들고 다닌다.
     repeat_count: int
@@ -204,7 +239,9 @@ class FoldResult:
         return self.accuracy - self.trained_majority_accuracy
 
 
-def _score(gold: Sequence[str], pred: Sequence[str]) -> tuple[float, float, dict, float]:
+def _score(
+    gold: Sequence[str], pred: Sequence[str]
+) -> tuple[float, float, dict, float, float]:
     """지표를 한 번에 계산한다.
 
     `labels=LABELS`를 명시하는 것이 중요하다. 넘기지 않으면 sklearn이 정답·예측에
@@ -219,10 +256,49 @@ def _score(gold: Sequence[str], pred: Sequence[str]) -> tuple[float, float, dict
             f1_score(gold, pred, labels=LABELS, average=None, zero_division=0),
         )
     )
-    review = recall_score(
+    review_precision = precision_score(
         gold, pred, labels=[REVIEW_LABEL], average="macro", zero_division=0
     )
-    return float(macro), float(accuracy_score(gold, pred)), per_class, float(review)
+    review_recall = recall_score(
+        gold, pred, labels=[REVIEW_LABEL], average="macro", zero_division=0
+    )
+    return (
+        float(macro),
+        float(accuracy_score(gold, pred)),
+        per_class,
+        float(review_precision),
+        float(review_recall),
+    )
+
+
+def _resolved_class_weight(
+    spec: ModelSpec, labels: Sequence[str]
+) -> str | dict[str, float] | None:
+    """학습 라벨만으로 balanced 가중치와 검토 배수를 결합한다."""
+    if spec.classifier != "dummy" and spec.review_weight_multiplier != 1.0:
+        if spec.class_weight == "balanced":
+            present = np.array(sorted(set(labels)), dtype=object)
+            values = compute_class_weight("balanced", classes=present, y=labels)
+            weights = dict(zip(present.tolist(), map(float, values)))
+        elif spec.class_weight is None:
+            weights = {label: 1.0 for label in LABELS}
+        elif isinstance(spec.class_weight, dict):
+            weights = dict(spec.class_weight)
+        else:
+            raise ValueError(f"지원하지 않는 class_weight: {spec.class_weight!r}")
+        weights[REVIEW_LABEL] = weights.get(REVIEW_LABEL, 1.0) * spec.review_weight_multiplier
+        return weights
+    return spec.class_weight
+
+
+def _fit_pipeline(spec: ModelSpec, rows: Sequence[dict[str, Any]]) -> Pipeline:
+    """학습 fold의 분포만으로 검토 클래스 가중치를 계산해 학습한다."""
+    labels = [r["primary_action"] for r in rows]
+    fitted_spec = replace(spec, class_weight=_resolved_class_weight(spec, labels))
+
+    pipeline = fitted_spec.build()
+    pipeline.fit([r["raw_requirement_text"] for r in rows], labels)
+    return pipeline
 
 
 def evaluate_fold(
@@ -238,7 +314,7 @@ def evaluate_fold(
 
     :param use_nine_documents: 검증 문서까지 학습에 넣을지. 기본은 False다.
         검증 문서를 비워두면 학습 데이터의 1/9을 쓰지 않는 셈이라 손해처럼 보이지만,
-        실측하면 macro F1 평균 차이가 **+0.002**이고 fold별로는 -0.046 ~ +0.037로
+        실측하면 macro F1 평균 차이가 **+0.001**이고 fold별로는 -0.059 ~ +0.046으로
         방향조차 일정하지 않다. 즉 이 손해는 잡음 수준이다. 대신 나중에 파인튜닝이
         그 자리를 early stopping에 쓸 때 **학습 데이터가 8문서로 같아야** 두 결과를
         나란히 놓을 수 있다(§9.3). 잃는 것이 거의 없으므로 비교 가능성을 택했다.
@@ -246,15 +322,35 @@ def evaluate_fold(
     fit_rows, validation_rows, test_rows = fold.split(rows)
     train_rows = fit_rows + validation_rows if use_nine_documents else fit_rows
 
-    pipeline = spec.build()
-    pipeline.fit(
-        [r["raw_requirement_text"] for r in train_rows],
-        [r["primary_action"] for r in train_rows],
-    )
+    pipeline = _fit_pipeline(spec, train_rows)
     pred = list(pipeline.predict([r["raw_requirement_text"] for r in test_rows]))
-    gold = [r["primary_action"] for r in test_rows]
 
-    macro, acc, per_class, review = _score(gold, pred)
+    return _fold_result_from_predictions(
+        fold,
+        rows,
+        test_rows,
+        pred,
+        train_size=len(train_rows),
+        repeat_flags=repeat_flags,
+        repeat_threshold=repeat_threshold,
+        review_weight_multiplier=spec.review_weight_multiplier,
+    )
+
+
+def _fold_result_from_predictions(
+    fold: Fold,
+    rows: Sequence[dict[str, Any]],
+    test_rows: Sequence[dict[str, Any]],
+    pred: Sequence[str],
+    *,
+    train_size: int,
+    repeat_flags: dict[str, bool],
+    repeat_threshold: float = DEFAULT_THRESHOLD,
+    review_weight_multiplier: float = 1.0,
+) -> FoldResult:
+    """표현 방식과 무관한 fold 지표·진단을 한곳에서 만든다."""
+    gold = [r["primary_action"] for r in test_rows]
+    macro, acc, per_class, review_precision, review_recall = _score(gold, pred)
 
     # 결정 34의 세 갈래. 반복 문구만 모으면 fold에 따라 0건일 수 있어(ccrs 0.0%)
     # 그 경우 점수를 만들지 않고 None으로 둔다. 0.0으로 채우면 "성능이 0"으로
@@ -274,11 +370,13 @@ def evaluate_fold(
         fold_index=fold.index,
         test_document=fold.test_document,
         test_size=len(test_rows),
-        train_size=len(train_rows),
+        train_size=train_size,
         macro_f1=macro,
         accuracy=acc,
         per_class_f1=per_class,
-        review_recall=review,
+        review_recall=review_recall,
+        review_precision=review_precision,
+        review_weight_multiplier=review_weight_multiplier,
         trained_majority_accuracy=diagnostics.trained_majority_accuracy,
         oracle_majority_accuracy=diagnostics.oracle_majority_accuracy,
         repeat_exposure_rate=diagnostics.repeat_exposure_rate,
@@ -299,18 +397,76 @@ def run_lodo(
     use_nine_documents: bool = False,
 ) -> list[FoldResult]:
     """모든 fold를 돌린다. 반복 문구 계산은 한 번만 한다."""
-    repeat_flags = _repeat_flags(rows, repeat_threshold)
     return [
         evaluate_fold(
             fold,
             rows,
             spec,
-            repeat_flags=repeat_flags,
+            repeat_flags=_repeat_flags(fold, rows, repeat_threshold),
             repeat_threshold=repeat_threshold,
             use_nine_documents=use_nine_documents,
         )
         for fold in make_lodo_folds(rows)
     ]
+
+
+def run_review_weight_tuned_lodo(
+    rows: Sequence[dict[str, Any]],
+    spec: ModelSpec,
+    *,
+    repeat_threshold: float = DEFAULT_THRESHOLD,
+) -> list[FoldResult]:
+    """검증 문서의 계약 F2로 검토 가중치를 고른 뒤 평가 문서를 한 번만 본다."""
+    results = []
+    for fold in make_lodo_folds(rows):
+        fit_rows, validation_rows, _ = fold.split(rows)
+        selected = _select_review_weight(fit_rows, validation_rows, spec)
+        results.append(
+            evaluate_fold(
+                fold,
+                rows,
+                replace(spec, review_weight_multiplier=selected),
+                repeat_flags=_repeat_flags(fold, rows, repeat_threshold),
+                repeat_threshold=repeat_threshold,
+            )
+        )
+    return results
+
+
+def _selection_rank(
+    gold: Sequence[str], pred: Sequence[str], multiplier: float
+) -> tuple[float, float, float]:
+    """계약 F2, macro F1, 작은 배수 순으로 검증 후보를 정렬한다."""
+    review_f2 = fbeta_score(
+        gold,
+        pred,
+        labels=[REVIEW_LABEL],
+        average="macro",
+        beta=2,
+        zero_division=0,
+    )
+    macro_f1 = f1_score(
+        gold, pred, labels=LABELS, average="macro", zero_division=0
+    )
+    return float(review_f2), float(macro_f1), -multiplier
+
+
+def _select_review_weight(
+    fit_rows: Sequence[dict[str, Any]],
+    validation_rows: Sequence[dict[str, Any]],
+    spec: ModelSpec,
+) -> float:
+    """고정 후보 중 하나를 학습·검증 행만 사용해 고른다."""
+    gold = [r["primary_action"] for r in validation_rows]
+    ranks = {}
+    for multiplier in REVIEW_WEIGHT_CANDIDATES:
+        candidate = replace(spec, review_weight_multiplier=multiplier)
+        pipeline = _fit_pipeline(candidate, fit_rows)
+        pred = list(
+            pipeline.predict([r["raw_requirement_text"] for r in validation_rows])
+        )
+        ranks[multiplier] = _selection_rank(gold, pred, multiplier)
+    return max(REVIEW_WEIGHT_CANDIDATES, key=ranks.__getitem__)
 
 
 def summarize(results: Sequence[FoldResult]) -> dict[str, dict[str, float]]:
@@ -324,7 +480,9 @@ def summarize(results: Sequence[FoldResult]) -> dict[str, dict[str, float]]:
     metrics = {
         "macro_f1": [r.macro_f1 for r in results],
         "accuracy": [r.accuracy for r in results],
+        "review_precision": [r.review_precision for r in results],
         "review_recall": [r.review_recall for r in results],
+        "review_f1": [r.per_class_f1[REVIEW_LABEL] for r in results],
         "lift_over_dummy": [r.lift_over_dummy for r in results],
     }
     return {name: aggregate(values, sizes) for name, values in metrics.items()}
@@ -356,8 +514,8 @@ class Comparison:
         """평균 효과가 fold별 편차보다 작으면 잡음으로 본다.
 
         문서가 10개뿐이라 fold 간 분산이 크다. 이 화면 없이 평균만 보면 잡음을
-        효과로 착각한다. 실측 예: 8문서 -> 9문서는 평균 +0.002에 편차 폭 0.083으로
-        잡음이었고, class_weight는 평균 +0.078로 효과였다.
+        효과로 착각한다. 실측 예: 8문서 -> 9문서는 평균 +0.001에 편차 폭 0.105로
+        잡음이었고, class_weight는 평균 +0.080으로 효과였다.
         """
         spread = max(self.deltas) - min(self.deltas)
         return abs(self.mean_delta) < spread / 4
@@ -394,9 +552,19 @@ def compare(
 # 지금까지 통제 비교로 확인한 설정들. 노트북 07이 이 목록을 쓴다.
 DUMMY = ModelSpec(name="Dummy(최빈)", classifier="dummy")
 CHAR_BALANCED = ModelSpec(name="char 3-4gram + balanced")
+SVM_BALANCED = ModelSpec(name="LinearSVC + balanced", classifier="svm")
 CHAR_UNWEIGHTED = ModelSpec(name="char 3-4gram + weight 없음", class_weight=None)
 WORD_BALANCED = ModelSpec(
     name="word 1-2gram + balanced", analyzer="word", ngram_range=(1, 2)
+)
+WORD_CHAR_BALANCED = ModelSpec(
+    name="word 1-2 + char 3-4gram + balanced", combine_word_char=True
+)
+WORD_CHAR_COMPLEMENT_NB = ModelSpec(
+    name="word 1-2 + char 3-4gram + ComplementNB",
+    classifier="complement_nb",
+    combine_word_char=True,
+    class_weight=None,
 )
 
 
@@ -406,15 +574,35 @@ def _main() -> None:
     rows, meta = load_label_dataset()
     print(f"데이터셋 {meta['dataset_version']} / {meta['row_count']}건\n")
 
-    header = f"{'설정':<28}{'macroF1':>9}{'정확도':>9}{'계약recall':>11}{'Dummy대비':>11}"
+    header = (
+        f"{'설정':<48}{'macroF1':>9}{'정확도':>9}"
+        f"{'계약prec':>10}{'계약recall':>11}{'계약F1':>9}{'Dummy대비':>11}"
+    )
     print(header)
-    print("-" * 68)
-    for spec in (DUMMY, WORD_BALANCED, CHAR_UNWEIGHTED, CHAR_BALANCED):
-        s = summarize(run_lodo(rows, spec))
+    print("-" * 107)
+    runs = [
+        (spec.name, run_lodo(rows, spec))
+        for spec in (
+            DUMMY,
+            WORD_BALANCED,
+            CHAR_UNWEIGHTED,
+            CHAR_BALANCED,
+            SVM_BALANCED,
+            WORD_CHAR_BALANCED,
+            WORD_CHAR_COMPLEMENT_NB,
+        )
+    ]
+    runs.append(
+        ("LinearSVC + 검증 weight", run_review_weight_tuned_lodo(rows, SVM_BALANCED))
+    )
+    for name, results in runs:
+        s = summarize(results)
         print(
-            f"{spec.name:<28}{s['macro_f1']['fold_mean']:>9.3f}"
+            f"{name:<48}{s['macro_f1']['fold_mean']:>9.3f}"
             f"{s['accuracy']['fold_mean']:>9.3f}"
+            f"{s['review_precision']['fold_mean']:>10.3f}"
             f"{s['review_recall']['fold_mean']:>11.3f}"
+            f"{s['review_f1']['fold_mean']:>9.3f}"
             f"{s['lift_over_dummy']['fold_mean']:>+11.3f}"
         )
     print("\n(전부 fold 평균. 건수 가중은 summarize()가 함께 낸다)")

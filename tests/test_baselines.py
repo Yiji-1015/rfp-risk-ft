@@ -1,15 +1,28 @@
-import pytest
+from unittest.mock import patch
 
+import pytest
+from sklearn.metrics import f1_score, fbeta_score
+
+from scripts.evaluation import baselines
 from scripts.evaluation.baselines import (
     CHAR_BALANCED,
     CHAR_UNWEIGHTED,
     DUMMY,
     LABELS,
+    REVIEW_LABEL,
+    REVIEW_WEIGHT_CANDIDATES,
+    SVM_BALANCED,
+    WORD_CHAR_BALANCED,
+    WORD_CHAR_COMPLEMENT_NB,
     Comparison,
     ModelSpec,
+    _resolved_class_weight,
+    _selection_rank,
+    run_review_weight_tuned_lodo,
     run_lodo,
     summarize,
 )
+from scripts.evaluation.folds import make_lodo_folds
 from scripts.labeling.label_dataset import load_label_dataset
 
 
@@ -39,6 +52,40 @@ def unweighted_results(rows):
 @pytest.fixture(scope="module")
 def nine_document_results(rows):
     return run_lodo(rows, CHAR_BALANCED, use_nine_documents=True)
+
+
+@pytest.fixture(scope="module")
+def svm_results(rows):
+    return run_lodo(rows, SVM_BALANCED)
+
+
+@pytest.fixture(scope="module")
+def word_char_results(rows):
+    return run_lodo(rows, WORD_CHAR_BALANCED)
+
+
+@pytest.fixture(scope="module")
+def complement_nb_results(rows):
+    return run_lodo(rows, WORD_CHAR_COMPLEMENT_NB)
+
+
+@pytest.fixture(scope="module")
+def tuned_svm_run(rows):
+    calls = []
+    original = baselines._select_review_weight
+
+    def spy(fit_rows, validation_rows, spec):
+        calls.append(
+            (
+                {r["requirement_uid"] for r in fit_rows},
+                {r["requirement_uid"] for r in validation_rows},
+            )
+        )
+        return original(fit_rows, validation_rows, spec)
+
+    with patch.object(baselines, "_select_review_weight", side_effect=spy):
+        results = run_review_weight_tuned_lodo(rows, SVM_BALANCED)
+    return results, calls
 
 
 def test_dummy_never_predicts_the_review_label(dummy_results):
@@ -82,8 +129,8 @@ def test_class_weight_is_a_real_effect_but_the_ninth_document_is_noise(
     이 프로젝트에서 "효과"와 "잡음"을 가르는 기준을 고정한다.
 
     문서가 10개뿐이라 fold 간 분산이 크다. 평균 차이가 편차 폭에 비해 작으면 그것은
-    효과가 아니다. class_weight는 평균 +0.078로 효과이고, 검증 문서 한 개를 학습에
-    더 넣는 것은 평균 +0.002로 잡음이다. **크기 차이가 40배다.**
+    효과가 아니다. class_weight는 평균 +0.080으로 효과이고, 검증 문서 한 개를 학습에
+    더 넣는 것은 평균 +0.001로 잡음이다.
     """
     weight_deltas = [
         b.macro_f1 - a.macro_f1 for a, b in zip(unweighted_results, char_results)
@@ -130,8 +177,8 @@ def test_every_fold_result_carries_its_own_diagnostics(char_results):
 
 def test_three_way_scores_report_counts_so_tiny_subsets_are_visible(char_results):
     """
-    결정 34의 세 갈래 보고에서 "반복만" 부분집합은 fold에 따라 1건에서 44건까지
-    흔들린다. genai는 1건이라 점수가 0.000 아니면 1.000밖에 나올 수 없고, ccrs는
+    결정 34의 세 갈래 보고에서 "반복만" 부분집합은 fold에 따라 1건에서 43건까지
+    흔들린다. incheon은 1건이라 점수가 0.000 아니면 1.000밖에 나올 수 없고, ccrs는
     0건이라 점수 자체가 없다. 비율만 적으면 이 사실이 보이지 않으므로 건수를 함께 낸다.
     """
     by_document = {r.test_document: r for r in char_results}
@@ -153,7 +200,7 @@ def test_repeated_phrases_are_easier_than_the_rest_where_there_are_enough_of_the
 ):
     """
     결정 34가 "점수에 두 능력이 섞인다"고 한 것의 실측이다. 반복 노출이 가장 높은
-    mfds(22.9%)에서 반복 문구 점수와 나머지 점수가 크게 갈린다. 전체 점수 하나만
+    mfds(23.8%)에서 반복 문구 점수와 나머지 점수가 크게 갈린다. 전체 점수 하나만
     보고 "처음 보는 RFP에 일반화된다"고 말하면 그 주장이 실제보다 강해 보인다.
     """
     mfds = next(r for r in char_results if r.test_document == "mfds_drug_ai_review")
@@ -172,8 +219,101 @@ def test_summarize_reports_both_aggregations(char_results):
     """하나만 쓰면 어느 쪽이든 오해를 만든다(issues/003)."""
     summary = summarize(char_results)
 
-    for metric in ("macro_f1", "accuracy", "review_recall", "lift_over_dummy"):
+    for metric in (
+        "macro_f1",
+        "accuracy",
+        "review_precision",
+        "review_recall",
+        "review_f1",
+        "lift_over_dummy",
+    ):
         assert set(summary[metric]) == {"fold_mean", "count_weighted"}
+
+
+def test_linear_svc_uses_the_same_tfidf_representation(svm_results):
+    assert SVM_BALANCED.analyzer == CHAR_BALANCED.analyzer
+    assert SVM_BALANCED.ngram_range == CHAR_BALANCED.ngram_range
+    assert SVM_BALANCED.min_df == CHAR_BALANCED.min_df
+    assert SVM_BALANCED.sublinear_tf == CHAR_BALANCED.sublinear_tf
+    assert SVM_BALANCED.classifier == "svm"
+    assert len(svm_results) == 10
+    assert all(result.review_weight_multiplier == 1.0 for result in svm_results)
+
+
+def test_word_char_union_and_complement_nb_use_the_same_representation(
+    word_char_results, complement_nb_results
+):
+    assert WORD_CHAR_BALANCED.combine_word_char
+    assert WORD_CHAR_COMPLEMENT_NB.combine_word_char
+    assert WORD_CHAR_BALANCED.classifier == "logistic"
+    assert WORD_CHAR_COMPLEMENT_NB.classifier == "complement_nb"
+    assert len(word_char_results) == len(complement_nb_results) == 10
+    assert sum(result.test_size for result in word_char_results) == 924
+
+
+def test_word_char_gain_is_noise_and_complement_nb_is_worse(
+    char_results, word_char_results, complement_nb_results
+):
+    deltas = [
+        after.macro_f1 - before.macro_f1
+        for before, after in zip(char_results, word_char_results)
+    ]
+
+    assert abs(sum(deltas) / len(deltas)) < 0.01
+    assert sum(delta > 0 for delta in deltas) == 5
+    assert summarize(complement_nb_results)["macro_f1"]["fold_mean"] < 0.55
+
+
+def test_review_weight_is_selected_on_validation_for_each_fold(rows, tuned_svm_run):
+    tuned_svm_results, calls = tuned_svm_run
+    assert len(tuned_svm_results) == 10
+    assert all(
+        result.review_weight_multiplier in REVIEW_WEIGHT_CANDIDATES
+        for result in tuned_svm_results
+    )
+    assert all(0.0 <= result.review_precision <= 1.0 for result in tuned_svm_results)
+
+    for fold, (fit_uids, validation_uids) in zip(make_lodo_folds(rows), calls):
+        expected_fit, expected_validation, test_rows = fold.split(rows)
+        test_uids = {r["requirement_uid"] for r in test_rows}
+        assert fit_uids == {r["requirement_uid"] for r in expected_fit}
+        assert validation_uids == {r["requirement_uid"] for r in expected_validation}
+        assert not test_uids.intersection(fit_uids | validation_uids)
+
+
+def test_review_multiplier_uses_only_the_supplied_fit_distribution():
+    labels = [LABELS[0]] * 6 + [LABELS[1]] * 3 + [REVIEW_LABEL]
+    spec = ModelSpec(name="검토 2배", review_weight_multiplier=2.0)
+
+    weights = _resolved_class_weight(spec, labels)
+
+    assert isinstance(weights, dict)
+    assert weights[LABELS[0]] == pytest.approx(10 / (3 * 6))
+    assert weights[LABELS[1]] == pytest.approx(10 / (3 * 3))
+    assert weights[REVIEW_LABEL] == pytest.approx(2 * 10 / (3 * 1))
+
+
+def test_selection_rank_is_f2_then_macro_f1_then_smaller_weight():
+    gold = [REVIEW_LABEL, REVIEW_LABEL, LABELS[0], LABELS[1]]
+    pred = [REVIEW_LABEL, LABELS[0], LABELS[0], LABELS[1]]
+
+    rank = _selection_rank(gold, pred, 1.5)
+
+    assert rank[0] == pytest.approx(
+        fbeta_score(
+            gold,
+            pred,
+            labels=[REVIEW_LABEL],
+            average="macro",
+            beta=2,
+            zero_division=0,
+        )
+    )
+    assert rank[1] == pytest.approx(
+        f1_score(gold, pred, labels=LABELS, average="macro", zero_division=0)
+    )
+    assert rank[2] == -1.5
+    assert _selection_rank(gold, pred, 1.0) > _selection_rank(gold, pred, 2.0)
 
 
 def _comparison(deltas):
@@ -188,11 +328,11 @@ def _comparison(deltas):
 
 def test_a_small_mean_next_to_a_wide_spread_is_called_noise():
     """
-    실측한 8문서 -> 9문서다. 평균 +0.002인데 fold별로는 -0.046 ~ +0.037이다.
+    실측한 8문서 -> 9문서다. 평균 +0.001인데 fold별로는 -0.059 ~ +0.046이다.
     평균만 보면 "조금 올랐다"로 읽히지만 방향조차 일정하지 않다.
     """
     verdict = _comparison(
-        [-0.011, 0.009, 0.002, 0.004, 0.037, 0.031, 0.012, -0.007, -0.046, -0.011]
+        [-0.051, 0.010, 0.002, 0.027, 0.025, 0.046, 0.025, -0.008, -0.059, -0.004]
     )
 
     assert verdict.looks_like_noise
@@ -201,12 +341,12 @@ def test_a_small_mean_next_to_a_wide_spread_is_called_noise():
 
 def test_a_large_consistent_mean_is_called_an_effect():
     """
-    실측한 class_weight None -> balanced다. 평균 +0.078에 8/10 fold에서 우세하다.
+    실측한 class_weight None -> balanced다. 평균 +0.080에 9/10 fold에서 우세하다.
     편차 폭이 커도 평균이 그에 비해 충분히 크면 효과로 본다.
     """
     verdict = _comparison(
-        [0.185, 0.178, 0.110, -0.001, 0.134, 0.055, 0.033, -0.072, 0.097, 0.059]
+        [0.156, 0.176, 0.143, 0.003, 0.118, 0.069, 0.024, -0.078, 0.126, 0.065]
     )
 
     assert not verdict.looks_like_noise
-    assert verdict.variant_wins == 8
+    assert verdict.variant_wins == 9

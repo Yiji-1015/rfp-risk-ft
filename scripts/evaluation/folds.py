@@ -42,21 +42,34 @@ TF-IDF가 9문서를 보고 인코더가 8문서를 보면 두 결과의 차이�
 본 값이라 배포할 수 없고, 모델이 아니라 **그 fold가 얼마나 쉬운가**를 재는 눈금이다.
 issues/003이 "fold별 다수 클래스 기준선을 병기하라"고 한 것이 이쪽이다.
 
-둘은 같지 않다. 문서마다 최빈 클래스가 달라서, defense·ccrs·genai에서는 `견적반영`이,
-kangwon에서는 `계약·질의검토`가 최빈이다. 그 fold에서는 배포 가능한 Dummy가 oracle보다
-낮게 나온다. 두 값을 섞어 하나로 보고하면 모델이 기준선을 넘었는지 판단이 흐려진다.
+둘은 같지 않다. 앵커를 제외한 평가 모집단에서는 ccrs·genai의 최빈이 `견적반영`이라
+학습 최빈 `통상수용`과 갈린다. 그 fold에서는 배포 가능한 Dummy가 oracle보다 낮다.
+두 값을 섞어 하나로 보고하면 모델이 기준선을 넘었는지 판단이 흐려진다.
 """
 
 from __future__ import annotations
 
 from collections import Counter
 from dataclasses import dataclass, field
+from functools import lru_cache
+from pathlib import Path
 from typing import Any, Iterable, Sequence
 
 from scripts.evaluation.duplication import (
     DEFAULT_THRESHOLD,
-    cross_document_similarity,
+    nearest_similarity,
 )
+from scripts.labeling.anchor_pool import load_anchor_pool
+
+ROOT = Path(__file__).resolve().parents[2]
+FROZEN_ANCHOR_POOL = ROOT / "data" / "anchors" / "anchor_pool_v2.jsonl"
+
+
+@lru_cache(maxsize=1)
+def evaluation_excluded_uids() -> frozenset[str]:
+    """결정 25에 따라 검증·평가에서 제외할 동결 앵커 100건 UID."""
+    anchors, _ = load_anchor_pool(FROZEN_ANCHOR_POOL)
+    return frozenset(row["requirement_uid"] for row in anchors)
 
 
 @dataclass(frozen=True)
@@ -79,11 +92,26 @@ class Fold:
     def split(
         self, rows: Sequence[dict[str, Any]]
     ) -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
-        """행 목록을 (학습, 검증, 평가)로 가른다."""
+        """행 목록을 (학습, 검증, 평가)로 가른다.
+
+        동결 앵커는 라벨 생성 때 이미 예시로 사용됐으므로 처음 보는 사례가 아니다.
+        학습에는 쓸 수 있지만 검증·평가에서는 제외한다(결정 25).
+        """
+        excluded = evaluation_excluded_uids()
         return (
             [r for r in rows if r["document_id"] in self.fit_documents],
-            [r for r in rows if r["document_id"] == self.validation_document],
-            [r for r in rows if r["document_id"] == self.test_document],
+            [
+                r
+                for r in rows
+                if r["document_id"] == self.validation_document
+                and r["requirement_uid"] not in excluded
+            ],
+            [
+                r
+                for r in rows
+                if r["document_id"] == self.test_document
+                and r["requirement_uid"] not in excluded
+            ],
         )
 
 
@@ -144,19 +172,33 @@ def _majority(labels: Iterable[str]) -> tuple[str, int]:
     return label, n
 
 
-def _repeat_flags(
-    rows: Sequence[dict[str, Any]], threshold: float
+@lru_cache(maxsize=40)
+def _cached_repeat_flags(
+    fold: Fold,
+    rows_key: tuple[tuple[str, str, str], ...],
+    threshold: float,
 ) -> dict[str, bool]:
-    """uid -> 반복 문구 여부.
-
-    LODO에서 학습 집합은 곧 "자기 문서를 뺀 나머지 전부"이므로, 문서 간 최근접
-    유사도를 한 번 구하면 모든 fold에 그대로 쓸 수 있다.
-    """
-    result = cross_document_similarity(rows, threshold=threshold)
+    rows = [
+        {"requirement_uid": uid, "document_id": document_id, "raw_requirement_text": text}
+        for uid, document_id, text in rows_key
+    ]
+    fit_rows, _, test_rows = fold.split(rows)
+    result = nearest_similarity(test_rows, fit_rows, threshold=threshold)
     return {
         row["requirement_uid"]: bool(flag)
-        for row, flag in zip(rows, result.is_repeat)
+        for row, flag in zip(test_rows, result.is_repeat)
     }
+
+
+def _repeat_flags(
+    fold: Fold, rows: Sequence[dict[str, Any]], threshold: float
+) -> dict[str, bool]:
+    """평가 행이 그 fold의 실제 학습 8문서에서 본 문구인지 표시한다."""
+    rows_key = tuple(
+        (row["requirement_uid"], row["document_id"], row["raw_requirement_text"])
+        for row in rows
+    )
+    return _cached_repeat_flags(fold, rows_key, threshold)
 
 
 def diagnose_fold(
@@ -182,7 +224,7 @@ def diagnose_fold(
     _, oracle_hits = _majority(r[label_field] for r in test_rows)
 
     if repeat_flags is None:
-        repeat_flags = _repeat_flags(rows, repeat_threshold)
+        repeat_flags = _repeat_flags(fold, rows, repeat_threshold)
     exposed = sum(1 for r in test_rows if repeat_flags[r["requirement_uid"]])
 
     # 희소 값이 학습과 평가 양쪽에 얼마나 있는가. 한쪽이 0이면 그 값은 이 fold에서
@@ -217,14 +259,13 @@ def diagnose_all(
     repeat_threshold: float = DEFAULT_THRESHOLD,
 ) -> list[FoldDiagnostics]:
     """모든 fold를 진단한다. 반복 문구 계산은 한 번만 한다."""
-    repeat_flags = _repeat_flags(rows, repeat_threshold)
     return [
         diagnose_fold(
             fold,
             rows,
             label_field=label_field,
             repeat_threshold=repeat_threshold,
-            repeat_flags=repeat_flags,
+            repeat_flags=_repeat_flags(fold, rows, repeat_threshold),
         )
         for fold in make_lodo_folds(rows)
     ]
