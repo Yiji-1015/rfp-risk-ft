@@ -1,26 +1,36 @@
 from unittest.mock import patch
 
+import numpy as np
 import pytest
 from sklearn.metrics import f1_score, fbeta_score
 
 from scripts.evaluation import baselines
 from scripts.evaluation.baselines import (
     CHAR_BALANCED,
+    CHAR_LENGTH_BALANCED,
+    CHAR_NUMBERS_BALANCED,
+    CHAR_STRUCTURE_BALANCED,
     CHAR_TYPE_BALANCED,
     CHAR_UNWEIGHTED,
     DUMMY,
+    ELASTIC_NET_STRUCTURE,
     LABELS,
     REVIEW_LABEL,
     REVIEW_WEIGHT_CANDIDATES,
+    TYPE_FEATURE_WEIGHT_CANDIDATES,
     SVM_BALANCED,
+    SVD_STRUCTURE_LOGISTIC,
+    SVD_STRUCTURE_XGBOOST,
     WORD_CHAR_BALANCED,
     WORD_CHAR_TYPE_BALANCED,
     WORD_CHAR_COMPLEMENT_NB,
     Comparison,
     ModelSpec,
     _resolved_class_weight,
+    _select_number_features,
     _selection_rank,
     run_review_weight_tuned_lodo,
+    run_type_weight_tuned_lodo,
     run_lodo,
     summarize,
 )
@@ -79,6 +89,11 @@ def type_feature_results(rows):
 @pytest.fixture(scope="module")
 def full_feature_results(rows):
     return run_lodo(rows, WORD_CHAR_TYPE_BALANCED)
+
+
+@pytest.fixture(scope="module")
+def structure_results(rows):
+    return run_lodo(rows, CHAR_STRUCTURE_BALANCED)
 
 
 @pytest.fixture(scope="module")
@@ -313,6 +328,105 @@ def test_review_multiplier_uses_only_the_supplied_fit_distribution():
     assert weights[LABELS[0]] == pytest.approx(10 / (3 * 6))
     assert weights[LABELS[1]] == pytest.approx(10 / (3 * 3))
     assert weights[REVIEW_LABEL] == pytest.approx(2 * 10 / (3 * 1))
+
+
+def test_type_weight_is_selected_without_test_document_leakage(rows):
+    calls = []
+
+    def select(fit_rows, validation_rows, spec):
+        calls.append(
+            (
+                {r["requirement_uid"] for r in fit_rows},
+                {r["requirement_uid"] for r in validation_rows},
+            )
+        )
+        return 0.1
+
+    with patch.object(baselines, "_select_type_weight", side_effect=select):
+        results = run_type_weight_tuned_lodo(rows, CHAR_TYPE_BALANCED)
+
+    assert len(results) == len(calls) == 10
+    assert all(r.type_feature_weight in TYPE_FEATURE_WEIGHT_CANDIDATES for r in results)
+    for fold, (fit_uids, validation_uids) in zip(make_lodo_folds(rows), calls):
+        expected_fit, expected_validation, test_rows = fold.split(rows)
+        test_uids = {r["requirement_uid"] for r in test_rows}
+        assert fit_uids == {r["requirement_uid"] for r in expected_fit}
+        assert validation_uids == {r["requirement_uid"] for r in expected_validation}
+        assert not test_uids.intersection(fit_uids | validation_uids)
+
+
+def test_type_weight_selection_prefers_smaller_weight_on_tie():
+    validation = [
+        {"primary_action": label, "requirement_type_normalized": "기능", "raw_requirement_text": "x"}
+        for label in LABELS
+    ]
+
+    class FakePipeline:
+        def __init__(self, weight):
+            self.weight = weight
+
+        def predict(self, rows):
+            return LABELS if self.weight in (0.0, 0.05) else [LABELS[0]] * 3
+
+    with patch.object(
+        baselines,
+        "_fit_pipeline",
+        side_effect=lambda spec, rows: FakePipeline(spec.type_feature_weight),
+    ):
+        selected = baselines._select_type_weight([], validation, CHAR_TYPE_BALANCED)
+
+    assert selected == 0.0
+
+
+def test_number_features_ignore_line_start_list_numbers():
+    rows = [
+        {
+            "raw_requirement_text": (
+                "1) 범위\n2. 조건\n3 | 표 항목\n사용자 500명, 99.9% 가용률"
+            )
+        }
+    ]
+
+    features = _select_number_features(rows)[0]
+
+    assert features[0] == 1.0
+    assert features[1] == pytest.approx(np.log1p(2))
+
+
+def test_structural_specs_keep_tfidf_and_add_only_requested_features(structure_results):
+    assert CHAR_LENGTH_BALANCED.include_text_length
+    assert not CHAR_LENGTH_BALANCED.include_number_features
+    assert CHAR_NUMBERS_BALANCED.include_number_features
+    assert not CHAR_NUMBERS_BALANCED.include_text_length
+    assert CHAR_STRUCTURE_BALANCED.include_text_length
+    assert CHAR_STRUCTURE_BALANCED.include_number_features
+    assert len(structure_results) == 10
+    assert sum(result.test_size for result in structure_results) == 924
+
+
+def test_nonlinear_structure_specs_build_and_predict_string_labels():
+    rows = [
+        {
+            "raw_requirement_text": f"성능 조건 {i * 10}%를 만족해야 한다",
+            "primary_action": label,
+        }
+        for i, label in enumerate(LABELS * 2, start=1)
+    ]
+    xgb = ModelSpec(
+        name="작은 XGBoost",
+        classifier="xgboost",
+        include_text_length=True,
+        include_number_features=True,
+        svd_components=2,
+        min_df=1,
+    )
+
+    predictions = baselines._fit_pipeline(xgb, rows).predict(rows)
+
+    assert set(predictions).issubset(LABELS)
+    assert ELASTIC_NET_STRUCTURE.classifier == "elasticnet"
+    assert SVD_STRUCTURE_LOGISTIC.svd_components == 100
+    assert SVD_STRUCTURE_XGBOOST.classifier == "xgboost"
 
 
 def test_selection_rank_is_f2_then_macro_f1_then_smaller_weight():

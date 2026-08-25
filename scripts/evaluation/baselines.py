@@ -62,13 +62,15 @@ fold 점수는 그 자체로 비교할 수 없다. 두 가지가 fold마다 다�
 
 from __future__ import annotations
 
+import re
 from collections import Counter
 from dataclasses import dataclass, replace
 from typing import Any, Sequence
 
 import numpy as np
+from sklearn.base import BaseEstimator, ClassifierMixin
+from sklearn.decomposition import TruncatedSVD
 from sklearn.dummy import DummyClassifier
-from sklearn.preprocessing import FunctionTransformer, OneHotEncoder
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import ComplementNB
@@ -80,8 +82,15 @@ from sklearn.metrics import (
     recall_score,
 )
 from sklearn.pipeline import FeatureUnion, Pipeline
+from sklearn.preprocessing import (
+    FunctionTransformer,
+    LabelEncoder,
+    OneHotEncoder,
+    StandardScaler,
+)
 from sklearn.svm import LinearSVC
-from sklearn.utils.class_weight import compute_class_weight
+from sklearn.utils.class_weight import compute_class_weight, compute_sample_weight
+from xgboost import XGBClassifier
 
 from scripts.evaluation.duplication import DEFAULT_THRESHOLD
 from scripts.evaluation.folds import (
@@ -102,6 +111,43 @@ REVIEW_LABEL = "계약·질의검토"
 # 다시 돌린 값이 어긋나면 원인을 찾는 데 시간이 든다.
 RANDOM_STATE = 42
 REVIEW_WEIGHT_CANDIDATES: tuple[float, ...] = (1.0, 1.25, 1.5, 2.0)
+TYPE_FEATURE_WEIGHT_CANDIDATES: tuple[float, ...] = (0.0, 0.05, 0.1, 0.25, 0.5, 1.0)
+
+_LIST_NUMBER_RE = re.compile(r"(?m)^\s*\d+\s*(?:[.)]|\|)\s+")
+_NUMBER_RE = re.compile(r"\d+(?:,\d{3})*(?:\.\d+)?")
+
+
+class _LabelEncodedXGBClassifier(ClassifierMixin, BaseEstimator):
+    """문자 라벨과 balanced sample weight를 XGBoost에 연결한다."""
+
+    def __init__(self, class_weight: str | dict[str, float] | None = "balanced"):
+        self.class_weight = class_weight
+
+    def fit(self, X: Any, y: Sequence[str]) -> _LabelEncodedXGBClassifier:
+        self.encoder_ = LabelEncoder().fit(y)
+        encoded = self.encoder_.transform(y)
+        sample_weight = (
+            compute_sample_weight(self.class_weight, y)
+            if self.class_weight is not None
+            else None
+        )
+        self.model_ = XGBClassifier(
+            n_estimators=200,
+            max_depth=3,
+            learning_rate=0.05,
+            subsample=0.8,
+            colsample_bytree=0.8,
+            objective="multi:softprob",
+            eval_metric="mlogloss",
+            random_state=RANDOM_STATE,
+            n_jobs=-1,
+        )
+        self.model_.fit(X, encoded, sample_weight=sample_weight)
+        self.classes_ = self.encoder_.classes_
+        return self
+
+    def predict(self, X: Any) -> np.ndarray:
+        return self.encoder_.inverse_transform(self.model_.predict(X).astype(int))
 
 
 @dataclass(frozen=True)
@@ -131,10 +177,15 @@ class ModelSpec:
     ngram_range: tuple[int, int] = (3, 4)
     min_df: int = 2
     sublinear_tf: bool = True
-    classifier: str = "logistic"  # logistic | svm | complement_nb | dummy
+    classifier: str = "logistic"
     combine_word_char: bool = False
     include_requirement_type: bool = False
+    type_feature_weight: float = 1.0
+    include_text_length: bool = False
+    include_number_features: bool = False
+    svd_components: int | None = None
     C: float = 1.0
+    l1_ratio: float = 0.5
     class_weight: str | dict[str, float] | None = "balanced"
     review_weight_multiplier: float = 1.0
 
@@ -173,11 +224,34 @@ class ModelSpec:
             if self.combine_word_char
             else char_vectorizer
         )
+        if self.svd_components is not None:
+            vectorizer = Pipeline(
+                [
+                    ("tfidf", vectorizer),
+                    (
+                        "svd",
+                        TruncatedSVD(
+                            n_components=self.svd_components,
+                            random_state=RANDOM_STATE,
+                        ),
+                    ),
+                ]
+            )
         if self.classifier == "logistic":
             clf = LogisticRegression(
                 C=self.C,
                 class_weight=self.class_weight,
                 max_iter=2000,
+                random_state=RANDOM_STATE,
+            )
+        elif self.classifier == "elasticnet":
+            clf = LogisticRegression(
+                C=self.C,
+                class_weight=self.class_weight,
+                max_iter=5000,
+                penalty="elasticnet",
+                solver="saga",
+                l1_ratio=self.l1_ratio,
                 random_state=RANDOM_STATE,
             )
         elif self.classifier == "svm":
@@ -188,20 +262,25 @@ class ModelSpec:
             )
         elif self.classifier == "complement_nb":
             clf = ComplementNB()
+        elif self.classifier == "xgboost":
+            clf = _LabelEncodedXGBClassifier(class_weight=self.class_weight)
         else:
             raise ValueError(f"알 수 없는 분류기: {self.classifier!r}")
-        if self.include_requirement_type:
-            vectorizer = FeatureUnion(
-                [
-                    (
-                        "text",
-                        Pipeline(
-                            [
-                                ("select", FunctionTransformer(_select_text)),
-                                ("tfidf", vectorizer),
-                            ]
-                        ),
+        if self.include_requirement_type or self.include_text_length or self.include_number_features:
+            transformers = [
+                (
+                    "text",
+                    Pipeline(
+                        [
+                            ("select", FunctionTransformer(_select_text)),
+                            ("tfidf", vectorizer),
+                        ]
                     ),
+                )
+            ]
+            weights = {}
+            if self.include_requirement_type:
+                transformers.append(
                     (
                         "type",
                         Pipeline(
@@ -210,9 +289,34 @@ class ModelSpec:
                                 ("onehot", OneHotEncoder(handle_unknown="ignore")),
                             ]
                         ),
-                    ),
-                ]
-            )
+                    )
+                )
+                weights["type"] = self.type_feature_weight
+            if self.include_text_length:
+                transformers.append(
+                    (
+                        "length",
+                        Pipeline(
+                            [
+                                ("select", FunctionTransformer(_select_text_length)),
+                                ("scale", StandardScaler()),
+                            ]
+                        ),
+                    )
+                )
+            if self.include_number_features:
+                transformers.append(
+                    (
+                        "numbers",
+                        Pipeline(
+                            [
+                                ("select", FunctionTransformer(_select_number_features)),
+                                ("scale", StandardScaler()),
+                            ]
+                        ),
+                    )
+                )
+            vectorizer = FeatureUnion(transformers, transformer_weights=weights or None)
         return Pipeline([("features", vectorizer), ("clf", clf)])
 
 
@@ -224,8 +328,26 @@ def _select_type(rows: Sequence[dict[str, Any]]) -> list[list[str]]:
     return [[row["requirement_type_normalized"]] for row in rows]
 
 
+def _select_text_length(rows: Sequence[dict[str, Any]]) -> np.ndarray:
+    return np.array([[np.log1p(len(row["raw_requirement_text"]))] for row in rows])
+
+
+def _select_number_features(rows: Sequence[dict[str, Any]]) -> np.ndarray:
+    features = []
+    for row in rows:
+        text = _LIST_NUMBER_RE.sub("", row["raw_requirement_text"])
+        count = len(_NUMBER_RE.findall(text))
+        features.append([float(count > 0), np.log1p(count)])
+    return np.array(features)
+
+
 def _model_input(spec: ModelSpec, rows: Sequence[dict[str, Any]]) -> Any:
-    return rows if spec.include_requirement_type else _select_text(rows)
+    uses_row_features = (
+        spec.include_requirement_type
+        or spec.include_text_length
+        or spec.include_number_features
+    )
+    return rows if uses_row_features else _select_text(rows)
 
 
 @dataclass(frozen=True)
@@ -248,6 +370,8 @@ class FoldResult:
     review_recall: float
     review_precision: float
     review_weight_multiplier: float
+    type_feature_weight: float
+    embedding_weight: float
 
     # 이 fold를 어떻게 읽어야 하는가 (folds.py의 진단값)
     trained_majority_accuracy: float
@@ -371,6 +495,7 @@ def evaluate_fold(
         repeat_flags=repeat_flags,
         repeat_threshold=repeat_threshold,
         review_weight_multiplier=spec.review_weight_multiplier,
+        type_feature_weight=spec.type_feature_weight if spec.include_requirement_type else 0.0,
     )
 
 
@@ -384,6 +509,8 @@ def _fold_result_from_predictions(
     repeat_flags: dict[str, bool],
     repeat_threshold: float = DEFAULT_THRESHOLD,
     review_weight_multiplier: float = 1.0,
+    type_feature_weight: float = 0.0,
+    embedding_weight: float = 0.0,
 ) -> FoldResult:
     """표현 방식과 무관한 fold 지표·진단을 한곳에서 만든다."""
     gold = [r["primary_action"] for r in test_rows]
@@ -414,6 +541,8 @@ def _fold_result_from_predictions(
         review_recall=review_recall,
         review_precision=review_precision,
         review_weight_multiplier=review_weight_multiplier,
+        type_feature_weight=type_feature_weight,
+        embedding_weight=embedding_weight,
         trained_majority_accuracy=diagnostics.trained_majority_accuracy,
         oracle_majority_accuracy=diagnostics.oracle_majority_accuracy,
         repeat_exposure_rate=diagnostics.repeat_exposure_rate,
@@ -470,6 +599,31 @@ def run_review_weight_tuned_lodo(
     return results
 
 
+def run_type_weight_tuned_lodo(
+    rows: Sequence[dict[str, Any]],
+    spec: ModelSpec,
+    *,
+    repeat_threshold: float = DEFAULT_THRESHOLD,
+) -> list[FoldResult]:
+    """검증 문서의 macro F1로 유형 가중치를 고른 뒤 평가 문서를 한 번만 본다."""
+    if not spec.include_requirement_type:
+        raise ValueError("유형 가중치 선택에는 include_requirement_type=True가 필요합니다")
+    results = []
+    for fold in make_lodo_folds(rows):
+        fit_rows, validation_rows, _ = fold.split(rows)
+        selected = _select_type_weight(fit_rows, validation_rows, spec)
+        results.append(
+            evaluate_fold(
+                fold,
+                rows,
+                replace(spec, type_feature_weight=selected),
+                repeat_flags=_repeat_flags(fold, rows, repeat_threshold),
+                repeat_threshold=repeat_threshold,
+            )
+        )
+    return results
+
+
 def _selection_rank(
     gold: Sequence[str], pred: Sequence[str], multiplier: float
 ) -> tuple[float, float, float]:
@@ -504,6 +658,25 @@ def _select_review_weight(
         )
         ranks[multiplier] = _selection_rank(gold, pred, multiplier)
     return max(REVIEW_WEIGHT_CANDIDATES, key=ranks.__getitem__)
+
+
+def _select_type_weight(
+    fit_rows: Sequence[dict[str, Any]],
+    validation_rows: Sequence[dict[str, Any]],
+    spec: ModelSpec,
+) -> float:
+    """학습·검증 문서만 사용해 유형 블록의 크기를 고른다."""
+    gold = [r["primary_action"] for r in validation_rows]
+    ranks = {}
+    for weight in TYPE_FEATURE_WEIGHT_CANDIDATES:
+        candidate = replace(spec, type_feature_weight=weight)
+        pipeline = _fit_pipeline(candidate, fit_rows)
+        pred = list(pipeline.predict(_model_input(candidate, validation_rows)))
+        macro_f1 = f1_score(
+            gold, pred, labels=LABELS, average="macro", zero_division=0
+        )
+        ranks[weight] = float(macro_f1), -weight
+    return max(TYPE_FEATURE_WEIGHT_CANDIDATES, key=ranks.__getitem__)
 
 
 def summarize(results: Sequence[FoldResult]) -> dict[str, dict[str, float]]:
@@ -606,6 +779,38 @@ WORD_CHAR_TYPE_BALANCED = ModelSpec(
     combine_word_char=True,
     include_requirement_type=True,
 )
+CHAR_LENGTH_BALANCED = ModelSpec(
+    name="char 3-4gram + 글자 수 + balanced",
+    include_text_length=True,
+)
+CHAR_NUMBERS_BALANCED = ModelSpec(
+    name="char 3-4gram + 숫자 정보 + balanced",
+    include_number_features=True,
+)
+CHAR_STRUCTURE_BALANCED = ModelSpec(
+    name="char 3-4gram + 글자 수 + 숫자 정보 + balanced",
+    include_text_length=True,
+    include_number_features=True,
+)
+ELASTIC_NET_STRUCTURE = ModelSpec(
+    name="char + 구조·숫자 + Elastic-net Logistic",
+    classifier="elasticnet",
+    include_text_length=True,
+    include_number_features=True,
+)
+SVD_STRUCTURE_LOGISTIC = ModelSpec(
+    name="SVD100 + 구조·숫자 + Logistic",
+    svd_components=100,
+    include_text_length=True,
+    include_number_features=True,
+)
+SVD_STRUCTURE_XGBOOST = ModelSpec(
+    name="SVD100 + 구조·숫자 + XGBoost",
+    classifier="xgboost",
+    svd_components=100,
+    include_text_length=True,
+    include_number_features=True,
+)
 WORD_CHAR_COMPLEMENT_NB = ModelSpec(
     name="word 1-2 + char 3-4gram + ComplementNB",
     classifier="complement_nb",
@@ -637,11 +842,26 @@ def _main() -> None:
             WORD_CHAR_BALANCED,
             CHAR_TYPE_BALANCED,
             WORD_CHAR_TYPE_BALANCED,
+            CHAR_LENGTH_BALANCED,
+            CHAR_NUMBERS_BALANCED,
+            CHAR_STRUCTURE_BALANCED,
+            ELASTIC_NET_STRUCTURE,
+            SVD_STRUCTURE_LOGISTIC,
+            SVD_STRUCTURE_XGBOOST,
             WORD_CHAR_COMPLEMENT_NB,
         )
     ]
     runs.append(
         ("LinearSVC + 검증 weight", run_review_weight_tuned_lodo(rows, SVM_BALANCED))
+    )
+    runs.extend(
+        [
+            ("char + 유형 검증 weight", run_type_weight_tuned_lodo(rows, CHAR_TYPE_BALANCED)),
+            (
+                "word+char + 유형 검증 weight",
+                run_type_weight_tuned_lodo(rows, WORD_CHAR_TYPE_BALANCED),
+            ),
+        ]
     )
     for name, results in runs:
         s = summarize(results)

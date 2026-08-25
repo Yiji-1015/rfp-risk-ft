@@ -5,10 +5,13 @@ import pytest
 import torch
 
 from scripts.evaluation.embeddings import (
+    EMBEDDING_WEIGHT_CANDIDATES,
     E5_LOGISTIC,
+    TFIDF_E5_NUMBERS,
     load_cached_embeddings,
     mean_pool,
     run_embedding_lodo,
+    run_hybrid_lodo,
 )
 from scripts.labeling.label_dataset import load_label_dataset
 
@@ -52,3 +55,19 @@ def test_stale_embedding_cache_is_rejected(tmp_path):
     )
 
     assert load_cached_embeddings(path, rows) is None
+
+
+def test_hybrid_lodo_runs_the_same_ten_document_folds():
+    rows, _ = load_label_dataset()
+    embeddings = np.random.default_rng(42).normal(size=(len(rows), 8)).astype(np.float32)
+
+    results = run_hybrid_lodo(
+        rows,
+        embeddings,
+        TFIDF_E5_NUMBERS,
+        weight_candidates=(0.0,),
+    )
+
+    assert len(results) == 10
+    assert sum(result.test_size for result in results) == len(rows) - 100
+    assert all(result.embedding_weight in EMBEDDING_WEIGHT_CANDIDATES for result in results)

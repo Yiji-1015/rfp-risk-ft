@@ -17,14 +17,20 @@ from typing import Any, Sequence
 import numpy as np
 import torch
 import transformers
+from scipy.sparse import csr_matrix, hstack
+from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import f1_score
+from sklearn.preprocessing import StandardScaler
 from sklearn.svm import LinearSVC
 from torch.nn import functional as F
 from transformers import AutoModel, AutoTokenizer
 
 from scripts.evaluation.baselines import (
     RANDOM_STATE,
+    LABELS,
     FoldResult,
+    _select_number_features,
     _fold_result_from_predictions,
     summarize,
 )
@@ -37,6 +43,7 @@ INPUT_PREFIX = "query: "
 MAX_LENGTH = 512
 DEFAULT_BATCH_SIZE = 16
 PIPELINE_VERSION = "attention-mask-mean+l2-v1"
+EMBEDDING_WEIGHT_CANDIDATES: tuple[float, ...] = (0.0, 0.05, 0.1, 0.25, 0.5, 1.0)
 
 
 @dataclass(frozen=True)
@@ -65,6 +72,19 @@ class EmbeddingSpec:
 
 E5_LOGISTIC = EmbeddingSpec("E5-small + balanced Logistic", "logistic")
 E5_SVM = EmbeddingSpec("E5-small + balanced LinearSVC", "svm")
+
+
+@dataclass(frozen=True)
+class HybridSpec:
+    name: str
+    include_number_features: bool = False
+
+
+TFIDF_E5 = HybridSpec("char TF-IDF + E5 검증 weight")
+TFIDF_E5_NUMBERS = HybridSpec(
+    "char TF-IDF + E5 검증 weight + 숫자 정보",
+    include_number_features=True,
+)
 
 
 def mean_pool(last_hidden_state: torch.Tensor, attention_mask: torch.Tensor) -> torch.Tensor:
@@ -199,6 +219,130 @@ def run_embedding_lodo(
     return results
 
 
+def _hybrid_matrix(
+    text_matrix: Any,
+    embeddings: np.ndarray,
+    embedding_weight: float,
+    number_features: np.ndarray | None,
+) -> Any:
+    blocks = [text_matrix, csr_matrix(embeddings * embedding_weight)]
+    if number_features is not None:
+        blocks.append(csr_matrix(number_features))
+    return hstack(blocks, format="csr")
+
+
+def run_hybrid_lodo(
+    rows: Sequence[dict[str, Any]],
+    embeddings: np.ndarray,
+    spec: HybridSpec,
+    *,
+    weight_candidates: Sequence[float] = EMBEDDING_WEIGHT_CANDIDATES,
+    repeat_threshold: float = DEFAULT_THRESHOLD,
+) -> list[FoldResult]:
+    """검증 문서로 E5 블록 가중치를 고르는 TF-IDF 결합 LODO."""
+    if embeddings.ndim != 2 or embeddings.shape[0] != len(rows):
+        raise ValueError("임베딩 행 수는 데이터 행 수와 같아야 합니다")
+    if not weight_candidates:
+        raise ValueError("임베딩 가중치 후보가 하나 이상 필요합니다")
+
+    positions = {row["requirement_uid"]: i for i, row in enumerate(rows)}
+    results = []
+    for fold in make_lodo_folds(rows):
+        fit_rows, validation_rows, test_rows = fold.split(rows)
+        fit_idx = [positions[row["requirement_uid"]] for row in fit_rows]
+        validation_idx = [positions[row["requirement_uid"]] for row in validation_rows]
+        test_idx = [positions[row["requirement_uid"]] for row in test_rows]
+
+        vectorizer = TfidfVectorizer(
+            analyzer="char_wb",
+            ngram_range=(3, 4),
+            min_df=2,
+            sublinear_tf=True,
+        )
+        fit_text = vectorizer.fit_transform(
+            row["raw_requirement_text"] for row in fit_rows
+        )
+        validation_text = vectorizer.transform(
+            row["raw_requirement_text"] for row in validation_rows
+        )
+        test_text = vectorizer.transform(
+            row["raw_requirement_text"] for row in test_rows
+        )
+
+        fit_numbers = validation_numbers = test_numbers = None
+        if spec.include_number_features:
+            scaler = StandardScaler()
+            fit_numbers = scaler.fit_transform(_select_number_features(fit_rows))
+            validation_numbers = scaler.transform(
+                _select_number_features(validation_rows)
+            )
+            test_numbers = scaler.transform(_select_number_features(test_rows))
+
+        gold_fit = [row["primary_action"] for row in fit_rows]
+        gold_validation = [row["primary_action"] for row in validation_rows]
+        ranks = {}
+        for weight in weight_candidates:
+            classifier = E5_LOGISTIC.build()
+            classifier.fit(
+                _hybrid_matrix(
+                    fit_text, embeddings[fit_idx], weight, fit_numbers
+                ),
+                gold_fit,
+            )
+            pred = classifier.predict(
+                _hybrid_matrix(
+                    validation_text,
+                    embeddings[validation_idx],
+                    weight,
+                    validation_numbers,
+                )
+            )
+            ranks[weight] = (
+                float(
+                    f1_score(
+                        gold_validation,
+                        pred,
+                        labels=LABELS,
+                        average="macro",
+                        zero_division=0,
+                    )
+                ),
+                -weight,
+            )
+        selected = max(weight_candidates, key=ranks.__getitem__)
+
+        classifier = E5_LOGISTIC.build()
+        classifier.fit(
+            _hybrid_matrix(
+                fit_text, embeddings[fit_idx], selected, fit_numbers
+            ),
+            gold_fit,
+        )
+        pred = list(
+            classifier.predict(
+                _hybrid_matrix(
+                    test_text,
+                    embeddings[test_idx],
+                    selected,
+                    test_numbers,
+                )
+            )
+        )
+        results.append(
+            _fold_result_from_predictions(
+                fold,
+                rows,
+                test_rows,
+                pred,
+                train_size=len(fit_rows),
+                repeat_flags=_repeat_flags(fold, rows, repeat_threshold),
+                repeat_threshold=repeat_threshold,
+                embedding_weight=selected,
+            )
+        )
+    return results
+
+
 def _main() -> None:
     from scripts.labeling.label_dataset import load_label_dataset
 
@@ -227,6 +371,15 @@ def _main() -> None:
     print("-" * 86)
     for spec in (E5_LOGISTIC, E5_SVM):
         summary = summarize(run_embedding_lodo(rows, embeddings, spec))
+        print(
+            f"{spec.name:<38}{summary['macro_f1']['fold_mean']:>9.3f}"
+            f"{summary['accuracy']['fold_mean']:>9.3f}"
+            f"{summary['review_precision']['fold_mean']:>10.3f}"
+            f"{summary['review_recall']['fold_mean']:>11.3f}"
+            f"{summary['review_f1']['fold_mean']:>9.3f}"
+        )
+    for spec in (TFIDF_E5, TFIDF_E5_NUMBERS):
+        summary = summarize(run_hybrid_lodo(rows, embeddings, spec))
         print(
             f"{spec.name:<38}{summary['macro_f1']['fold_mean']:>9.3f}"
             f"{summary['accuracy']['fold_mean']:>9.3f}"

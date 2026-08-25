@@ -220,8 +220,15 @@ macro F1은 0.579 → 0.576으로 내렸다. recall이 오른 fold도 3/10뿐이
 
 같은 결합 TF-IDF의 ComplementNB는 macro F1 0.505, 계약 recall 0.351로 명확히 낮았다.
 평균 최고 숫자만 따라 모델을 교체하지 않고, 주 기준선은 단순한 문자 TF-IDF balanced
-Logistic 0.601을 유지한다. 요구사항 유형 결합 2종도 기준선을 넘지 못했다. 전체 12종
+Logistic 0.601을 유지한다. 요구사항 유형 및 구조·수치 feature도 기준선을 넘지 못했다. 전체 22종
 비교는 `notebooks/09_model_summary.ipynb`에 있다.
+
+구조·수치 입력의 Elastic-net은 0.471, SVD100+Logistic은 0.528, SVD100+XGBoost는
+0.564였다. 비선형 XGBoost가 SVD Logistic보다는 높지만 원래 희소 TF-IDF 0.601에는
+못 미쳤다. 고정 초기 설정의 모델 구조 비교이며 파라미터 튜닝 결과는 아니다.
+
+문자 TF-IDF+E5의 검증 가중치 선택은 macro F1 0.611로 숫자상 최고였지만 문자 단독 대비
++0.010, 우세 5/10이라 유망 후보로만 둔다. 숫자 정보를 추가하면 0.594로 낮아졌다.
 
 ---
 
