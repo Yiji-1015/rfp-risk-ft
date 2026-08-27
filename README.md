@@ -325,6 +325,8 @@ python -m scripts.evaluation.explanation_viewer
 새로운 문장 입력은 최종 학습 범위를 정한 뒤 별도 추론 화면으로 추가한다. 같은 명령이
 다른 컴퓨터·도구에서 읽을 수 있는 설명 JSON, 상위 문구 CSV와 클래스별 문구 클라우드
 PNG 3장도 `reports/`에 만든다. 원시 문자 n-gram은 원문에서 포함된 단어로 확장해 합친다.
+정확한 소프트웨어 버전·데이터 hash·seed·사전학습 모델 revision은
+[`reports/experiment_environment.json`](reports/experiment_environment.json)에 고정한다.
 
 모델을 USB `E:`에 저장해 실행하는 명령은 다음과 같다. 모델 파일 약 470MB는 USB에,
 재생성 가능한 임베딩 약 1.5MB는 Git 제외된 `data/processed/`에 저장된다.

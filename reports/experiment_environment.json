@@ -1,0 +1,57 @@
+{
+  "captured_at": "2026-08-27T16:37:00+09:00",
+  "scope": "LODO classical, embedding, dependency, ensemble, and explanation experiments",
+  "python": "3.12.13",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "hardware_recorded": false,
+  "packages": {
+    "numpy": "2.5.2",
+    "scipy": "1.18.1",
+    "pandas": "2.3.3",
+    "scikit-learn": "1.9.0",
+    "matplotlib": "3.11.1",
+    "seaborn": "0.13.2",
+    "xgboost": "3.4.1",
+    "fasttext-wheel": "0.9.2",
+    "stanza": "1.14.0",
+    "torch": "2.13.0",
+    "transformers": "5.15.1",
+    "datasets": "5.0.1",
+    "accelerate": "1.14.0",
+    "pytest": "9.1.1",
+    "jupyter": "1.1.1",
+    "ipykernel": "7.3.0"
+  },
+  "dataset": {
+    "version": "label_dataset_v3",
+    "schema_version": "4.0.0",
+    "row_count": 1024,
+    "evaluation_row_count": 924,
+    "document_count": 10,
+    "sha256": "cacd75695b01b2d6a51bc2933041488c375c4212e7d43bb7dd113321cb7c7684"
+  },
+  "evaluation": {
+    "protocol": "LODO: fit 8 documents / validation 1 / test 1",
+    "random_state": 42,
+    "candidate_registry": "reports/model_candidates.json",
+    "oof_predictions": "reports/model_candidate_oof.csv"
+  },
+  "pretrained_assets": {
+    "e5_model_id": "intfloat/multilingual-e5-small",
+    "e5_revision": "d2648e288f5fe1641aeab663a7fa6d1f0d1daff2",
+    "e5_binary_location": "external USB cache; not committed",
+    "stanza_model_location": "external USB cache; not committed"
+  },
+  "trained_weights": {
+    "fold_models_committed": false,
+    "final_model_committed": false,
+    "reason": "LODO fold models are deterministically regenerated; final deployment model has not been selected"
+  },
+  "configuration_sources": [
+    "scripts/evaluation/baselines.py",
+    "scripts/evaluation/classical_search.py",
+    "scripts/evaluation/embeddings.py",
+    "scripts/evaluation/dependency_features.py",
+    "scripts/evaluation/candidate_ensemble.py"
+  ]
+}
