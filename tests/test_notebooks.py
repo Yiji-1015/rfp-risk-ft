@@ -15,6 +15,9 @@ EXPECTED_NOTEBOOKS = {
     "07_baseline_comparison.ipynb",
     "08_embedding_comparison.ipynb",
     "09_model_summary.ipynb",
+    "10_explainable_classical_search.ipynb",
+    "11_dependency_features.ipynb",
+    "12_candidate_ensemble.ipynb",
 }
 
 

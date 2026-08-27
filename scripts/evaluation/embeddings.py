@@ -30,6 +30,7 @@ from scripts.evaluation.baselines import (
     RANDOM_STATE,
     LABELS,
     FoldResult,
+    _aligned_probabilities,
     _select_number_features,
     _fold_result_from_predictions,
     summarize,
@@ -245,88 +246,11 @@ def run_hybrid_lodo(
     if not weight_candidates:
         raise ValueError("임베딩 가중치 후보가 하나 이상 필요합니다")
 
-    positions = {row["requirement_uid"]: i for i, row in enumerate(rows)}
     results = []
     for fold in make_lodo_folds(rows):
-        fit_rows, validation_rows, test_rows = fold.split(rows)
-        fit_idx = [positions[row["requirement_uid"]] for row in fit_rows]
-        validation_idx = [positions[row["requirement_uid"]] for row in validation_rows]
-        test_idx = [positions[row["requirement_uid"]] for row in test_rows]
-
-        vectorizer = TfidfVectorizer(
-            analyzer="char_wb",
-            ngram_range=(3, 4),
-            min_df=2,
-            sublinear_tf=True,
-        )
-        fit_text = vectorizer.fit_transform(
-            row["raw_requirement_text"] for row in fit_rows
-        )
-        validation_text = vectorizer.transform(
-            row["raw_requirement_text"] for row in validation_rows
-        )
-        test_text = vectorizer.transform(
-            row["raw_requirement_text"] for row in test_rows
-        )
-
-        fit_numbers = validation_numbers = test_numbers = None
-        if spec.include_number_features:
-            scaler = StandardScaler()
-            fit_numbers = scaler.fit_transform(_select_number_features(fit_rows))
-            validation_numbers = scaler.transform(
-                _select_number_features(validation_rows)
-            )
-            test_numbers = scaler.transform(_select_number_features(test_rows))
-
-        gold_fit = [row["primary_action"] for row in fit_rows]
-        gold_validation = [row["primary_action"] for row in validation_rows]
-        ranks = {}
-        for weight in weight_candidates:
-            classifier = E5_LOGISTIC.build()
-            classifier.fit(
-                _hybrid_matrix(
-                    fit_text, embeddings[fit_idx], weight, fit_numbers
-                ),
-                gold_fit,
-            )
-            pred = classifier.predict(
-                _hybrid_matrix(
-                    validation_text,
-                    embeddings[validation_idx],
-                    weight,
-                    validation_numbers,
-                )
-            )
-            ranks[weight] = (
-                float(
-                    f1_score(
-                        gold_validation,
-                        pred,
-                        labels=LABELS,
-                        average="macro",
-                        zero_division=0,
-                    )
-                ),
-                -weight,
-            )
-        selected = max(weight_candidates, key=ranks.__getitem__)
-
-        classifier = E5_LOGISTIC.build()
-        classifier.fit(
-            _hybrid_matrix(
-                fit_text, embeddings[fit_idx], selected, fit_numbers
-            ),
-            gold_fit,
-        )
-        pred = list(
-            classifier.predict(
-                _hybrid_matrix(
-                    test_text,
-                    embeddings[test_idx],
-                    selected,
-                    test_numbers,
-                )
-            )
+        fit_rows, _, test_rows = fold.split(rows)
+        pred, _, selected = predict_hybrid_fold(
+            rows, embeddings, fold, spec, weight_candidates=weight_candidates
         )
         results.append(
             _fold_result_from_predictions(
@@ -341,6 +265,76 @@ def run_hybrid_lodo(
             )
         )
     return results
+
+
+def predict_hybrid_fold(
+    rows: Sequence[dict[str, Any]],
+    embeddings: np.ndarray,
+    fold: Any,
+    spec: HybridSpec,
+    *,
+    weight_candidates: Sequence[float] = EMBEDDING_WEIGHT_CANDIDATES,
+) -> tuple[list[str], np.ndarray, float]:
+    """fold 하나의 검증 선택, 예측, 정렬 확률을 반환한다."""
+    positions = {row["requirement_uid"]: i for i, row in enumerate(rows)}
+    fit_rows, validation_rows, test_rows = fold.split(rows)
+    fit_idx = [positions[row["requirement_uid"]] for row in fit_rows]
+    validation_idx = [positions[row["requirement_uid"]] for row in validation_rows]
+    test_idx = [positions[row["requirement_uid"]] for row in test_rows]
+
+    vectorizer = TfidfVectorizer(
+        analyzer="char_wb", ngram_range=(3, 4), min_df=2, sublinear_tf=True
+    )
+    fit_text = vectorizer.fit_transform(row["raw_requirement_text"] for row in fit_rows)
+    validation_text = vectorizer.transform(
+        row["raw_requirement_text"] for row in validation_rows
+    )
+    test_text = vectorizer.transform(row["raw_requirement_text"] for row in test_rows)
+
+    fit_numbers = validation_numbers = test_numbers = None
+    if spec.include_number_features:
+        scaler = StandardScaler()
+        fit_numbers = scaler.fit_transform(_select_number_features(fit_rows))
+        validation_numbers = scaler.transform(_select_number_features(validation_rows))
+        test_numbers = scaler.transform(_select_number_features(test_rows))
+
+    gold_fit = [row["primary_action"] for row in fit_rows]
+    gold_validation = [row["primary_action"] for row in validation_rows]
+    ranks = {}
+    for weight in weight_candidates:
+        classifier = E5_LOGISTIC.build()
+        classifier.fit(
+            _hybrid_matrix(fit_text, embeddings[fit_idx], weight, fit_numbers), gold_fit
+        )
+        pred = classifier.predict(
+            _hybrid_matrix(
+                validation_text, embeddings[validation_idx], weight, validation_numbers
+            )
+        )
+        ranks[weight] = (
+            float(
+                f1_score(
+                    gold_validation,
+                    pred,
+                    labels=LABELS,
+                    average="macro",
+                    zero_division=0,
+                )
+            ),
+            -weight,
+        )
+    selected = max(weight_candidates, key=ranks.__getitem__)
+
+    classifier = E5_LOGISTIC.build()
+    fit_matrix = _hybrid_matrix(
+        fit_text, embeddings[fit_idx], selected, fit_numbers
+    )
+    test_matrix = _hybrid_matrix(
+        test_text, embeddings[test_idx], selected, test_numbers
+    )
+    classifier.fit(fit_matrix, gold_fit)
+    probabilities = _aligned_probabilities(classifier, test_matrix)
+    return [LABELS[i] for i in probabilities.argmax(axis=1)], probabilities, selected
 
 
 def _main() -> None:

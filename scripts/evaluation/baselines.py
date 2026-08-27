@@ -183,6 +183,7 @@ class ModelSpec:
     type_feature_weight: float = 1.0
     include_text_length: bool = False
     include_number_features: bool = False
+    include_dependency_features: bool = False
     svd_components: int | None = None
     C: float = 1.0
     l1_ratio: float = 0.5
@@ -266,7 +267,12 @@ class ModelSpec:
             clf = _LabelEncodedXGBClassifier(class_weight=self.class_weight)
         else:
             raise ValueError(f"알 수 없는 분류기: {self.classifier!r}")
-        if self.include_requirement_type or self.include_text_length or self.include_number_features:
+        if (
+            self.include_requirement_type
+            or self.include_text_length
+            or self.include_number_features
+            or self.include_dependency_features
+        ):
             transformers = [
                 (
                     "text",
@@ -316,6 +322,18 @@ class ModelSpec:
                         ),
                     )
                 )
+            if self.include_dependency_features:
+                transformers.append(
+                    (
+                        "dependency",
+                        Pipeline(
+                            [
+                                ("select", FunctionTransformer(_select_dependency_features)),
+                                ("scale", StandardScaler()),
+                            ]
+                        ),
+                    )
+                )
             vectorizer = FeatureUnion(transformers, transformer_weights=weights or None)
         return Pipeline([("features", vectorizer), ("clf", clf)])
 
@@ -341,11 +359,19 @@ def _select_number_features(rows: Sequence[dict[str, Any]]) -> np.ndarray:
     return np.array(features)
 
 
+def _select_dependency_features(rows: Sequence[dict[str, Any]]) -> np.ndarray:
+    try:
+        return np.asarray([row["dependency_features"] for row in rows], dtype=float)
+    except KeyError as exc:
+        raise ValueError("dependency_features가 없는 행이 있습니다") from exc
+
+
 def _model_input(spec: ModelSpec, rows: Sequence[dict[str, Any]]) -> Any:
     uses_row_features = (
         spec.include_requirement_type
         or spec.include_text_length
         or spec.include_number_features
+        or spec.include_dependency_features
     )
     return rows if uses_row_features else _select_text(rows)
 
@@ -460,6 +486,13 @@ def _fit_pipeline(spec: ModelSpec, rows: Sequence[dict[str, Any]]) -> Pipeline:
     pipeline = fitted_spec.build()
     pipeline.fit(_model_input(spec, rows), labels)
     return pipeline
+
+
+def _aligned_probabilities(classifier: Any, features: Any) -> np.ndarray:
+    """분류기의 클래스 순서를 프로젝트 고정 `LABELS` 순서로 맞춘다."""
+    raw = classifier.predict_proba(features)
+    positions = {label: i for i, label in enumerate(classifier.classes_)}
+    return np.column_stack([raw[:, positions[label]] for label in LABELS])
 
 
 def evaluate_fold(
@@ -791,6 +824,10 @@ CHAR_STRUCTURE_BALANCED = ModelSpec(
     name="char 3-4gram + 글자 수 + 숫자 정보 + balanced",
     include_text_length=True,
     include_number_features=True,
+)
+CHAR_DEPENDENCY_BALANCED = ModelSpec(
+    name="char 3-4gram + 한국어 의존구문 + balanced",
+    include_dependency_features=True,
 )
 ELASTIC_NET_STRUCTURE = ModelSpec(
     name="char + 구조·숫자 + Elastic-net Logistic",

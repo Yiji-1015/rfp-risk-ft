@@ -162,6 +162,9 @@ system에 올리면 오히려 손해다(결정 29).
 | 07 | `07_baseline_comparison.ipynb` | TF-IDF 기준선 6종, 통제 비교, macro F1 해부 |
 | 08 | `08_embedding_comparison.ipynb` | 동결 E5 임베딩과 TF-IDF 통제 비교 |
 | 09 | `09_model_summary.ipynb` | 실험 모델 22종 종합표·그래프와 최종 모델 해석 |
+| 10 | `10_explainable_classical_search.ipynb` | 검증 선택 Logistic·NB-SVM·fastText와 근거 feature·오류 시각화 |
+| 11 | `11_dependency_features.ipynb` | 한국어 의존구문 feature 통제 비교·계수·문서 분포 시각화 |
+| 12 | `12_candidate_ensemble.ipynb` | 0.6 이상 후보 3개의 합의·오류 겹침·고정 결합 비교 |
 
 비교·분석은 스크립트가 아니라 노트북으로 만든다. 노트북은 사용법만 보여주고
 실제 로직은 `scripts/` 모듈이 기준이다.
@@ -221,6 +224,12 @@ python -m scripts.evaluation.baselines
 | SVD100 + 구조·숫자 + Logistic | 0.528 | 0.617 | 0.489 | 0.468 | 0.469 |
 | SVD100 + 구조·숫자 + XGBoost | 0.564 | 0.622 | 0.495 | 0.532 | 0.495 |
 | word+char TF-IDF ComplementNB | 0.505 | 0.610 | 0.692 | 0.351 | 0.436 |
+| 검증 선택 char TF-IDF Logistic | 0.581 | 0.652 | 0.588 | 0.502 | 0.526 |
+| NB-SVM | 0.532 | 0.635 | 0.642 | 0.404 | 0.478 |
+| fastText | 0.352 | 0.527 | 0.454 | 0.052 | 0.090 |
+| char TF-IDF + 한국어 의존구문 | 0.539 | 0.628 | 0.511 | 0.458 | 0.475 |
+| 세 후보 동일 가중 soft voting | 0.607 | 0.671 | 0.587 | 0.511 | 0.538 |
+| **후보 하나라도 계약 검토면 검토** | **0.611** | 0.672 | 0.563 | **0.580** | **0.559** |
 
 동결 앵커 100건은 라벨 생성 때 이미 예시로 쓰였으므로 검증·평가에서 제외한다(결정 25).
 따라서 데이터셋은 1,024건이지만 평가 합계는 **924건**이다.
@@ -268,6 +277,55 @@ TF-IDF를 100차원으로 압축한 Logistic은 0.528, 같은 입력의 XGBoost�
 XGBoost가 비선형 결합으로 일부를 회복했지만 문자 TF-IDF 기준선 0.601보다 낮다. 현재
 설정은 모델 구조 비교용 고정 1차 설정이며 하이퍼파라미터 탐색 결과가 아니다.
 
+파인튜닝 전 추가 탐색은 다음 명령으로 재현한다. `C`, `min_df`, 문자 n-gram 27조합과
+NB-SVM 6조합, fastText 3조합을 fold별 검증 문서에서 고르며 평가 문서는 선택에 쓰지 않는다.
+
+```powershell
+python -m scripts.evaluation.classical_search
+```
+
+검증 선택 Logistic은 macro F1 0.581로 고정 기준선보다 0.020 낮고 우세 4/10이었다.
+검증 문서 하나에 맞춘 파라미터가 다음 문서로 안정적으로 이어지지 않았다. NB-SVM은
+0.532로 10/10 fold에서 낮았고, fastText는 0.352와 계약 recall 0.052로 10/10 fold에서
+낮았다. 세 모델은 설명·오류 분석용 비교군으로 남기고 주 기준선은 바꾸지 않는다.
+
+한국어 Stanza UD 파서로 주어·목적어·수식어·절·접속·서술어의 개수와 비율 12개를
+문자 TF-IDF에 추가하면 macro F1은 0.539, 계약 recall은 0.458이었다. 기준선 대비
+-0.062(-0.288~+0.050), 우세 3/10으로 악화됐다. 의존구문 블록은 설명용 비교 결과로만
+남기고 학습 입력에서는 제외한다. 모델은 USB에 저장하고 다음 명령으로 재현한다.
+
+```powershell
+python -m scripts.evaluation.dependency_features --model-dir E:\rfp-models\stanza
+```
+
+macro F1 0.6 이상인 서로 다른 후보 3개는 문자 TF-IDF Logistic 0.601, 단어+문자
+TF-IDF Logistic 0.603, TF-IDF+E5 결합 0.611이다. 같은 924건의 OOF 확률을 동일 가중
+평균하면 0.607로 최고 단일 후보를 넘지 못했다. 세 모델은 822건(89.0%)에서 같은 예측을
+했고 259건(28.0%)에서는 모두 틀려, 단순 평균으로 고칠 수 있는 상보성이 작았다.
+
+반면 하나라도 `계약·질의검토`를 예측하면 검토로 올리는 고정 규칙은 macro F1 0.611을
+유지하면서 계약 recall을 최고 단일 후보의 0.508에서 0.580으로 높였다. 대신 precision은
+0.598에서 0.563으로 낮아진다. 이는 새 주 모델이라기보다, 놓침 비용이 오탐 검토 비용보다
+클 때 선택하는 운영 규칙이다. 예측별 확률과 합의 여부는 `reports/model_candidate_oof.csv`,
+후보 설정과 fold 결과는 `reports/model_candidates.json`에 보존한다.
+
+```powershell
+python -m scripts.evaluation.candidate_ensemble
+```
+
+기존 924건 중 하나를 문서·UID·문구로 찾아, 문자 Logistic의 예측 근거를 원문에 색칠하고
+세 후보의 확률·투표를 나란히 보는 정적 화면도 만든다. 색은 예측 클래스와 2위 클래스의
+`TF-IDF × 계수 차이`이며 실제 위험 원인이나 보정된 위험 확률을 뜻하지 않는다.
+
+```powershell
+python -m scripts.evaluation.explanation_viewer
+```
+
+생성 파일은 [`reports/explanation_viewer.html`](reports/explanation_viewer.html)이다. 완전히
+새로운 문장 입력은 최종 학습 범위를 정한 뒤 별도 추론 화면으로 추가한다. 같은 명령이
+다른 컴퓨터·도구에서 읽을 수 있는 설명 JSON, 상위 문구 CSV와 클래스별 문구 클라우드
+PNG 3장도 `reports/`에 만든다. 원시 문자 n-gram은 원문에서 포함된 단어로 확장해 합친다.
+
 모델을 USB `E:`에 저장해 실행하는 명령은 다음과 같다. 모델 파일 약 470MB는 USB에,
 재생성 가능한 임베딩 약 1.5MB는 Git 제외된 `data/processed/`에 저장된다.
 
@@ -291,7 +349,9 @@ python -m scripts.evaluation.embeddings --model-cache E:\rfp-models
 상세와 해석은 [`notebooks/07_baseline_comparison.ipynb`](notebooks/07_baseline_comparison.ipynb),
 [`notebooks/08_embedding_comparison.ipynb`](notebooks/08_embedding_comparison.ipynb),
 [`notebooks/09_model_summary.ipynb`](notebooks/09_model_summary.ipynb),
-근거는 [`docs/history/decisions-04.md`](docs/history/decisions-04.md).
+[`notebooks/10_explainable_classical_search.ipynb`](notebooks/10_explainable_classical_search.ipynb),
+근거는 [`docs/history/decisions-04.md`](docs/history/decisions-04.md)와
+[`docs/history/decisions-05.md`](docs/history/decisions-05.md).
 
 ### 평가 분할 — 확정
 
@@ -315,9 +375,8 @@ fold별로 기준선을 **둘** 낸다. 학습 최빈을 찍는 `Dummy`는 배�
 
 ### 남은 결정
 
-- **하이퍼파라미터를 어디서 고를 것인가** — `C`, `min_df`, `ngram_range`를 고르기 시작하면
-  선택 누수를 막을 자리가 필요하다. 검증 문서 하나(49~192건)는 선택 신호로 흔들리므로
-  학습 8문서 안의 inner LODO를 검토한다(§14).
+- **하이퍼파라미터 선택** — 기존 회전 검증 1문서에서 선택한 첫 실험은 완료했으나
+  고정 기준선보다 낮았다. 더 비싼 inner LODO를 별도 실험으로 할지는 §14에서 검토한다.
 - **파인튜닝 타깃** — 주 라벨 하나만 할지, 다중 헤드로 보조 축까지 예측할지.
   §12가 "처음부터 다중 과제 파인튜닝"을 제외 범위로 두고 있어 §12 수정 여부가 선결이다.
 
