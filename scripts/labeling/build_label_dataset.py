@@ -25,6 +25,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from scripts.data.preprocess_text import make_model_text
 from scripts.labeling.label_schema import (
     LabelResult,
     SCHEMA_VERSION,
@@ -34,7 +35,8 @@ from scripts.labeling.requirement_taxonomy import normalize_requirement_type
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_REQUIREMENTS = ROOT / "data" / "processed" / "requirements_v0.3.0.jsonl"
-DEFAULT_OUTPUT = ROOT / "data" / "labels" / "label_dataset_v3.jsonl"
+DATASET_VERSION = "label_dataset_v4"
+DEFAULT_OUTPUT = ROOT / "data" / "labels" / f"{DATASET_VERSION}.jsonl"
 RUNS_DIR = ROOT / "reports" / "current" / "claude_runs"
 
 # 전수 1,024건을 만든 실행들. Chunk 1 재실행 배치를 취소해서 경로가 섞여 있다(결정 27).
@@ -114,11 +116,21 @@ def build_rows(
             canonical_type, type_source = normalize_requirement_type(
                 requirement.get("requirement_type"), requirement["requirement_id"]
             )
+            normalized_text = make_model_text(
+                None, requirement["raw_requirement_text"], "normalized-list"
+            )
+            model_text = make_model_text(
+                requirement["requirement_name"],
+                requirement["raw_requirement_text"],
+                "normalized-list",
+            )
 
             rows.append(
                 {
                     "requirement_uid": uid,
                     **{f: requirement[f] for f in REQUIREMENT_FIELDS},
+                    "normalized_requirement_text": normalized_text,
+                    "model_text": model_text,
                     "requirement_type_normalized": canonical_type,
                     "requirement_type_source": type_source,
                     "primary_action": derived,
@@ -167,6 +179,7 @@ def main() -> None:
     )
 
     manifest = {
+        "dataset_version": DATASET_VERSION,
         "built_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "row_count": len(rows),
         "schema_version": SCHEMA_VERSION,
@@ -191,6 +204,11 @@ def main() -> None:
             Counter(r["requirement_type_source"] for r in rows)
         ),
         "primary_action_counts": dict(Counter(r["primary_action"] for r in rows)),
+        "model_input": {
+            "field": "model_text",
+            "variant": "normalized-list",
+            "composition": "requirement_name + newline + normalized_requirement_text",
+        },
         "rule_corrections": corrections,
         "output_sha256": sha256_of(args.output),
     }

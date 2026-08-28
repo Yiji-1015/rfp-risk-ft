@@ -38,6 +38,13 @@ from scripts.evaluation.folds import make_lodo_folds
 from scripts.labeling.label_dataset import load_label_dataset
 
 
+def test_text_selector_uses_v4_model_text_and_v3_raw_fallback():
+    assert baselines._select_text([
+        {"raw_requirement_text": "원문", "model_text": "요구사항명\n- 전처리 본문"},
+        {"raw_requirement_text": "이전 버전 원문"},
+    ]) == ["요구사항명\n- 전처리 본문", "이전 버전 원문"]
+
+
 # LODO 한 번이 학습 10회다. 같은 설정을 테스트마다 다시 돌리면 스위트가 1분을 넘고,
 # 느린 테스트는 결국 안 돌리게 된다. 설정별로 한 번만 돌려 재사용한다.
 @pytest.fixture(scope="module")

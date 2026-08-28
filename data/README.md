@@ -2,6 +2,22 @@
 
 > **문서 역할:** 생성된 데이터 파일의 의미, 버전과 재생성 명령을 안내한다. 연구 설계의 근거는 [`../docs/history/`](../docs/history/)에 시간순으로 기록한다.
 
+## `labels/label_dataset_v4.jsonl`
+
+현재 확정 데이터셋이다. v3의 1,024건 라벨과 원문을 보존하고 다음 필드를 추가한다.
+
+- `normalized_requirement_text`: 줄 시작 불릿을 `-`로 통일한 본문
+- `model_text`: 요구사항명과 정규화 본문을 줄바꿈으로 결합한 모델 입력
+
+재생성:
+
+```powershell
+python -m scripts.labeling.build_label_dataset
+```
+
+`RFP_DATASET_VERSION=v3|v4`로 평가 입력을 전환한다. v3는
+`raw_requirement_text`, v4는 `model_text`를 사용하며 기본값은 v4다.
+
 ## `processed/requirements_v0.2.0.*`
 
 `RFP_data/md/`의 HTML 상세 요구사항 표를 결정론적으로 추출한 비라벨 데이터다.

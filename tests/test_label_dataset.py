@@ -7,6 +7,7 @@ from scripts.labeling.label_dataset import (
     EXPECTED_ROWS,
     FROZEN_SHA256,
     LabelDatasetError,
+    get_model_text,
     load_label_dataset,
 )
 
@@ -19,6 +20,28 @@ def test_frozen_dataset_passes_its_own_audit():
     assert meta['sha256'] == FROZEN_SHA256
     assert meta['document_count'] == 10
     assert sum(meta['label_counts'].values()) == EXPECTED_ROWS
+    assert all(r['model_text'].startswith(r['requirement_name'] + '\n') for r in rows)
+
+
+def test_environment_switch_loads_v3_raw_text(monkeypatch):
+    monkeypatch.setenv('RFP_DATASET_VERSION', 'v3')
+
+    rows, meta = load_label_dataset()
+
+    assert meta['dataset_version'] == 'label_dataset_v3'
+    assert get_model_text(rows[0]) == rows[0]['raw_requirement_text']
+
+
+def test_v4_uses_explicit_model_text():
+    rows, meta = load_label_dataset(version='v4')
+
+    assert meta['dataset_version'] == 'label_dataset_v4'
+    assert get_model_text(rows[0]) == rows[0]['model_text']
+
+
+def test_unknown_dataset_version_is_rejected():
+    with pytest.raises(LabelDatasetError, match='알 수 없는 데이터셋 버전'):
+        load_label_dataset(version='v99')
 
 
 def _valid_row(uid='doc_a:R-1'):

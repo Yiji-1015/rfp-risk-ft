@@ -21,6 +21,7 @@ from scripts.evaluation.baselines import (
     _model_input,
 )
 from scripts.evaluation.folds import make_lodo_folds
+from scripts.labeling.label_dataset import get_model_text
 
 
 def character_explanation(
@@ -89,7 +90,7 @@ def build_explanation_records(
             explanations[row["requirement_uid"]] = {
                 "explanation_label": predicted,
                 "explanation_runner_up": runner_up,
-                **character_explanation(row["raw_requirement_text"], contributions),
+                **character_explanation(get_model_text(row), contributions),
             }
 
     records = []
@@ -99,7 +100,7 @@ def build_explanation_records(
         record: dict[str, Any] = {
             "requirement_uid": uid,
             "test_document": saved["test_document"],
-            "raw_requirement_text": source["raw_requirement_text"],
+            "raw_requirement_text": get_model_text(source),
             "gold": saved["gold"],
             "tfidf_e5_weight": float(saved["tfidf_e5_weight"]),
             "soft_vote_pred": saved["soft_vote_pred"],

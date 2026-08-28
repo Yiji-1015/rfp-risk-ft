@@ -93,6 +93,24 @@ def test_execution_path_and_source_run_are_explicit(runs_dir):
         assert all(field in r for r in rows)
 
 
+def test_model_text_uses_normalized_list_and_requirement_name(runs_dir):
+    _write_run(runs_dir, "run_a", [
+        {"status": "ok", "requirement_uid": "doc_a:R-1",
+         "label": _label("doc_a:R-1", "통상수용")},
+    ])
+    requirement = _requirement("doc_a:R-1")
+    requirement["requirement_name"] = "AI 서비스"
+    requirement["raw_requirement_text"] = "◦ 모델 개발\n■ 서비스 구현"
+
+    rows, _ = build_rows(
+        {"doc_a:R-1": requirement}, runs=(("run_a", "배치"),)
+    )
+
+    assert rows[0]["raw_requirement_text"] == "◦ 모델 개발\n■ 서비스 구현"
+    assert rows[0]["normalized_requirement_text"] == "- 모델 개발\n- 서비스 구현"
+    assert rows[0]["model_text"] == "AI 서비스\n- 모델 개발\n- 서비스 구현"
+
+
 def test_failed_rows_are_excluded(runs_dir):
     """생성 반복으로 실패한 행은 label이 없다. 데이터셋에 들어가면 안 된다."""
     _write_run(runs_dir, "run_a", [

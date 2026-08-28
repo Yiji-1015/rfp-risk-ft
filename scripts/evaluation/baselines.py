@@ -89,6 +89,8 @@ from sklearn.preprocessing import (
     StandardScaler,
 )
 from sklearn.svm import LinearSVC
+
+from scripts.labeling.label_dataset import get_model_text
 from sklearn.utils.class_weight import compute_class_weight, compute_sample_weight
 from xgboost import XGBClassifier
 
@@ -339,7 +341,7 @@ class ModelSpec:
 
 
 def _select_text(rows: Sequence[dict[str, Any]]) -> list[str]:
-    return [row["raw_requirement_text"] for row in rows]
+    return [get_model_text(row) for row in rows]
 
 
 def _select_type(rows: Sequence[dict[str, Any]]) -> list[list[str]]:
@@ -347,13 +349,13 @@ def _select_type(rows: Sequence[dict[str, Any]]) -> list[list[str]]:
 
 
 def _select_text_length(rows: Sequence[dict[str, Any]]) -> np.ndarray:
-    return np.array([[np.log1p(len(row["raw_requirement_text"]))] for row in rows])
+    return np.array([[np.log1p(len(get_model_text(row)))] for row in rows])
 
 
 def _select_number_features(rows: Sequence[dict[str, Any]]) -> np.ndarray:
     features = []
     for row in rows:
-        text = _LIST_NUMBER_RE.sub("", row["raw_requirement_text"])
+        text = _LIST_NUMBER_RE.sub("", get_model_text(row))
         count = len(_NUMBER_RE.findall(text))
         features.append([float(count > 0), np.log1p(count)])
     return np.array(features)

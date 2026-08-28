@@ -37,6 +37,7 @@ from scripts.evaluation.baselines import (
 )
 from scripts.evaluation.duplication import DEFAULT_THRESHOLD
 from scripts.evaluation.folds import _repeat_flags, make_lodo_folds
+from scripts.labeling.label_dataset import get_model_text
 
 MODEL_ID = "intfloat/multilingual-e5-small"
 MODEL_REVISION = "d2648e288f5fe1641aeab663a7fa6d1f0d1daff2"
@@ -100,7 +101,7 @@ def _row_fingerprint(rows: Sequence[dict[str, Any]]) -> str:
     for row in rows:
         digest.update(row["requirement_uid"].encode("utf-8"))
         digest.update(b"\0")
-        digest.update(row["raw_requirement_text"].encode("utf-8"))
+        digest.update(get_model_text(row).encode("utf-8"))
         digest.update(b"\n")
     return digest.hexdigest()
 
@@ -158,7 +159,7 @@ def load_or_create_embeddings(
     model.eval()
 
     batches = []
-    texts = [INPUT_PREFIX + row["raw_requirement_text"] for row in rows]
+    texts = [INPUT_PREFIX + get_model_text(row) for row in rows]
     with torch.inference_mode():
         for start in range(0, len(texts), batch_size):
             encoded = tokenizer(
@@ -285,11 +286,11 @@ def predict_hybrid_fold(
     vectorizer = TfidfVectorizer(
         analyzer="char_wb", ngram_range=(3, 4), min_df=2, sublinear_tf=True
     )
-    fit_text = vectorizer.fit_transform(row["raw_requirement_text"] for row in fit_rows)
+    fit_text = vectorizer.fit_transform(get_model_text(row) for row in fit_rows)
     validation_text = vectorizer.transform(
-        row["raw_requirement_text"] for row in validation_rows
+        get_model_text(row) for row in validation_rows
     )
-    test_text = vectorizer.transform(row["raw_requirement_text"] for row in test_rows)
+    test_text = vectorizer.transform(get_model_text(row) for row in test_rows)
 
     fit_numbers = validation_numbers = test_numbers = None
     if spec.include_number_features:

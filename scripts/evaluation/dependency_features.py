@@ -10,6 +10,8 @@ from dataclasses import asdict
 from pathlib import Path
 from typing import Any, Sequence
 
+from scripts.labeling.label_dataset import get_model_text
+
 
 DEPENDENCY_GROUPS: tuple[tuple[str, frozenset[str]], ...] = (
     ("주어", frozenset({"nsubj", "csubj"})),
@@ -54,7 +56,7 @@ def attach_dependency_features(
     cache = _load_cache(cache_path)
     pending = []
     for row in rows:
-        uid, text = row["requirement_uid"], row["raw_requirement_text"]
+        uid, text = row["requirement_uid"], get_model_text(row)
         digest = _text_hash(text)
         cached = cache.get(uid)
         if not cached or cached.get("text_sha256") != digest:

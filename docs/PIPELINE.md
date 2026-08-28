@@ -20,7 +20,7 @@
       ↓  run_claude_batch.py (층화 퓨샷)
 [5] 라벨링 실행 결과          reports/current/claude_runs/*/results.jsonl (1,024건)
       ↓  build_label_dataset.py
-[6] 라벨 데이터셋            data/labels/label_dataset_v3.jsonl         (1,024건)
+[6] 라벨 데이터셋            data/labels/label_dataset_v4.jsonl         (1,024건)
       ↓  (예정)
 [7] ML 비교 실험
 ```
@@ -196,8 +196,11 @@ python -m scripts.labeling.run_claude_batch --submit --execute \
 python -m scripts.labeling.build_label_dataset
 ```
 
-산출물은 `data/labels/label_dataset_v3.jsonl`(1,024건)과 같은 이름의 `_manifest.json`이다.
+산출물은 `data/labels/label_dataset_v4.jsonl`(1,024건)과 같은 이름의 `_manifest.json`이다.
 실행 디렉터리 세 곳에서 직접 읽으므로 언제든 다시 만들 수 있고, 원본은 건드리지 않는다.
+
+v4는 v3의 라벨과 `raw_requirement_text`를 그대로 보존한다. 모델용으로 줄 시작 불릿을
+`-`로 통일한 `normalized_requirement_text`와, 요구사항명을 앞에 붙인 `model_text`를 추가한다.
 
 정리하는 것은 셋이다.
 
@@ -283,7 +286,8 @@ Sonnet 5 도입가($2/$10 per MTok, 2026-08-31까지) 기준, 환율 1,416원.
 | `data/samples/` | 파일럿·표준조항·앵커후보 표본 |
 | `reports/current/claude_runs/*/manifest.json` | 실행 조건 (재현의 기준) |
 | `reports/current/claude_runs/*/results.jsonl` | 건별 라벨과 토큰 사용량 |
-| `data/labels/label_dataset_v3.jsonl` | 확정(동결) 라벨 데이터셋 |
+| `data/labels/label_dataset_v4.jsonl` | 확정(동결) 라벨·모델 입력 데이터셋 |
+| `data/labels/label_dataset_v3.jsonl` | 이전 동결 라벨 데이터셋 |
 
 ---
 

@@ -4,7 +4,7 @@
 분류하는 연구 프로젝트다.
 
 10개 RFP에서 요구사항 1,024건을 추출해 Claude로 전수 라벨링했고, 그 결과를 동결해
-`label_dataset_v3`로 확정했다. 다음 단계는 이 라벨로 전통 ML과 경량 인코더를 학습해
+`label_dataset_v4`로 확정했다. 다음 단계는 이 라벨로 전통 ML과 경량 인코더를 학습해
 **비싼 모델이 정말 필요한지** 비교하는 것이다.
 
 | 문서 | 역할 |
@@ -32,7 +32,8 @@ python -m scripts.labeling.label_dataset
 
 ## 라벨 데이터셋
 
-분석과 실험은 모두 `data/labels/label_dataset_v3.jsonl`에서 출발한다.
+분석과 실험은 모두 `data/labels/label_dataset_v4.jsonl`에서 출발한다. v4는 v3의
+라벨과 원문을 그대로 보존하고, 재현 가능한 전처리 본문과 모델 입력을 추가했다.
 
 | 항목 | 값 |
 |---|---|
@@ -40,6 +41,20 @@ python -m scripts.labeling.label_dataset
 | 주 라벨 | 통상수용 512 (50.0%) / 계약·질의검토 270 (26.4%) / 견적반영 242 (23.6%) |
 | 스키마 | v4.0.0 (7필드) |
 | 생성 | Claude Sonnet 5, 층화 few-shot, 프롬프트 v5 |
+
+`normalized_requirement_text`는 줄 시작 불릿을 `-`로 통일한 본문이고,
+`model_text`는 `요구사항명 + 줄바꿈 + normalized_requirement_text`다.
+
+실험 입력은 환경 변수 하나로 바꾼다. 미지정 기본값은 `v4`다.
+
+```powershell
+$env:RFP_DATASET_VERSION = "v3"  # 원문 본문
+$env:RFP_DATASET_VERSION = "v4"  # 요구사항명 + 불릿 정규화 본문
+python -m scripts.evaluation.baselines
+```
+
+같은 셸에서 실행하는 모든 평가 모듈에 적용된다. 해제는
+`Remove-Item Env:RFP_DATASET_VERSION`이다.
 
 `agency` 필드는 문서 1건에서 비어 있다. 원본 RFP에 해당 항목이 없어서이며
 데이터 결함이 아니다([issues/002](docs/issues/002-missing-source-fields.md)).
@@ -194,7 +209,14 @@ system에 올리면 오히려 손해다(결정 29).
 4. 경량 한국어 인코더 파인튜닝    GPU 예산 대비 추가 이득이 있는가        [미룸]
 ```
 
-### 기준선 결과 (LODO fold 평균)
+### 기준선 결과 (v3 원문, LODO fold 평균)
+
+v4 `model_text`로 다시 실행한 기준선 결과는
+[`reports/current/v4_baseline_results.md`](reports/current/v4_baseline_results.md)에 별도로
+기록했다. word+char Logistic의 macro F1은 0.603에서 0.614로, 계약·질의검토 recall은
+0.532에서 0.568로 올랐다. 구현된 나머지 모델과 앙상블도 같은 보고서에 재평가를 마쳤다.
+고정 검토 합집합 규칙은 macro F1 0.614를 유지하며 계약 recall 0.603을 보였다. 아래 표는
+기존 v3 결과다.
 
 ```powershell
 python -m scripts.evaluation.baselines

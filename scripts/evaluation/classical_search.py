@@ -39,6 +39,7 @@ from scripts.evaluation.baselines import (
 )
 from scripts.evaluation.duplication import DEFAULT_THRESHOLD
 from scripts.evaluation.folds import _repeat_flags, make_lodo_folds
+from scripts.labeling.label_dataset import get_model_text
 
 
 LOGISTIC_CANDIDATES: tuple[ModelSpec, ...] = tuple(
@@ -225,9 +226,9 @@ def select_nbsvm(
     validation_rows: Sequence[dict[str, Any]],
     candidates: Sequence[NBSVMSpec] = NBSVM_CANDIDATES,
 ) -> NBSVMSpec:
-    fit_texts = [row["raw_requirement_text"] for row in fit_rows]
+    fit_texts = [get_model_text(row) for row in fit_rows]
     labels = [row["primary_action"] for row in fit_rows]
-    validation_texts = [row["raw_requirement_text"] for row in validation_rows]
+    validation_texts = [get_model_text(row) for row in validation_rows]
     gold = [row["primary_action"] for row in validation_rows]
     ranks = []
     for index, candidate in enumerate(candidates):
@@ -283,7 +284,7 @@ def _prediction_rows(
             "fold": fold_index,
             "test_document": row["document_id"],
             "requirement_uid": row["requirement_uid"],
-            "text": row["raw_requirement_text"],
+            "text": get_model_text(row),
             "gold": row["primary_action"],
             "pred": label,
             "correct": row["primary_action"] == label,
@@ -306,7 +307,7 @@ def run_tuned_logistic_lodo(
         fit_rows, validation_rows, test_rows = fold.split(rows)
         spec = select_logistic(fit_rows, validation_rows, candidates)
         model = _fit_pipeline(spec, fit_rows)
-        texts = [row["raw_requirement_text"] for row in test_rows]
+        texts = [get_model_text(row) for row in test_rows]
         pred = list(model.predict(texts))
         probabilities = model.predict_proba(texts)
         flags = _repeat_flags(fold, rows, repeat_threshold)
@@ -346,9 +347,9 @@ def run_nbsvm_lodo(
     for fold in make_lodo_folds(rows):
         fit_rows, validation_rows, test_rows = fold.split(rows)
         spec = select_nbsvm(fit_rows, validation_rows, candidates)
-        fit_texts = [row["raw_requirement_text"] for row in fit_rows]
+        fit_texts = [get_model_text(row) for row in fit_rows]
         labels = [row["primary_action"] for row in fit_rows]
-        test_texts = [row["raw_requirement_text"] for row in test_rows]
+        test_texts = [get_model_text(row) for row in test_rows]
         model = fit_nbsvm(spec, fit_texts, labels)
         pred = list(model.predict(test_texts))
         scores = model.named_steps["clf"].decision_function(
@@ -391,7 +392,7 @@ def _fasttext_module():
 def _balanced_fasttext_lines(rows: Sequence[dict[str, Any]]) -> list[str]:
     by_label = {label: [] for label in LABELS}
     for row in rows:
-        by_label[row["primary_action"]].append(row["raw_requirement_text"])
+        by_label[row["primary_action"]].append(get_model_text(row))
     target = max(map(len, by_label.values()))
     lines = []
     for label_index, label in enumerate(LABELS):
@@ -424,7 +425,7 @@ def fit_fasttext(spec: FastTextSpec, rows: Sequence[dict[str, Any]]):
 def _predict_fasttext(model: Any, rows: Sequence[dict[str, Any]]) -> tuple[list[str], np.ndarray]:
     predictions, scores = [], []
     for row in rows:
-        text = " ".join(row["raw_requirement_text"].split())
+        text = " ".join(get_model_text(row).split())
         # fasttext-wheel 0.9.2의 단일 문자열 경로는 NumPy 2에서 copy=False로
         # 실패한다. 공개 batch 경로는 같은 예측을 호환되게 반환한다.
         label_batch, probability_batch = model.predict([text], k=len(LABELS))
