@@ -90,6 +90,19 @@ def _fail(message: str) -> None:
     raise LabelDatasetError(message)
 
 
+def content_digest(raw: bytes) -> str:
+    """줄바꿈 표기를 통일한 뒤 SHA-256을 낸다.
+
+    같은 파일이라도 Windows에서 체크아웃하면 CRLF, 리눅스에서는 LF가 되어 바이트가
+    달라진다(`core.autocrlf`). 동결은 **내용**에 대한 약속이지 표기에 대한 약속이
+    아니므로, 대조 전에 한 형태로 맞춘다. 기준을 CRLF로 두는 이유는 기록된 값들이
+    그 표기로 계산돼 있어서다 — `label_dataset_v4_manifest.json`의 `output_sha256`과
+    `reports/current/v4_baseline_results.md`가 같은 값을 인용한다. 표기 문제 때문에
+    상수를 바꾸면 그 기록들이 한꺼번에 어긋난다.
+    """
+    return hashlib.sha256(raw.replace(b"\r\n", b"\n").replace(b"\n", b"\r\n")).hexdigest()
+
+
 def get_model_text(row: dict[str, Any]) -> str:
     """v4는 명시적 모델 입력을, 이전 버전은 원문을 반환한다.
 
@@ -131,7 +144,7 @@ def load_label_dataset(
             "  python -m scripts.labeling.build_label_dataset"
         )
 
-    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    digest = content_digest(path.read_bytes())
     if verify_hash and digest != spec["sha256"]:
         _fail(
             f"데이터셋이 동결 상태와 다릅니다.\n"

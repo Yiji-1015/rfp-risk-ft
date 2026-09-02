@@ -7,6 +7,7 @@ from scripts.labeling.label_dataset import (
     EXPECTED_ROWS,
     FROZEN_SHA256,
     LabelDatasetError,
+    content_digest,
     get_model_text,
     load_label_dataset,
 )
@@ -132,3 +133,30 @@ def test_nullable_fields_are_tolerated():
     assert meta['nullable_missing']['agency'] == 67
     assert meta['nullable_missing']['requirement_type'] == 0
     assert meta['nullable_missing']['domain'] == 0
+
+
+def test_digest_ignores_the_line_ending_the_platform_checked_out():
+    """같은 내용이면 CRLF든 LF든 같은 해시여야 한다.
+
+    Windows는 `core.autocrlf`로 CRLF를, 리눅스는 LF를 받는다. 표기 차이로 동결 대조가
+    실패하면 같은 저장소를 리눅스에서 clone한 것만으로 학습이 막힌다(실제로 gcube
+    컨테이너에서 그렇게 막혔다).
+    """
+    crlf = b'{"a": 1}\r\n{"b": 2}\r\n'
+    lf = b'{"a": 1}\n{"b": 2}\n'
+
+    assert content_digest(crlf) == content_digest(lf)
+    # 내용이 실제로 다르면 여전히 갈라져야 한다.
+    assert content_digest(lf) != content_digest(b'{"a": 1}\n{"b": 3}\n')
+
+
+def test_frozen_dataset_loads_from_a_lf_checkout(tmp_path):
+    """리눅스 체크아웃과 같은 바이트를 만들어도 로더가 통과해야 한다."""
+    source = DEFAULT_PATH.read_bytes()
+    lf_copy = tmp_path / "label_dataset_v4.jsonl"
+    lf_copy.write_bytes(source.replace(b"\r\n", b"\n"))
+
+    rows, meta = load_label_dataset(lf_copy)
+
+    assert len(rows) == EXPECTED_ROWS
+    assert meta["sha256"] == FROZEN_SHA256
