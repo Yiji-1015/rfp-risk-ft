@@ -200,7 +200,7 @@ def train_one_fold(rows, fold, args, device) -> dict[str, Any]:
 
     # 평가 문서는 학습 내내 보지 않는다. 검증으로 고른 시점의 가중치로 한 번만 본다.
     model.load_state_dict(best_state)
-    test_macro, _ = evaluate(model, test_loader, device)
+    test_macro, predictions = evaluate(model, test_loader, device)
     print(f"  평가 문서 macro F1 {test_macro:.3f} (검증 최고 {best_score:.3f} 시점)")
 
     return {
@@ -212,6 +212,16 @@ def train_one_fold(rows, fold, args, device) -> dict[str, Any]:
         "best_validation_macro_f1": best_score,
         "test_macro_f1": test_macro,
         "history": [asdict(entry) for entry in history],
+        # 건별 예측을 남긴다. 점수 하나로는 어느 라벨에서 막히는지, TF-IDF와 같은
+        # 경계에서 틀리는지를 볼 수 없다. `DataLoader(shuffle=False)`라 순서가 보존된다.
+        "predictions": [
+            {
+                "requirement_uid": row["requirement_uid"],
+                "gold": row["primary_action"],
+                "pred": LABELS[index],
+            }
+            for row, index in zip(test_rows, predictions)
+        ],
     }
 
 
@@ -255,6 +265,14 @@ def main() -> None:
     if len(results) > 1:
         average = float(np.mean([r["test_macro_f1"] for r in results]))
         print(f"fold 평균 평가 macro F1 {average:.3f}")
+        gold = [p["gold"] for r in results for p in r["predictions"]]
+        pred = [p["pred"] for r in results for p in r["predictions"]]
+        pooled = f1_score(gold, pred, labels=list(LABELS), average="macro", zero_division=0)
+        print(f"통합 OOF macro F1 {pooled:.3f} ({len(gold)}건)")
+        for label, value in zip(
+            LABELS, f1_score(gold, pred, labels=list(LABELS), average=None, zero_division=0)
+        ):
+            print(f"  {label:<12} F1 {value:.3f}")
 
     version = os.getenv(DATASET_VERSION_ENV, DEFAULT_DATASET_KEY)
     output = args.output or ROOT / "reports" / "current" / version / "finetune_runs.jsonl"
