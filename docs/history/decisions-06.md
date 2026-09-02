@@ -161,3 +161,26 @@
 - 산출물: `apply_mask`의 `+` 연결(`subject+ending+josa`),
   `reports/current/v4/text_masking_ablation.{md,json}` 갱신,
   `notebooks/14_text_masking.ipynb`.
+
+## 2026-09-02 15:57
+
+- 결정: 경량 인코더 파인튜닝의 학습 코드를 `scripts/modeling/finetune.py`에 두고, 1단계로
+  fold 하나만 돌려 학습 곡선을 확인했다. 본 실험은 gcube GPU에서 `klue/roberta-base`,
+  512토큰, 10 fold, seed 복수로 돌린다. 절차는 `docs/guides/04-finetuning.md`에 적었다.
+  타깃은 주 라벨 단일 헤드이며 §12를 고치지 않는다.
+- 이유: `klue/roberta-small`, fold 0(ccrs), 192토큰, 유효 batch 16, CPU에서 학습 loss가
+  1.066에서 0.366으로 단조 감소해 `lr=2e-5`가 적정 범위임을 확인했다. 검증 macro F1은
+  0.437 → 0.603 → 0.642까지 오른 뒤 0.625 / 0.649 / 0.622로 정체한다. **epoch 3 이후는
+  일반화가 아니라 암기**이며, 노이즈 라벨을 초기에 외운다는 문헌 관측과 방향이 같다.
+  같은 fold의 char TF-IDF는 0.680, word+char은 0.663, Dummy는 0.152다. 파인튜닝 0.582는
+  제일 작은 모델·잘린 입력·fold 하나·seed 하나의 값이라 비교 결론으로 쓰지 않는다.
+- 논문 메모: 두 가지를 한계로 함께 적는다. 첫째, 인코더는 입력을 자른다 — 토큰 길이
+  중앙값 165, 95%가 580이라 512로도 6.8%가 잘리는데 TF-IDF는 전체를 본다. 둘째,
+  best-checkpoint 선택이 잡음이다 — 3~6 epoch 검증값이 ±0.02 안에서 흔들리고 검증 문서는
+  156건뿐이라 최고 epoch 선택에 근거가 약하다. 파인튜닝 점수는 seed 복수의 범위로 낸다.
+- 환경 제약: 로컬은 CUDA가 없고(torch 2.13.0+cpu, Intel Arc 130T) `토큰 x batch`가 2,048
+  이상이면 Segmentation fault가 난다. 128x16과 256x8이 같이 죽고 192x8은 통과하므로 특정
+  축이 아니라 할당 크기 문제이며 `OMP_NUM_THREADS=1`로도 해결되지 않는다. `--grad-accum`
+  으로 유효 batch를 메모리와 분리했다. 로컬은 연기 테스트, 본 실험은 gcube로 나눈다.
+- 사전 등록: `--mask subject+ending+josa`를 원문과 나란히 돌린다. TF-IDF에서 관찰한
+  +0.018이 다른 모델 계열에서 재현되는지가 2026-09-02 14:04 결정의 확인 조건이다.
