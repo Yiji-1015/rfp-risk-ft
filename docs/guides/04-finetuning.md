@@ -76,9 +76,13 @@ fault로 죽는다.
 GPU를 쓰지 못한 채 학습이 돈다. 파인튜닝에 필요한 것만 따로 넣고 torch는 컨테이너 것을
 그대로 쓴다. `fasttext`·`stanza`·`xgboost`·`mlflow`는 전통 모델 실험용이라 필요 없다.
 
+학습 경로가 실제로 끌어오는 서드파티는 `numpy`·`pydantic`·`sklearn`·`torch`·`transformers`
+다섯이 전부다. `pydantic`은 `folds` → `anchor_pool` → `label_schema`를 타고 들어오므로
+빠뜨리기 쉽다. `pandas`는 쓰지 않는다.
+
 ```bash
 git clone https://github.com/Yiji-1015/rfp-risk-ft.git && cd rfp-risk-ft
-pip install "transformers>=4.35" "scikit-learn>=1.3" "numpy>=1.24" "pandas>=2.0"
+pip install pydantic "transformers>=4.35" "scikit-learn>=1.3" "numpy>=1.24"
 python -c "import torch; print(torch.__version__, torch.cuda.is_available())"   # True여야 한다
 export RFP_DATASET_VERSION=v4
 ```
