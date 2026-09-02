@@ -21,6 +21,7 @@ from typing import Any, Sequence
 
 from scipy.stats import chi2_contingency
 
+from scripts.data.preprocess_text import JOSA
 from scripts.evaluation.folds import evaluation_excluded_uids
 from scripts.labeling.label_dataset import (
     DATASET_VERSION_ENV,
@@ -32,19 +33,14 @@ from scripts.labeling.label_dataset import (
 ROOT = Path(__file__).resolve().parents[2]
 LABELS = ("통상수용", "견적반영", "계약·질의검토")
 
-# 명사 뒤 조사만 뗀다. 형태소 분석기를 붙이지 않으므로 근사이며, 남는 어간이 두 글자
-# 미만이면 떼지 않는다("정의"의 "의"를 조사로 오인하지 않기 위해서다).
-# ponytail: 정규식 근사. 어미 변화까지 묶어야 하면 형태소 분석기로 올린다.
-_JOSA = (
-    "에서의", "으로써", "으로서", "에게서", "이라도", "으로", "에서", "에게",
-    "까지", "부터", "보다", "라도", "이나", "와의", "과의", "은", "는", "이",
-    "가", "을", "를", "의", "에", "도", "만", "나", "와", "과", "로",
-)
-
 
 def stem_approx(token: str) -> str:
-    """조사를 뗀 어간 근사. 엑셀에서 조사 변이를 묶어 보기 위한 보조 열이다."""
-    for josa in _JOSA:
+    """조사를 뗀 어간 근사. 엑셀에서 조사 변이를 묶어 보기 위한 보조 열이다.
+
+    규칙은 `preprocess_text`의 마스킹과 같은 목록을 쓴다. 검토표에서 묶여 보이는
+    단위와 실제로 합쳐지는 단위가 어긋나면 표를 믿을 수 없다.
+    """
+    for josa in JOSA:
         if token.endswith(josa) and len(token) - len(josa) >= 2:
             return token[: -len(josa)]
     return token

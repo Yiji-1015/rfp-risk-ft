@@ -17,7 +17,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-from scripts.data.preprocess_text import make_model_text
+from scripts.data.preprocess_text import apply_mask, make_model_text
 from scripts.labeling.label_schema import (
     BLOCKER_TYPES,
     PRIMARY_ACTIONS,
@@ -48,6 +48,7 @@ DATASET_SPECS = {
 }
 DEFAULT_DATASET_KEY = "v4"
 DATASET_VERSION_ENV = "RFP_DATASET_VERSION"
+TEXT_MASK_ENV = "RFP_TEXT_MASK"
 
 COST_BASES = ("없음", "고급·전문인력", "장비·인프라", "라이선스", "외부인증", "외주·전문기관", "복합")
 LEVELS = ("높음", "보통", "낮음")
@@ -90,8 +91,14 @@ def _fail(message: str) -> None:
 
 
 def get_model_text(row: dict[str, Any]) -> str:
-    """v4는 명시적 모델 입력을, 이전 버전은 원문을 반환한다."""
-    return row["model_text"] if "model_text" in row else row["raw_requirement_text"]
+    """v4는 명시적 모델 입력을, 이전 버전은 원문을 반환한다.
+
+    `RFP_TEXT_MASK`가 설정돼 있으면 전처리 ablation의 마스킹 규칙을 하나 적용한다.
+    데이터셋 파일은 그대로 두고 읽는 시점에만 바꾸므로 동결과 SHA-256 대조는 유지된다.
+    모든 평가 코드가 이 함수를 거치므로 스위치는 여기 하나만 둔다.
+    """
+    text = row["model_text"] if "model_text" in row else row["raw_requirement_text"]
+    return apply_mask(text, os.getenv(TEXT_MASK_ENV))
 
 
 def load_label_dataset(
