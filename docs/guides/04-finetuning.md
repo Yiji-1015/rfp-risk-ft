@@ -113,6 +113,43 @@ python -m scripts.modeling.finetune --model klue/roberta-base --fold -1 \
 붙이는 대신 git push로 빼면 된다. 다만 10 fold를 seed 여러 개로 몇 시간 돌릴 때는 중간에
 끊기면 처음부터이므로, fold를 나눠 돌리며 중간에 push하거나 개인 저장소를 마운트한다.
 
+## 3-1. 남은 실험 네 가지
+
+한 번 돌리는 데 15~25분이고 시간당 252~360원이므로 회당 100원 안팎이다.
+
+**① 2분류 파인튜닝** — 빠뜨린 조합이다. `통상수용` 대 `검토필요`의 0.788은 전부 TF-IDF로
+낸 값이고 파인튜닝을 그 축으로 돌려본 적이 없다. 3분류에서 두 계열이 보완적이었으므로
+2분류에서도 그렇다면 **주 지표가 직접 오른다.**
+
+```bash
+python -m scripts.modeling.finetune --model klue/roberta-base --fold -1 \
+  --epochs 6 --max-length 512 --batch-size 32 --binary
+```
+
+**② 긴 입력** — 전원 오답 계약 17건이 원문 892자였고 512토큰으로도 6.8%가 잘린다.
+`kobigbird`는 4,096토큰을 받아 **우리 최장 2,261토큰도 온전히 들어간다.** 좋아지면 희석·
+절단 가설이 맞은 것이고, 안 좋아지면 길이가 아니라 정보의 성격 문제라는 결론이 강해진다.
+
+```bash
+python -m scripts.modeling.finetune --model monologg/kobigbird-bert-base --fold -1 \
+  --epochs 6 --max-length 4096 --batch-size 4 --grad-accum 8
+```
+
+**③ 계열 하나 더** — 앙상블 이득이 계열 다양성에서 나왔으므로, 사전학습 방식이 다른
+ELECTRA를 넣으면 더 오를 수 있다.
+
+```bash
+python -m scripts.modeling.finetune --model monologg/koelectra-base-v3-discriminator \
+  --fold -1 --epochs 6 --max-length 512 --batch-size 32
+```
+
+**④ large seed 추가** — 지금 large는 seed 하나(0.617)라 크기 효과를 확정할 수 없다.
+
+```bash
+for s in 7 13; do python -m scripts.modeling.finetune --model klue/roberta-large \
+  --fold -1 --epochs 6 --max-length 512 --batch-size 8 --grad-accum 4 --seed $s; done
+```
+
 ## 4. 사전 등록해 둔 비교
 
 `--mask subject+ending+josa`는 2026-09-02 14:04 결정이 등록한 입력 변형이다. TF-IDF에서
