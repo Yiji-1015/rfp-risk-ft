@@ -18,6 +18,7 @@ EXPECTED_NOTEBOOKS = {
     "10_explainable_classical_search.ipynb",
     "11_dependency_features.ipynb",
     "12_candidate_ensemble.ipynb",
+    "13_label_boundary.ipynb",
 }
 
 
