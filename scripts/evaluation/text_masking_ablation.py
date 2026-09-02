@@ -49,6 +49,10 @@ MASK_LABELS = {
     "subject": "R1 주체 표기 → <주체>",
     "ending": "R2 서술 어미 → 어간",
     "josa": "R3 조사 제거",
+    "subject+josa": "R1+R3 (탐색)",
+    "subject+ending": "R1+R2 (탐색)",
+    "ending+josa": "R2+R3 (탐색)",
+    "subject+ending+josa": "R1+R2+R3 (탐색)",
 }
 
 
@@ -146,7 +150,7 @@ def render_markdown(report: dict[str, Any]) -> str:
                 continue
             diff = arm["comparison"]
             lines.append(
-                f"| {MASK_LABELS[mask]} | {arm['macro_f1']:.3f} | "
+                f"| {MASK_LABELS.get(mask, mask)} | {arm['macro_f1']:.3f} | "
                 f"{diff['macro_f1']['difference']:+.3f} | "
                 f"{diff['fold_wins']}/{diff['fold_count']} | "
                 f"{arm['review_recall']:.3f} | {diff['review_recall']['difference']:+.3f} |"
@@ -163,8 +167,7 @@ def main() -> None:
         "--masks",
         nargs="+",
         default=["ending", "josa"],
-        choices=sorted(MASKS),
-        help="적용할 규칙. 기준선(none)은 항상 함께 돌린다.",
+        help="적용할 규칙. `+`로 이으면 겹쳐 적용한다. 기준선(none)은 항상 함께 돌린다.",
     )
     parser.add_argument("--output", type=Path, default=default_dir / "text_masking_ablation.md")
     parser.add_argument("--json", type=Path, default=default_dir / "text_masking_ablation.json")

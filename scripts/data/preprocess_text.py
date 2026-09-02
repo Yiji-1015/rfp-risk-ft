@@ -170,12 +170,18 @@ MASKS = {
 
 
 def apply_mask(text: str, mask: str | None) -> str:
-    """마스킹 규칙 하나를 적용한다. `None`이나 `'none'`이면 원문 그대로다."""
+    """마스킹 규칙을 적용한다. `None`이나 `'none'`이면 원문 그대로다.
+
+    `'subject+josa'`처럼 `+`로 이으면 적은 순서대로 겹쳐 적용한다. 단일 규칙 비교가
+    통제 실험이고 결합은 그 뒤의 탐색이므로, 결합 결과는 사전 등록된 결과가 아니다.
+    """
     if not mask or mask == "none":
         return text
-    if mask not in MASKS:
-        raise ValueError(f"unknown mask: {mask} (사용 가능: {', '.join(MASKS)})")
-    return MASKS[mask](text)
+    for name in mask.split("+"):
+        if name not in MASKS:
+            raise ValueError(f"unknown mask: {name} (사용 가능: {', '.join(MASKS)})")
+        text = MASKS[name](text)
+    return text
 
 
 def read_jsonl(path: Path) -> list[dict]:

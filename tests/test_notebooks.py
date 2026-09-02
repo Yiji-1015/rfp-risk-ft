@@ -19,6 +19,7 @@ EXPECTED_NOTEBOOKS = {
     "11_dependency_features.ipynb",
     "12_candidate_ensemble.ipynb",
     "13_label_boundary.ipynb",
+    "14_text_masking.ipynb",
 }
 
 

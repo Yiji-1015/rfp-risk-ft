@@ -95,6 +95,17 @@ class MaskingTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             apply_mask("제안사는 한다", "존재하지않는규칙")
 
+    def test_apply_mask_chains_rules_in_the_order_written(self):
+        source = "제안사는 데이터를 제공하여야 한다"
+        self.assertEqual(apply_mask(source, "subject"), "<주체> 데이터를 제공하여야 한다")
+        self.assertEqual(apply_mask(source, "josa"), "제안사 데이터 제공하여야 한다")
+        # 겹쳐 적용하면 주체 치환과 조사 제거가 함께 걸린다.
+        self.assertEqual(apply_mask(source, "subject+josa"), "<주체> 데이터 제공하여야 한다")
+
+    def test_chained_mask_rejects_an_unknown_member(self):
+        with self.assertRaises(ValueError):
+            apply_mask("제안사는 한다", "subject+없는규칙")
+
 
 if __name__ == "__main__":
     unittest.main()
