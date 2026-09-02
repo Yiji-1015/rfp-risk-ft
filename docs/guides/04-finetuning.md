@@ -71,18 +71,43 @@ fault로 죽는다.
 컨테이너에서 저장소를 받아 그대로 돌린다. 학습에 필요한 것은 동결 라벨 파일 하나이고
 저장소에 들어 있다. 원본 RFP는 필요 없다.
 
+**`pip install -r requirements.txt`를 그대로 돌리지 않는다.** 그 파일의 `torch`에는 버전이
+없어서, 컨테이너에 이미 깔린 **CUDA 빌드 torch를 CPU 빌드로 갈아끼울 수 있다.** 그러면
+GPU를 쓰지 못한 채 학습이 돈다. 파인튜닝에 필요한 것만 따로 넣고 torch는 컨테이너 것을
+그대로 쓴다. `fasttext`·`stanza`·`xgboost`·`mlflow`는 전통 모델 실험용이라 필요 없다.
+
 ```bash
 git clone https://github.com/Yiji-1015/rfp-risk-ft.git && cd rfp-risk-ft
-pip install -r requirements.txt          # 리눅스라 CUDA 빌드 torch가 잡힌다
+pip install "transformers>=4.35" "scikit-learn>=1.3" "numpy>=1.24" "pandas>=2.0"
+python -c "import torch; print(torch.__version__, torch.cuda.is_available())"   # True여야 한다
 export RFP_DATASET_VERSION=v4
+```
+
+먼저 fold 하나로 연기 테스트를 돌려 `장치 cuda`가 찍히는지 확인한다. GPU에서 1~2분이다.
+
+```bash
+python -m scripts.modeling.finetune --epochs 3 --max-length 256 --batch-size 16
+```
+
+확인되면 본 실험으로 넓힌다.
+
+```bash
 python -m scripts.modeling.finetune --model klue/roberta-base --fold -1 \
   --epochs 4 --max-length 512 --batch-size 32
 ```
 
 `--fold -1`이 10 fold 전체다. GPU에서는 위 메모리 상한을 신경 쓰지 않아도 된다.
 
+워크로드 설정은 대부분 기본값으로 둔다. **컨테이너 명령어는 비워둔다** — 넣으면 그 명령만
+실행하고 컨테이너가 끝날 수 있다. 환경변수에 `RFP_DATASET_VERSION=v4`를 넣어두면 매번
+`export`하지 않아도 된다. 동시 처리 요청 수는 추론 서빙용이라 학습과 무관하다.
+
 결과는 `reports/current/<버전>/finetune_runs.jsonl`에 **한 줄씩 덧붙는다.** 설정과 fold별
 학습 곡선이 함께 남으므로 나중에 실행끼리 비교할 수 있다. 모델 가중치는 Git에 넣지 않는다.
+
+**컨테이너는 종료되면 안이 사라진다.** 남겨야 할 것은 이 jsonl 몇 KB뿐이므로 개인 저장소를
+붙이는 대신 git push로 빼면 된다. 다만 10 fold를 seed 여러 개로 몇 시간 돌릴 때는 중간에
+끊기면 처음부터이므로, fold를 나눠 돌리며 중간에 push하거나 개인 저장소를 마운트한다.
 
 ## 4. 사전 등록해 둔 비교
 
