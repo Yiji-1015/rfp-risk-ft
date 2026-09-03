@@ -29,6 +29,7 @@ from sklearn.metrics import f1_score
 from sklearn.utils.class_weight import compute_class_weight
 from torch.utils.data import DataLoader, Dataset
 from transformers import (
+    AutoModel,
     AutoModelForSequenceClassification,
     AutoTokenizer,
     get_linear_schedule_with_warmup,
@@ -36,12 +37,15 @@ from transformers import (
 
 from scripts.evaluation.folds import make_lodo_folds
 from scripts.labeling.label_dataset import (
+    COST_BASES,
     DATASET_VERSION_ENV,
     DEFAULT_DATASET_KEY,
+    LEVELS,
     TEXT_MASK_ENV,
     get_model_text,
     load_label_dataset,
 )
+from scripts.labeling.label_schema import BLOCKER_TYPES
 
 ROOT = Path(__file__).resolve().parents[2]
 LABELS = ("통상수용", "견적반영", "계약·질의검토")
@@ -55,6 +59,68 @@ BINARY_LABELS = (ACCEPT, REVIEW)
 
 def collapse(label: str) -> str:
     return ACCEPT if label == ACCEPT else REVIEW
+
+
+# `--aux`는 같은 LLM 호출에서 나온 보조 필드를 **타깃**으로 함께 배운다. 입력으로는 쓸 수
+# 없다 — 새 RFP에는 없는 값이고 blockers는 주 라벨을 100% 결정한다. 선형 TF-IDF에서는
+# 헤드끼리 공유하는 것이 없어 효과가 없었으므로(boundary_features.py), 인코더를 공유하는
+# 여기서만 의미가 있다.
+AUX_HEADS = {
+    "aux_blockers": len(BLOCKER_TYPES),  # 다중 라벨 (BCE)
+    "aux_cost": len(COST_BASES),
+    "aux_build": len(LEVELS),
+    "aux_domain": len(LEVELS),
+}
+
+
+def aux_targets(row) -> dict[str, torch.Tensor]:
+    return {
+        "aux_blockers": torch.tensor(
+            [float(b in row["blockers"]) for b in BLOCKER_TYPES]
+        ),
+        "aux_cost": torch.tensor(COST_BASES.index(row["cost_basis"])),
+        "aux_build": torch.tensor(LEVELS.index(row["build_difficulty"])),
+        "aux_domain": torch.tensor(LEVELS.index(row["domain_dependency"])),
+    }
+
+
+class MultiHeadModel(torch.nn.Module):
+    """인코더 하나 위에 주 라벨 헤드와 보조 헤드를 얹는다. [CLS] 표현을 공유한다."""
+
+    def __init__(self, name: str, num_labels: int):
+        super().__init__()
+        self.encoder = AutoModel.from_pretrained(name, add_pooling_layer=False)
+        hidden = self.encoder.config.hidden_size
+        self.dropout = torch.nn.Dropout(0.1)
+        self.heads = torch.nn.ModuleDict(
+            {"primary": torch.nn.Linear(hidden, num_labels)}
+            | {key: torch.nn.Linear(hidden, size) for key, size in AUX_HEADS.items()}
+        )
+
+    def forward(self, **batch) -> dict[str, torch.Tensor]:
+        pooled = self.dropout(self.encoder(**batch).last_hidden_state[:, 0])
+        return {key: head(pooled) for key, head in self.heads.items()}
+
+
+def aux_loss(outputs: dict[str, torch.Tensor], targets: dict[str, torch.Tensor]) -> torch.Tensor:
+    total = torch.nn.functional.binary_cross_entropy_with_logits(
+        outputs["aux_blockers"], targets["aux_blockers"]
+    )
+    for key in ("aux_cost", "aux_build", "aux_domain"):
+        total = total + torch.nn.functional.cross_entropy(outputs[key], targets[key])
+    return total
+
+
+def primary_logits(outputs) -> torch.Tensor:
+    # HF ModelOutput도 dict 계열이라 타입으로는 못 가른다. 키 유무로 가른다.
+    return outputs["primary"] if "primary" in outputs else outputs.logits
+
+
+def split_batch(batch, device):
+    """(입력, 주 라벨, 보조 타깃)으로 가른다. 보조 키는 `aux_`로 시작한다."""
+    targets = batch.pop("labels").to(device)
+    aux = {k: batch.pop(k).to(device) for k in list(batch) if k.startswith("aux_")}
+    return {k: v.to(device) for k, v in batch.items()}, targets, aux
 
 
 def pick_device() -> torch.device:
@@ -86,13 +152,14 @@ class RequirementDataset(Dataset):
     모델을 감당할 수 없다. `attention_mask`가 패딩을 가리므로 결과는 달라지지 않는다.
     """
 
-    def __init__(self, rows, tokenizer, max_length: int, labels: Sequence[str]):
+    def __init__(self, rows, tokenizer, max_length: int, labels: Sequence[str], aux: bool = False):
         collapsed = len(labels) == 2
         self.texts = [get_model_text(row) for row in rows]
         self.labels = [
             labels.index(collapse(row["primary_action"]) if collapsed else row["primary_action"])
             for row in rows
         ]
+        self.aux = [aux_targets(row) for row in rows] if aux else [{} for _ in rows]
         self.tokenizer = tokenizer
         self.max_length = max_length
 
@@ -103,19 +170,23 @@ class RequirementDataset(Dataset):
         encoded = self.tokenizer(
             self.texts[index], truncation=True, max_length=self.max_length
         )
-        return {**encoded, "labels": self.labels[index]}
+        return {**encoded, "labels": self.labels[index], **self.aux[index]}
 
 
 def make_collator(tokenizer):
     """배치 안에서만 패딩한다. 토크나이저가 패딩 토큰과 마스크를 함께 만든다."""
 
     def collate(batch: Sequence[dict[str, Any]]) -> dict[str, torch.Tensor]:
-        labels = torch.tensor([item["labels"] for item in batch])
+        extra = {
+            key: torch.stack([torch.as_tensor(item[key]) for item in batch])
+            for key in batch[0]
+            if key == "labels" or key.startswith("aux_")
+        }
         padded = tokenizer.pad(
-            [{k: v for k, v in item.items() if k != "labels"} for item in batch],
+            [{k: v for k, v in item.items() if k not in extra} for item in batch],
             return_tensors="pt",
         )
-        return {**padded, "labels": labels}
+        return {**padded, **extra}
 
     return collate
 
@@ -143,11 +214,10 @@ def evaluate(model, loader: DataLoader, device: torch.device, label_count: int =
     model.eval()
     gold, pred = [], []
     for batch in loader:
-        targets = batch.pop("labels")
-        batch = {key: value.to(device) for key, value in batch.items()}
-        logits = model(**batch).logits
+        inputs, targets, _ = split_batch(batch, device)
+        logits = primary_logits(model(**inputs))
         pred.extend(logits.argmax(dim=-1).cpu().tolist())
-        gold.extend(targets.tolist())
+        gold.extend(targets.cpu().tolist())
     macro = f1_score(gold, pred, labels=list(range(label_count)), average="macro", zero_division=0)
     return float(macro), pred
 
@@ -164,14 +234,16 @@ def train_one_fold(rows, fold, args, device) -> dict[str, Any]:
     labels = BINARY_LABELS if args.binary else LABELS
     fit_rows, validation_rows, test_rows = fold.split(rows)
     tokenizer = AutoTokenizer.from_pretrained(args.model)
-    model = AutoModelForSequenceClassification.from_pretrained(
-        args.model, num_labels=len(labels)
+    model = (
+        MultiHeadModel(args.model, len(labels))
+        if args.aux
+        else AutoModelForSequenceClassification.from_pretrained(args.model, num_labels=len(labels))
     ).to(device)
     collate = make_collator(tokenizer)
 
     def loader(subset, shuffle):
         return DataLoader(
-            RequirementDataset(subset, tokenizer, args.max_length, labels),
+            RequirementDataset(subset, tokenizer, args.max_length, labels, aux=args.aux),
             batch_size=args.batch_size,
             shuffle=shuffle,
             collate_fn=collate,
@@ -202,9 +274,11 @@ def train_one_fold(rows, fold, args, device) -> dict[str, Any]:
         running = 0.0
         optimizer.zero_grad()
         for index, batch in enumerate(train_loader, start=1):
-            targets = batch.pop("labels").to(device)
-            batch = {key: value.to(device) for key, value in batch.items()}
-            loss = loss_fn(model(**batch).logits, targets)
+            inputs, targets, aux = split_batch(batch, device)
+            outputs = model(**inputs)
+            loss = loss_fn(primary_logits(outputs), targets)
+            if aux:
+                loss = loss + args.aux_weight * aux_loss(outputs, aux)
             running += loss.item()
             # 누적 구간의 평균이 되도록 나눠서 역전파한다. 그래야 누적 횟수를 바꿔도
             # 기울기 크기가 유지되고 learning rate를 다시 잡지 않아도 된다.
@@ -276,6 +350,14 @@ def main() -> None:
         "--binary",
         action="store_true",
         help="견적반영과 계약·질의검토를 검토필요로 합쳐 2분류로 학습한다",
+    )
+    parser.add_argument(
+        "--aux",
+        action="store_true",
+        help="blockers·cost_basis·build_difficulty·domain_dependency를 보조 헤드로 함께 학습한다",
+    )
+    parser.add_argument(
+        "--aux-weight", type=float, default=0.5, help="보조 손실 합의 가중치. 주 손실은 1.0"
     )
     parser.add_argument("--output", type=Path, default=None)
     args = parser.parse_args()
