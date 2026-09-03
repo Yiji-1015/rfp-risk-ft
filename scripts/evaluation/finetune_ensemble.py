@@ -47,6 +47,13 @@ CANDIDATE_COMBOS = (
     ("sv", "ft7", "ftL"), ("wc", "e5", "ft7"), ("wc", "ch", "ftL"),
     ("wc", "ftL", "ftM"), ("ch", "e5", "ftL"), ("wc", "e5", "ftM"),
     ("e5", "ftL", "ftM"), ("wc", "ch", "e5"), ("wc", "ch", "e5", "ft7", "ftL"),
+    # 채택 조합 wc+ft+ftL의 base 멤버를 seed별로, 그리고 aux 멤버로 바꾼 것. aux가 seed 편차를
+    # 줄였으니(0.038 → 0.008) 앙상블 범위도 좁아지는지 본다. 점수를 보고 고른 조합이 아니다.
+    ("wc", "ft42", "ftL"), ("wc", "ft13", "ftL"),
+    ("wc", "ftA42", "ftL"), ("wc", "ftA7", "ftL"), ("wc", "ftA13", "ftL"),
+    ("wc", "ftA42", "ftA7", "ftA13"),
+    # 두 멤버 모두 aux. seed를 어떻게 뽑아도 같은 값이 나오는지가 질문이다.
+    ("wc", "ftA42", "ftAL42"), ("wc", "ftA7", "ftAL7"), ("wc", "ftA13", "ftAL13"),
 )
 
 
@@ -62,10 +69,17 @@ def load_members(runs_path: Path, oof_path: Path) -> tuple[dict[str, dict[str, s
         config = run["config"]
         if config["fold"] != -1 or not run["results"][0].get("predictions"):
             continue
+        # 2분류·다른 계열은 3분류 투표에 못 섞는다. 태그가 겹치면 뒤 실행이 앞을 덮어쓰므로
+        # seed와 변형(마스킹·aux)을 태그에 넣는다. 기존 태그(ft7·ftL·ftM·ftS)는 그대로다.
+        if config.get("binary") or "roberta" not in config["model"]:
+            continue
         size = config["model"].split("-")[-1]
-        tag = {"small": "ftS", "large": "ftL"}.get(size, f"ft{config['seed']}")
+        seed = config["seed"]
+        tag = {"small": "ftS", "large": "ftL" if seed == 42 else f"ftL{seed}"}.get(size, f"ft{seed}")
         if config["mask"]:
             tag = "ftM"
+        if config.get("aux"):
+            tag = f"ftAL{seed}" if size == "large" else f"ftA{seed}"
         members[tag] = {
             item["requirement_uid"]: item["pred"]
             for fold in run["results"]
@@ -235,7 +249,10 @@ def main() -> None:
             ("wc", "word+char TF-IDF"), ("ch", "char TF-IDF"), ("e5", "TF-IDF+E5"),
             ("sv", "soft voting (TF-IDF 3종)"), ("ftS", "FT small"), ("ft42", "FT base seed42"),
             ("ft7", "FT base seed7"), ("ft13", "FT base seed13"), ("ftL", "FT large"),
-            ("ftM", "FT base +마스킹"),
+            ("ftL7", "FT large seed7"), ("ftL13", "FT large seed13"), ("ftM", "FT base +마스킹"),
+            ("ftA42", "FT base +aux seed42"), ("ftA7", "FT base +aux seed7"),
+            ("ftA13", "FT base +aux seed13"), ("ftAL42", "FT large +aux seed42"),
+            ("ftAL7", "FT large +aux seed7"), ("ftAL13", "FT large +aux seed13"),
         )
         if tag in members
     }
