@@ -1,0 +1,658 @@
+nohup: ignoring input
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+모델 klue/roberta-base | 장치 cuda | seed 42 | 마스킹 없음 | 3분류
+데이터 label_dataset_v4 1024건 | max_length 512
+fold 0 — ccrs_ai_platform
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 3506.69it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.dense.weight      | UNEXPECTED |  | 
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 760 / 검증 156 / 평가 88  (ccrs_ai_platform), 144 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.2035  검증 macro F1 0.490  ← 최고
+  epoch 2/6  학습 loss 2.3573  검증 macro F1 0.620  ← 최고
+  epoch 3/6  학습 loss 1.9652  검증 macro F1 0.644  ← 최고
+  epoch 4/6  학습 loss 1.7489  검증 macro F1 0.626
+  epoch 5/6  학습 loss 1.5602  검증 macro F1 0.650  ← 최고
+  epoch 6/6  학습 loss 1.4815  검증 macro F1 0.626
+  평가 문서 macro F1 0.619 (검증 최고 0.650 시점)
+fold 1 — defense_intelligent_platform
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 3552.54it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.dense.weight      | UNEXPECTED |  | 
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 788 / 검증 59 / 평가 156  (defense_intelligent_platform), 150 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.1607  검증 macro F1 0.351  ← 최고
+  epoch 2/6  학습 loss 2.3562  검증 macro F1 0.394  ← 최고
+  epoch 3/6  학습 loss 2.0356  검증 macro F1 0.365
+  epoch 4/6  학습 loss 1.8241  검증 macro F1 0.347
+  epoch 5/6  학습 loss 1.6740  검증 macro F1 0.465  ← 최고
+  epoch 6/6  학습 loss 1.5671  검증 macro F1 0.466  ← 최고
+  평가 문서 macro F1 0.633 (검증 최고 0.466 시점)
+fold 2 — genai_incident_response
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 4152.00it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.dense.weight      | UNEXPECTED |  | 
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 879 / 검증 70 / 평가 59  (genai_incident_response), 168 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.1587  검증 macro F1 0.351  ← 최고
+  epoch 2/6  학습 loss 2.3129  검증 macro F1 0.448  ← 최고
+  epoch 3/6  학습 loss 1.9545  검증 macro F1 0.517  ← 최고
+  epoch 4/6  학습 loss 1.7029  검증 macro F1 0.501
+  epoch 5/6  학습 loss 1.5263  검증 macro F1 0.534  ← 최고
+  epoch 6/6  학습 loss 1.4111  검증 macro F1 0.526
+  평가 문서 macro F1 0.473 (검증 최고 0.534 시점)
+fold 3 — incheon_airport_digital_work
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 2985.40it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.dense.weight      | UNEXPECTED |  | 
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 860 / 검증 77 / 평가 70  (incheon_airport_digital_work), 162 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.0597  검증 macro F1 0.392  ← 최고
+  epoch 2/6  학습 loss 2.2690  검증 macro F1 0.585  ← 최고
+  epoch 3/6  학습 loss 1.9204  검증 macro F1 0.581
+  epoch 4/6  학습 loss 1.6808  검증 macro F1 0.579
+  epoch 5/6  학습 loss 1.4986  검증 macro F1 0.627  ← 최고
+  epoch 6/6  학습 loss 1.3904  검증 macro F1 0.618
+  평가 문서 macro F1 0.498 (검증 최고 0.627 시점)
+fold 4 — kac_ai_work_platform
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 3251.23it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.dense.weight      | UNEXPECTED |  | 
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 888 / 검증 41 / 평가 77  (kac_ai_work_platform), 168 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.0391  검증 macro F1 0.326  ← 최고
+  epoch 2/6  학습 loss 2.3369  검증 macro F1 0.507  ← 최고
+  epoch 3/6  학습 loss 1.9944  검증 macro F1 0.674  ← 최고
+  epoch 4/6  학습 loss 1.7298  검증 macro F1 0.654
+  epoch 5/6  학습 loss 1.5529  검증 macro F1 0.560
+  epoch 6/6  학습 loss 1.4566  검증 macro F1 0.642
+  평가 문서 macro F1 0.579 (검증 최고 0.674 시점)
+fold 5 — kangwon_land_genai
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 3242.28it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.dense.weight      | UNEXPECTED |  | 
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 837 / 검증 125 / 평가 41  (kangwon_land_genai), 162 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.0731  검증 macro F1 0.536  ← 최고
+  epoch 2/6  학습 loss 2.3920  검증 macro F1 0.665  ← 최고
+  epoch 3/6  학습 loss 2.0924  검증 macro F1 0.714  ← 최고
+  epoch 4/6  학습 loss 1.8059  검증 macro F1 0.703
+  epoch 5/6  학습 loss 1.6644  검증 macro F1 0.748  ← 최고
+  epoch 6/6  학습 loss 1.5693  검증 macro F1 0.746
+  평가 문서 macro F1 0.595 (검증 최고 0.748 시점)
+fold 6 — kexim_ai_platform
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 3668.94it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.dense.weight      | UNEXPECTED |  | 
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 786 / 검증 90 / 평가 125  (kexim_ai_platform), 150 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.1709  검증 macro F1 0.411  ← 최고
+  epoch 2/6  학습 loss 2.4687  검증 macro F1 0.372
+  epoch 3/6  학습 loss 2.1640  검증 macro F1 0.569  ← 최고
+  epoch 4/6  학습 loss 1.9100  검증 macro F1 0.669  ← 최고
+  epoch 5/6  학습 loss 1.7466  검증 macro F1 0.667
+  epoch 6/6  학습 loss 1.6240  검증 macro F1 0.622
+  평가 문서 macro F1 0.724 (검증 최고 0.669 시점)
+fold 7 — koen_ai_infrastructure
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 3182.70it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.dense.weight      | UNEXPECTED |  | 
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 874 / 검증 37 / 평가 90  (koen_ai_infrastructure), 168 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.1324  검증 macro F1 0.401  ← 최고
+  epoch 2/6  학습 loss 2.3610  검증 macro F1 0.511  ← 최고
+  epoch 3/6  학습 loss 2.0130  검증 macro F1 0.604  ← 최고
+  epoch 4/6  학습 loss 1.8052  검증 macro F1 0.671  ← 최고
+  epoch 5/6  학습 loss 1.6465  검증 macro F1 0.668
+  epoch 6/6  학습 loss 1.5243  검증 macro F1 0.748  ← 최고
+  평가 문서 macro F1 0.713 (검증 최고 0.748 시점)
+fold 8 — korail_genai_isp_ismp
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 4027.40it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.dense.weight      | UNEXPECTED |  | 
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 783 / 검증 181 / 평가 37  (korail_genai_isp_ismp), 150 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.1523  검증 macro F1 0.399  ← 최고
+  epoch 2/6  학습 loss 2.5306  검증 macro F1 0.407  ← 최고
+  epoch 3/6  학습 loss 2.1290  검증 macro F1 0.475  ← 최고
+  epoch 4/6  학습 loss 1.9145  검증 macro F1 0.532  ← 최고
+  epoch 5/6  학습 loss 1.7330  검증 macro F1 0.610  ← 최고
+  epoch 6/6  학습 loss 1.6367  검증 macro F1 0.600
+  평가 문서 macro F1 0.524 (검증 최고 0.610 시점)
+fold 9 — mfds_drug_ai_review
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 2870.83it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.dense.weight      | UNEXPECTED |  | 
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 737 / 검증 88 / 평가 181  (mfds_drug_ai_review), 144 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.1452  검증 macro F1 0.338  ← 최고
+  epoch 2/6  학습 loss 2.3546  검증 macro F1 0.600  ← 최고
+  epoch 3/6  학습 loss 2.0876  검증 macro F1 0.547
+  epoch 4/6  학습 loss 1.7999  검증 macro F1 0.629  ← 최고
+  epoch 5/6  학습 loss 1.6756  검증 macro F1 0.648  ← 최고
+  epoch 6/6  학습 loss 1.5438  검증 macro F1 0.641
+  평가 문서 macro F1 0.526 (검증 최고 0.648 시점)
+fold 평균 평가 macro F1 0.588
+통합 OOF macro F1 0.628 (924건)
+  통상수용         F1 0.816
+  견적반영         F1 0.534
+  계약·질의검토      F1 0.533
+기록 추가: /workspace/rfp-risk-ft/reports/current/v4/finetune_runs.jsonl
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+모델 klue/roberta-base | 장치 cuda | seed 7 | 마스킹 없음 | 3분류
+데이터 label_dataset_v4 1024건 | max_length 512
+fold 0 — ccrs_ai_platform
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 3814.32it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+lm_head.dense.weight      | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 760 / 검증 156 / 평가 88  (ccrs_ai_platform), 144 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.1410  검증 macro F1 0.463  ← 최고
+  epoch 2/6  학습 loss 2.3364  검증 macro F1 0.486  ← 최고
+  epoch 3/6  학습 loss 2.0071  검증 macro F1 0.604  ← 최고
+  epoch 4/6  학습 loss 1.7503  검증 macro F1 0.656  ← 최고
+  epoch 5/6  학습 loss 1.5756  검증 macro F1 0.640
+  epoch 6/6  학습 loss 1.4683  검증 macro F1 0.658  ← 최고
+  평가 문서 macro F1 0.601 (검증 최고 0.658 시점)
+fold 1 — defense_intelligent_platform
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 3111.82it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+lm_head.dense.weight      | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 788 / 검증 59 / 평가 156  (defense_intelligent_platform), 150 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.0479  검증 macro F1 0.313  ← 최고
+  epoch 2/6  학습 loss 2.3504  검증 macro F1 0.426  ← 최고
+  epoch 3/6  학습 loss 1.9948  검증 macro F1 0.455  ← 최고
+  epoch 4/6  학습 loss 1.7558  검증 macro F1 0.440
+  epoch 5/6  학습 loss 1.5940  검증 macro F1 0.423
+  epoch 6/6  학습 loss 1.4853  검증 macro F1 0.441
+  평가 문서 macro F1 0.599 (검증 최고 0.455 시점)
+fold 2 — genai_incident_response
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 4841.41it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+lm_head.dense.weight      | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 879 / 검증 70 / 평가 59  (genai_incident_response), 168 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.1093  검증 macro F1 0.380  ← 최고
+  epoch 2/6  학습 loss 2.2968  검증 macro F1 0.416  ← 최고
+  epoch 3/6  학습 loss 1.9497  검증 macro F1 0.486  ← 최고
+  epoch 4/6  학습 loss 1.6945  검증 macro F1 0.553  ← 최고
+  epoch 5/6  학습 loss 1.5722  검증 macro F1 0.596  ← 최고
+  epoch 6/6  학습 loss 1.4428  검증 macro F1 0.530
+  평가 문서 macro F1 0.530 (검증 최고 0.596 시점)
+fold 3 — incheon_airport_digital_work
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 3208.02it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+lm_head.dense.weight      | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 860 / 검증 77 / 평가 70  (incheon_airport_digital_work), 162 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.1821  검증 macro F1 0.291  ← 최고
+  epoch 2/6  학습 loss 2.3828  검증 macro F1 0.485  ← 최고
+  epoch 3/6  학습 loss 1.9902  검증 macro F1 0.528  ← 최고
+  epoch 4/6  학습 loss 1.7423  검증 macro F1 0.584  ← 최고
+  epoch 5/6  학습 loss 1.5535  검증 macro F1 0.597  ← 최고
+  epoch 6/6  학습 loss 1.4367  검증 macro F1 0.583
+  평가 문서 macro F1 0.502 (검증 최고 0.597 시점)
+fold 4 — kac_ai_work_platform
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 2987.26it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+lm_head.dense.weight      | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 888 / 검증 41 / 평가 77  (kac_ai_work_platform), 168 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.0919  검증 macro F1 0.257  ← 최고
+  epoch 2/6  학습 loss 2.3464  검증 macro F1 0.449  ← 최고
+  epoch 3/6  학습 loss 2.0251  검증 macro F1 0.565  ← 최고
+  epoch 4/6  학습 loss 1.7947  검증 macro F1 0.685  ← 최고
+  epoch 5/6  학습 loss 1.6228  검증 macro F1 0.626
+  epoch 6/6  학습 loss 1.4947  검증 macro F1 0.667
+  평가 문서 macro F1 0.529 (검증 최고 0.685 시점)
+fold 5 — kangwon_land_genai
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 3128.63it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+lm_head.dense.weight      | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 837 / 검증 125 / 평가 41  (kangwon_land_genai), 162 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.0991  검증 macro F1 0.405  ← 최고
+  epoch 2/6  학습 loss 2.3900  검증 macro F1 0.638  ← 최고
+  epoch 3/6  학습 loss 2.0827  검증 macro F1 0.709  ← 최고
+  epoch 4/6  학습 loss 1.8084  검증 macro F1 0.680
+  epoch 5/6  학습 loss 1.6151  검증 macro F1 0.718  ← 최고
+  epoch 6/6  학습 loss 1.4894  검증 macro F1 0.717
+  평가 문서 macro F1 0.582 (검증 최고 0.718 시점)
+fold 6 — kexim_ai_platform
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 3167.70it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+lm_head.dense.weight      | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 786 / 검증 90 / 평가 125  (kexim_ai_platform), 150 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.2440  검증 macro F1 0.294  ← 최고
+  epoch 2/6  학습 loss 2.4978  검증 macro F1 0.343  ← 최고
+  epoch 3/6  학습 loss 2.1636  검증 macro F1 0.552  ← 최고
+  epoch 4/6  학습 loss 1.9572  검증 macro F1 0.650  ← 최고
+  epoch 5/6  학습 loss 1.7622  검증 macro F1 0.674  ← 최고
+  epoch 6/6  학습 loss 1.6417  검증 macro F1 0.658
+  평가 문서 macro F1 0.765 (검증 최고 0.674 시점)
+fold 7 — koen_ai_infrastructure
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 3683.58it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+lm_head.dense.weight      | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 874 / 검증 37 / 평가 90  (koen_ai_infrastructure), 168 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.1127  검증 macro F1 0.286  ← 최고
+  epoch 2/6  학습 loss 2.4434  검증 macro F1 0.446  ← 최고
+  epoch 3/6  학습 loss 2.0804  검증 macro F1 0.664  ← 최고
+  epoch 4/6  학습 loss 1.8255  검증 macro F1 0.598
+  epoch 5/6  학습 loss 1.6547  검증 macro F1 0.651
+  epoch 6/6  학습 loss 1.5518  검증 macro F1 0.698  ← 최고
+  평가 문서 macro F1 0.711 (검증 최고 0.698 시점)
+fold 8 — korail_genai_isp_ismp
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 3801.51it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+lm_head.dense.weight      | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 783 / 검증 181 / 평가 37  (korail_genai_isp_ismp), 150 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.1558  검증 macro F1 0.385  ← 최고
+  epoch 2/6  학습 loss 2.4954  검증 macro F1 0.436  ← 최고
+  epoch 3/6  학습 loss 2.1511  검증 macro F1 0.560  ← 최고
+  epoch 4/6  학습 loss 1.9159  검증 macro F1 0.571  ← 최고
+  epoch 5/6  학습 loss 1.7593  검증 macro F1 0.608  ← 최고
+  epoch 6/6  학습 loss 1.6697  검증 macro F1 0.580
+  평가 문서 macro F1 0.606 (검증 최고 0.608 시점)
+fold 9 — mfds_drug_ai_review
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 3018.58it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+lm_head.dense.weight      | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 737 / 검증 88 / 평가 181  (mfds_drug_ai_review), 144 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.1330  검증 macro F1 0.432  ← 최고
+  epoch 2/6  학습 loss 2.4563  검증 macro F1 0.609  ← 최고
+  epoch 3/6  학습 loss 2.1131  검증 macro F1 0.629  ← 최고
+  epoch 4/6  학습 loss 1.8776  검증 macro F1 0.627
+  epoch 5/6  학습 loss 1.6643  검증 macro F1 0.665  ← 최고
+  epoch 6/6  학습 loss 1.5881  검증 macro F1 0.588
+  평가 문서 macro F1 0.519 (검증 최고 0.665 시점)
+fold 평균 평가 macro F1 0.594
+통합 OOF macro F1 0.629 (924건)
+  통상수용         F1 0.815
+  견적반영         F1 0.584
+  계약·질의검토      F1 0.487
+기록 추가: /workspace/rfp-risk-ft/reports/current/v4/finetune_runs.jsonl
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+모델 klue/roberta-base | 장치 cuda | seed 13 | 마스킹 없음 | 3분류
+데이터 label_dataset_v4 1024건 | max_length 512
+fold 0 — ccrs_ai_platform
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 3587.54it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.weight      | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 760 / 검증 156 / 평가 88  (ccrs_ai_platform), 144 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.1892  검증 macro F1 0.432  ← 최고
+  epoch 2/6  학습 loss 2.4020  검증 macro F1 0.630  ← 최고
+  epoch 3/6  학습 loss 2.0303  검증 macro F1 0.628
+  epoch 4/6  학습 loss 1.8425  검증 macro F1 0.621
+  epoch 5/6  학습 loss 1.6364  검증 macro F1 0.672  ← 최고
+  epoch 6/6  학습 loss 1.5406  검증 macro F1 0.646
+  평가 문서 macro F1 0.591 (검증 최고 0.672 시점)
+fold 1 — defense_intelligent_platform
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 2912.62it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.weight      | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 788 / 검증 59 / 평가 156  (defense_intelligent_platform), 150 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.1127  검증 macro F1 0.352  ← 최고
+  epoch 2/6  학습 loss 2.2921  검증 macro F1 0.424  ← 최고
+  epoch 3/6  학습 loss 1.9062  검증 macro F1 0.487  ← 최고
+  epoch 4/6  학습 loss 1.6938  검증 macro F1 0.440
+  epoch 5/6  학습 loss 1.5501  검증 macro F1 0.455
+  epoch 6/6  학습 loss 1.4207  검증 macro F1 0.466
+  평가 문서 macro F1 0.638 (검증 최고 0.487 시점)
+fold 2 — genai_incident_response
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 3184.43it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.weight      | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 879 / 검증 70 / 평가 59  (genai_incident_response), 168 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.0324  검증 macro F1 0.500  ← 최고
+  epoch 2/6  학습 loss 2.3281  검증 macro F1 0.470
+  epoch 3/6  학습 loss 2.0407  검증 macro F1 0.481
+  epoch 4/6  학습 loss 1.7914  검증 macro F1 0.494
+  epoch 5/6  학습 loss 1.6253  검증 macro F1 0.492
+  epoch 6/6  학습 loss 1.4943  검증 macro F1 0.487
+  평가 문서 macro F1 0.489 (검증 최고 0.500 시점)
+fold 3 — incheon_airport_digital_work
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 2941.97it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.weight      | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 860 / 검증 77 / 평가 70  (incheon_airport_digital_work), 162 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.1264  검증 macro F1 0.463  ← 최고
+  epoch 2/6  학습 loss 2.3318  검증 macro F1 0.586  ← 최고
+  epoch 3/6  학습 loss 1.9933  검증 macro F1 0.566
+  epoch 4/6  학습 loss 1.8328  검증 macro F1 0.566
+  epoch 5/6  학습 loss 1.6419  검증 macro F1 0.575
+  epoch 6/6  학습 loss 1.5413  검증 macro F1 0.622  ← 최고
+  평가 문서 macro F1 0.482 (검증 최고 0.622 시점)
+fold 4 — kac_ai_work_platform
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 2780.29it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.weight      | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 888 / 검증 41 / 평가 77  (kac_ai_work_platform), 168 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.0439  검증 macro F1 0.381  ← 최고
+  epoch 2/6  학습 loss 2.3036  검증 macro F1 0.492  ← 최고
+  epoch 3/6  학습 loss 1.9552  검증 macro F1 0.485
+  epoch 4/6  학습 loss 1.7098  검증 macro F1 0.521  ← 최고
+  epoch 5/6  학습 loss 1.5433  검증 macro F1 0.599  ← 최고
+  epoch 6/6  학습 loss 1.4203  검증 macro F1 0.645  ← 최고
+  평가 문서 macro F1 0.622 (검증 최고 0.645 시점)
+fold 5 — kangwon_land_genai
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 4692.12it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.weight      | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 837 / 검증 125 / 평가 41  (kangwon_land_genai), 162 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.1107  검증 macro F1 0.582  ← 최고
+  epoch 2/6  학습 loss 2.3357  검증 macro F1 0.679  ← 최고
+  epoch 3/6  학습 loss 1.9865  검증 macro F1 0.742  ← 최고
+  epoch 4/6  학습 loss 1.7547  검증 macro F1 0.723
+  epoch 5/6  학습 loss 1.6231  검증 macro F1 0.754  ← 최고
+  epoch 6/6  학습 loss 1.4858  검증 macro F1 0.730
+  평가 문서 macro F1 0.599 (검증 최고 0.754 시점)
+fold 6 — kexim_ai_platform
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 3006.23it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.weight      | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 786 / 검증 90 / 평가 125  (kexim_ai_platform), 150 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.1855  검증 macro F1 0.456  ← 최고
+  epoch 2/6  학습 loss 2.4599  검증 macro F1 0.552  ← 최고
+  epoch 3/6  학습 loss 2.0812  검증 macro F1 0.596  ← 최고
+  epoch 4/6  학습 loss 1.8496  검증 macro F1 0.527
+  epoch 5/6  학습 loss 1.6961  검증 macro F1 0.656  ← 최고
+  epoch 6/6  학습 loss 1.5856  검증 macro F1 0.569
+  평가 문서 macro F1 0.716 (검증 최고 0.656 시점)
+fold 7 — koen_ai_infrastructure
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 3596.44it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.weight      | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 874 / 검증 37 / 평가 90  (koen_ai_infrastructure), 168 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.0852  검증 macro F1 0.360  ← 최고
+  epoch 2/6  학습 loss 2.3547  검증 macro F1 0.450  ← 최고
+  epoch 3/6  학습 loss 1.9868  검증 macro F1 0.511  ← 최고
+  epoch 4/6  학습 loss 1.7984  검증 macro F1 0.627  ← 최고
+  epoch 5/6  학습 loss 1.6253  검증 macro F1 0.712  ← 최고
+  epoch 6/6  학습 loss 1.4895  검증 macro F1 0.627
+  평가 문서 macro F1 0.767 (검증 최고 0.712 시점)
+fold 8 — korail_genai_isp_ismp
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 3010.87it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.weight      | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 783 / 검증 181 / 평가 37  (korail_genai_isp_ismp), 150 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.1225  검증 macro F1 0.329  ← 최고
+  epoch 2/6  학습 loss 2.4682  검증 macro F1 0.410  ← 최고
+  epoch 3/6  학습 loss 2.1327  검증 macro F1 0.429  ← 최고
+  epoch 4/6  학습 loss 1.9113  검증 macro F1 0.531  ← 최고
+  epoch 5/6  학습 loss 1.7328  검증 macro F1 0.590  ← 최고
+  epoch 6/6  학습 loss 1.6319  검증 macro F1 0.588
+  평가 문서 macro F1 0.594 (검증 최고 0.590 시점)
+fold 9 — mfds_drug_ai_review
+Loading weights:   0%|          | 0/197 [00:00<?, ?it/s]Loading weights: 100%|██████████| 197/197 [00:00<00:00, 3657.76it/s]
+[transformers] [1mRobertaModel LOAD REPORT[0m from: klue/roberta-base
+Key                       | Status     |  | 
+--------------------------+------------+--+-
+lm_head.layer_norm.bias   | UNEXPECTED |  | 
+lm_head.bias              | UNEXPECTED |  | 
+lm_head.dense.bias        | UNEXPECTED |  | 
+lm_head.layer_norm.weight | UNEXPECTED |  | 
+lm_head.dense.weight      | UNEXPECTED |  | 
+
+Notes:
+- UNEXPECTED:	can be ignored when loading from different task/architecture; not ok if you expect identical arch.
+  학습 737 / 검증 88 / 평가 181  (mfds_drug_ai_review), 144 step  (배치 32 x 누적 1 = 유효 32)
+  epoch 1/6  학습 loss 3.2403  검증 macro F1 0.422  ← 최고
+  epoch 2/6  학습 loss 2.4942  검증 macro F1 0.466  ← 최고
+  epoch 3/6  학습 loss 2.2611  검증 macro F1 0.697  ← 최고
+  epoch 4/6  학습 loss 1.9048  검증 macro F1 0.647
+  epoch 5/6  학습 loss 1.7713  검증 macro F1 0.600
+  epoch 6/6  학습 loss 1.6139  검증 macro F1 0.636
+  평가 문서 macro F1 0.388 (검증 최고 0.697 시점)
+fold 평균 평가 macro F1 0.589
+통합 OOF macro F1 0.621 (924건)
+  통상수용         F1 0.813
+  견적반영         F1 0.516
+  계약·질의검토      F1 0.534
+기록 추가: /workspace/rfp-risk-ft/reports/current/v4/finetune_runs.jsonl
