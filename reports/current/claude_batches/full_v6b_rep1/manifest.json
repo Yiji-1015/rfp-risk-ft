@@ -1,0 +1,20 @@
+{
+  "execute": true,
+  "input": "C:\\Users\\LLOYDK\\Desktop\\rfp-risk-ft\\data\\samples\\full_v6b_rep1_retry.jsonl",
+  "sample_count": 1,
+  "strategy": "zero-shot",
+  "schema_version": "4.0.0",
+  "prompt_version": "claude-rfp-risk-v6",
+  "prompt_sha256": "9249480412a8",
+  "hints": true,
+  "parameters": {
+    "model": "claude-sonnet-5",
+    "effort": "medium",
+    "thinking": "adaptive",
+    "max_tokens": 16000,
+    "cache_ttl": "5m",
+    "timeout_seconds": 120.0,
+    "max_retries": 2,
+    "structured_output": true
+  }
+}
