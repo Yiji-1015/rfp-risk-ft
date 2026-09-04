@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import hashlib
 import os
 import time
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, Literal, Sequence
 
 from scripts.labeling.label_schema import (
@@ -119,7 +121,12 @@ def _apply_v6(prompt: str) -> str:
     return prompt
 
 
-SYSTEM_PROMPT_V6 = _apply_v6(SYSTEM_PROMPT)
+# v6부터는 파일이 원본이다. 프롬프트를 고칠 때 코드를 안 건드리게 하기 위해서다.
+# 파일이 없으면 위 치환으로 처음 만든 v6와 같은 내용을 쓴다.
+_V6_PATH = Path(__file__).resolve().parents[2] / "notebooks" / "prompts" / "system_prompt_v6.txt"
+SYSTEM_PROMPT_V6 = (
+    _V6_PATH.read_text(encoding="utf-8") if _V6_PATH.exists() else _apply_v6(SYSTEM_PROMPT)
+)
 PROMPT_VERSIONS = {
     "v5": (PROMPT_VERSION, SYSTEM_PROMPT),
     "v6": ("claude-rfp-risk-v6", SYSTEM_PROMPT_V6),
@@ -337,6 +344,8 @@ class ClaudeLabelingClient:
             "latency_seconds": round(latency_seconds, 4),
             "schema_version": SCHEMA_VERSION,
             "prompt_version": self.prompt_version,
+            # v6는 파일이 원본이라 버전 이름만으로는 본문이 같은지 알 수 없다. 해시로 남긴다.
+            "prompt_sha256": hashlib.sha256(self.system_prompt.encode("utf-8")).hexdigest()[:12],
             "hints": bool(hints),
             "anchor_count": len(anchors or ()),
             "anchor_block_version": (

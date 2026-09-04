@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import sys
@@ -153,6 +154,9 @@ def make_manifest(
         "strategy": args.strategy,
         "schema_version": SCHEMA_VERSION,
         "prompt_version": PROMPT_VERSIONS[getattr(args, "prompt_version", "v5")][0],
+        "prompt_sha256": hashlib.sha256(
+            PROMPT_VERSIONS[getattr(args, "prompt_version", "v5")][1].encode("utf-8")
+        ).hexdigest()[:12],
         "hints": bool(getattr(args, "hints", False)),
         "parameters": {
             "model": args.model,
