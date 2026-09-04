@@ -14,6 +14,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import sys
@@ -35,6 +36,7 @@ from scripts.labeling.anchor_retriever import PureTfidfAnchorRetriever
 from scripts.labeling.claude_client import (
     DEFAULT_MODEL,
     PROMPT_VERSION,
+    PROMPT_VERSIONS,
     SCHEMA_VERSION,
     SYSTEM_PROMPT,
     ANCHOR_BLOCK_VERSION,
@@ -66,12 +68,19 @@ CACHEABLE_RETRIEVALS = frozenset({"global"})
 
 def build_batch_requests(
     samples: list[dict[str, Any]],
-    retriever: PureTfidfAnchorRetriever,
+    retriever: PureTfidfAnchorRetriever | None,
     retrieval: str = "stratified",
-) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+    *,
+    system_prompt: str = SYSTEM_PROMPT,
+    hint_builder: Any = None,
+) -> tuple[list[dict[str, Any]], dict[str, Any], dict[str, str]]:
+    """`retrieval='none'`이면 zero-shot이다. `hint_builder`가 있으면 대상 뒤에 힌트 블록을 붙인다.
+    동기 러너(`run_claude_labeling.py`)와 같은 메시지를 만들어야 두 경로의 결과를 나란히 놓을 수 있다.
+    """
     requests = []
     cache_anchors = retrieval in CACHEABLE_RETRIEVALS
     traces = {}
+    hints: dict[str, str] = {}
     label_schema = LabelResult.model_json_schema()
 
     for r in samples:
@@ -79,7 +88,7 @@ def build_batch_requests(
         name = r["requirement_name"]
         text = r["raw_requirement_text"]
 
-        anchors = retriever.retrieve(r, strategy=retrieval)
+        anchors = retriever.retrieve(r, strategy=retrieval) if retriever is not None else []
         traces[uid] = [
             {
                 "requirement_uid": a["requirement_uid"],
@@ -96,11 +105,13 @@ def build_batch_requests(
         system_blocks: list[dict[str, Any]] = [
             {
                 "type": "text",
-                "text": SYSTEM_PROMPT,
+                "text": system_prompt,
                 "cache_control": {"type": "ephemeral", "ttl": "5m"},
             }
         ]
-        if cache_anchors:
+        if not anchors:
+            user_content = target_block
+        elif cache_anchors:
             user_content = f"[대상 요구사항]\n{target_block}"
             system_blocks.append(
                 {
@@ -115,6 +126,11 @@ def build_batch_requests(
             user_content = (
                 f"{render_anchor_block(anchors)}\n\n[대상 요구사항]\n{target_block}"
             )
+        if hint_builder is not None:
+            hint = hint_builder.for_uid(uid)
+            if hint:
+                hints[uid] = hint
+                user_content = f"{user_content}\n\n{hint}"
 
         params = {
             "model": DEFAULT_MODEL,
@@ -133,14 +149,22 @@ def build_batch_requests(
         # Anthropic custom_id pattern: ^[a-zA-Z0-9_-]{1,64}$
         custom_id = uid.replace(":", "__")
         requests.append({"custom_id": custom_id, "params": params})
-
-    return requests, traces
+    return requests, traces, hints
 
 
 def cmd_submit(args: argparse.Namespace) -> None:
     client = get_anthropic_client()
-    pool_rows, pool_meta = load_anchor_pool(args.anchor_pool)
-    retriever = PureTfidfAnchorRetriever(pool_rows)
+    if args.retrieval == "none":
+        retriever, pool_meta = None, None
+    else:
+        pool_rows, pool_meta = load_anchor_pool(args.anchor_pool)
+        retriever = PureTfidfAnchorRetriever(pool_rows)
+    prompt_version, system_prompt = PROMPT_VERSIONS[args.prompt_version]
+    hint_builder = None
+    if args.hints:
+        from scripts.labeling.label_hints import HintBuilder
+
+        hint_builder = HintBuilder()
 
     # Read samples with slicing
     all_samples = []
@@ -154,10 +178,16 @@ def cmd_submit(args: argparse.Namespace) -> None:
     samples = all_samples[start_idx:end_idx]
 
     print(f"총 추출 표본: {len(samples)}건 ({start_idx + 1}번 ~ {min(end_idx, len(all_samples))}번)")
-    requests, traces = build_batch_requests(samples, retriever, retrieval=args.retrieval)
+    requests, traces, hints = build_batch_requests(
+        samples, retriever, retrieval=args.retrieval,
+        system_prompt=system_prompt, hint_builder=hint_builder,
+    )
 
     if not args.execute:
         print(f"\n[dry-run] {len(requests)}건의 배치 요청 생성 완료 (네트워크 호출 생략)")
+        print(f"  프롬프트 {prompt_version} sha {hashlib.sha256(system_prompt.encode('utf-8')).hexdigest()[:12]}"
+              f" | 앵커 {args.retrieval} | 힌트 {len(hints)}건")
+        print("  첫 요청 user 메시지:\n" + requests[0]["params"]["messages"][0]["content"][:600])
         print(f"실제 제출하려면 --execute 플래그를 추가하세요.")
         return
 
@@ -172,6 +202,9 @@ def cmd_submit(args: argparse.Namespace) -> None:
         "status": batch.processing_status,
         "created_at": batch.created_at.isoformat() if hasattr(batch.created_at, "isoformat") else str(batch.created_at),
         "request_count": len(requests),
+        "prompt_version": prompt_version,
+        "prompt_sha256": hashlib.sha256(system_prompt.encode("utf-8")).hexdigest()[:12],
+        "hints": hints,
         "retrieval": args.retrieval,
         "anchor_block_version": (
             CONSTANT_ANCHOR_BLOCK_VERSION
@@ -235,6 +268,7 @@ def cmd_download(args: argparse.Namespace) -> None:
     info = json.loads(info_path.read_text(encoding="utf-8"))
     batch_id = info["batch_id"]
     traces = info.get("traces", {})
+    hints = info.get("hints", {})
 
     print(f"Batch 결과 스트리밍 다운로드 중 ({batch_id})...")
     results_path = batch_dir / "results.jsonl"
@@ -274,6 +308,8 @@ def cmd_download(args: argparse.Namespace) -> None:
                         "requirement_uid": uid,
                         "status": "ok",
                         "label": label_obj.model_dump(),
+                        "hints": hints.get(uid),
+                        "prompt_version": info.get("prompt_version", PROMPT_VERSION),
                         "anchors_used": traces.get(uid, []),
                         "usage": {
                             "input_tokens": message.usage.input_tokens,
@@ -320,10 +356,12 @@ def main():
     parser.add_argument("--execute", action="store_true", help="실제 API 호출")
     parser.add_argument(
         "--retrieval",
-        choices=["stratified", "similarity", "global"],
+        choices=["stratified", "similarity", "global", "none"],
         default="stratified",
-        help="앵커 인출 방식. global만 앵커 블록이 system에 실려 캐시된다.",
+        help="앵커 인출 방식. global만 앵커 블록이 system에 실려 캐시된다. none이면 zero-shot.",
     )
+    parser.add_argument("--prompt-version", choices=sorted(PROMPT_VERSIONS), default="v5")
+    parser.add_argument("--hints", action="store_true", help="[드문 표현]·[주목 줄] 블록을 붙인다")
 
     args = parser.parse_args()
 
