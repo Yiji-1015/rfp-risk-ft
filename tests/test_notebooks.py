@@ -21,6 +21,7 @@ EXPECTED_NOTEBOOKS = {
     "13_label_boundary.ipynb",
     "14_text_masking.ipynb",
     "15_finetuning.ipynb",
+    "16_label_recheck.ipynb",
 }
 
 
