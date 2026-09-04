@@ -18,6 +18,7 @@ from scripts.labeling.claude_client import (
     DEFAULT_MODEL,
     HAIKU_MODEL,
     PROMPT_VERSION,
+    PROMPT_VERSIONS,
     ClaudeLabelingClient,
     ClaudeSettings,
 )
@@ -99,6 +100,17 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--limit", type=int)
     parser.add_argument(
+        "--prompt-version",
+        choices=sorted(PROMPT_VERSIONS),
+        default="v5",
+        help="v6는 기준 수행사 범위·범위책임 조건·근거 인용 규칙을 더한 프롬프트다",
+    )
+    parser.add_argument(
+        "--hints",
+        action="store_true",
+        help="대상 요구사항 뒤에 [드문 표현]·[주목 줄] 블록을 붙인다 (label_hints.py). v6와 함께 쓴다",
+    )
+    parser.add_argument(
         "--execute",
         action="store_true",
         help="실제 유료 API 호출 실행. 생략하면 manifest만 출력합니다.",
@@ -140,7 +152,8 @@ def make_manifest(
         "sample_count": len(samples),
         "strategy": args.strategy,
         "schema_version": SCHEMA_VERSION,
-        "prompt_version": PROMPT_VERSION,
+        "prompt_version": PROMPT_VERSIONS[getattr(args, "prompt_version", "v5")][0],
+        "hints": bool(getattr(args, "hints", False)),
         "parameters": {
             "model": args.model,
             "effort": effort,
@@ -320,7 +333,12 @@ def execute_run(
         max_tokens=args.max_tokens,
         cache_ttl=args.cache_ttl,
     )
-    client = ClaudeLabelingClient(settings=settings)
+    client = ClaudeLabelingClient(settings=settings, prompt_version=args.prompt_version)
+    hint_builder = None
+    if args.hints:
+        from scripts.labeling.label_hints import HintBuilder
+
+        hint_builder = HintBuilder()
     output_dir.mkdir(parents=True, exist_ok=True)
     results_path = output_dir / "results.jsonl"
     manifest_path = output_dir / "manifest.json"
@@ -345,6 +363,7 @@ def execute_run(
                 if retriever is not None
                 else []
             )
+            hints = hint_builder.for_uid(uid) if hint_builder else None
             try:
                 result = client.label_requirement(
                     requirement_uid=uid,
@@ -352,12 +371,14 @@ def execute_run(
                     requirement_text=sample["raw_requirement_text"],
                     anchors=anchors,
                     cache_anchors=args.strategy in CACHEABLE_ANCHOR_STRATEGIES,
+                    hints=hints,
                 )
                 record = {
                     "status": "ok",
                     "requirement_uid": uid,
                     "strategy": args.strategy,
                     "input": sample,
+                    "hints": hints,
                     "anchors_used": _anchor_trace(anchors),
                     "label": result.label.model_dump(),
                     "metadata": result.metadata,

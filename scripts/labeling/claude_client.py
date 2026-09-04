@@ -77,6 +77,54 @@ build_difficulty: 발주기관이 업무 지식·데이터·정답 기준을 모
 6. requirement_uid는 입력값을 그대로 복사한다.
 """
 
+# v6 — 2026-09-04 불일치 감사(reports/current/v4/axis1{2,3}_recheck.md)에서 라벨러가 흔들린
+# 두 자리를 메운다. (1) 기준 수행사가 무엇을 기본 공수로 갖는지, (2) 관행 조항 안의 어떤 조건이
+# 범위·책임 blocker인지. 그리고 부여한 판정의 근거 문구를 인용하게 해 문구 단위 감사가 가능하게
+# 한다. v5 본문을 바꾸지 않고 치환으로 만들어 두 버전의 차이가 이 블록 하나에 보이게 한다.
+_V6_EDITS = (
+    (
+        "- 발주기관의 업무 도메인 지식은 없다\n",
+        "- 발주기관의 업무 도메인 지식은 없다\n"
+        "- 시큐어코딩·취약점 점검과 조치, 표준 보안 기능(암호화·접근통제·백업·로그), 교육, 테스트, "
+        "산출물 작성은 기본 공수에 포함된다. 별도 원가는 외부 도구·라이선스 구매, 외부 인증 수수료, "
+        "외부 전문기관 위탁, 상주 전담 인력, 별도 장비처럼 단가가 붙는 항목일 때만 잡는다\n",
+    ),
+    (
+        "- 범위·책임: 열린 범위, 포괄 책임, 발주기관 재량에 따른 추가 수행, 무제한 의무\n",
+        "- 범위·책임: '일체·모든·제반'이 책임이나 비용에 붙은 조항, 발주기관 단독 판단으로 추가 수행이 "
+        "강제되는 조항(상호 합의로 조정하는 조항은 제외), 분쟁 중에도 수행 중단을 금지하는 조항, "
+        "기한·횟수 없이 반복되는 의무. 과업변경 상호합의, 인력교체 절차, 지침 준수 요구 자체는 관행이며 "
+        "그 안에 위 조건이 있을 때만 올린다\n",
+    ),
+    (
+        f"5. reasoning은 1~2문장, 공백 포함 {REASONING_MAX_LENGTH}자 이내. blocker 유무와 원가 발생 여부를 중심으로 쓴다.\n",
+        f"5. reasoning은 1~2문장, 공백 포함 {REASONING_MAX_LENGTH}자 이내. blocker나 원가를 부여했으면 "
+        "그 근거가 된 원문 문구를 「」 안에 그대로 인용한다. 인용할 문구가 없으면 부여하지 않는다.\n",
+    ),
+    (
+        "6. requirement_uid는 입력값을 그대로 복사한다.\n",
+        "6. requirement_uid는 입력값을 그대로 복사한다.\n"
+        "\n[주의 문구]\n"
+        "입력 끝에 [드문 표현]과 [주목 줄]이 붙을 수 있다. 판정이 아니다. 말뭉치 통계와 이전 모델이 "
+        "볼 곳을 짚은 것뿐이며 위험하다는 뜻도, 안전하다는 뜻도 아니다. 원문을 읽을 때 그 자리를 "
+        "빠뜨리지 않는 용도로만 쓴다. 판정의 근거가 되면 인용하고, 아니면 무시한다.\n",
+    ),
+)
+
+
+def _apply_v6(prompt: str) -> str:
+    for old, new in _V6_EDITS:
+        assert old in prompt, f"v6 치환 대상이 v5 프롬프트에 없습니다: {old[:40]!r}"
+        prompt = prompt.replace(old, new)
+    return prompt
+
+
+SYSTEM_PROMPT_V6 = _apply_v6(SYSTEM_PROMPT)
+PROMPT_VERSIONS = {
+    "v5": (PROMPT_VERSION, SYSTEM_PROMPT),
+    "v6": ("claude-rfp-risk-v6", SYSTEM_PROMPT_V6),
+}
+
 # 앵커 블록의 기본 위치는 user 메시지다. 동적 인출은 입력마다 앵커가 달라져서
 # system에 넣으면 캐시 프리픽스가 매 건 깨지고, system이 전략과 무관하게 동일해야
 # zero-shot과 few-shot이 통제 비교가 되기 때문이다(결정 18).
@@ -171,9 +219,17 @@ def _read_usage(response: Any) -> dict[str, int]:
 
 
 class ClaudeLabelingClient:
-    def __init__(self, settings: ClaudeSettings | None = None, client: Any = None):
+    def __init__(
+        self,
+        settings: ClaudeSettings | None = None,
+        client: Any = None,
+        prompt_version: str = "v5",
+    ):
         self.settings = settings or ClaudeSettings()
         self._client = client
+        if prompt_version not in PROMPT_VERSIONS:
+            raise ValueError(f"알 수 없는 프롬프트 버전: {prompt_version}")
+        self.prompt_version, self.system_prompt = PROMPT_VERSIONS[prompt_version]
 
     def _get_client(self) -> Any:
         if self._client is None:
@@ -201,8 +257,11 @@ class ClaudeLabelingClient:
         requirement_text: str,
         anchors: Sequence[dict[str, Any]] | None = None,
         cache_anchors: bool = False,
+        hints: str | None = None,
     ) -> ClaudeLabelingResult:
         """
+        :param hints: `[드문 표현]`·`[주목 줄]` 블록 텍스트. 대상 요구사항 뒤에 붙는다.
+            판정이 아니라 볼 곳이며, system 프롬프트 v6의 [주의 문구] 절이 사용법을 정한다.
         :param cache_anchors: 앵커를 캐시되는 system 블록에 넣을지 여부.
 
             기본값은 False다. 동적 인출(유사도·층화)은 입력마다 앵커가 달라지므로
@@ -222,10 +281,12 @@ class ClaudeLabelingClient:
             user_content = f"{render_anchor_block(anchors)}\n\n[대상 요구사항]\n{target_block}"
         else:
             user_content = target_block
+        if hints:
+            user_content = f"{user_content}\n\n{hints}"
         # 브레이크포인트를 둘로 나눈다. 기본 프롬프트 블록은 전략과 무관하게 동일하므로
         # zero-shot 실행과 캐시를 공유하고, 앵커 블록은 그 뒤에서 따로 캐시된다.
         system_blocks: list[dict[str, Any]] = [
-            {"type": "text", "text": SYSTEM_PROMPT, "cache_control": cache_control}
+            {"type": "text", "text": self.system_prompt, "cache_control": cache_control}
         ]
         if use_system_anchors:
             system_blocks.append(
@@ -275,7 +336,8 @@ class ClaudeLabelingClient:
             "stop_reason": response.stop_reason,
             "latency_seconds": round(latency_seconds, 4),
             "schema_version": SCHEMA_VERSION,
-            "prompt_version": PROMPT_VERSION,
+            "prompt_version": self.prompt_version,
+            "hints": bool(hints),
             "anchor_count": len(anchors or ()),
             "anchor_block_version": (
                 None
