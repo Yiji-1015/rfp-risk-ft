@@ -23,6 +23,8 @@ from scripts.evaluation.baselines import (
 from scripts.evaluation.folds import make_lodo_folds
 from scripts.labeling.label_dataset import get_model_text
 
+ROOT = Path(__file__).resolve().parents[2]
+
 
 def character_explanation(
     text: str, fragment_contributions: Sequence[tuple[str, float]], *, limit: int = 8
@@ -335,11 +337,19 @@ doc.addEventListener('change',refreshList); search.addEventListener('input',refr
 
 
 def _main() -> None:
-    from scripts.labeling.label_dataset import load_label_dataset
+    from scripts.labeling.label_dataset import (
+        DATASET_VERSION_ENV,
+        DEFAULT_DATASET_KEY,
+        load_label_dataset,
+    )
 
+    # 다른 보고서 스크립트와 같은 관례로 데이터셋 버전 폴더에 쓴다. 예전 기본값이던
+    # `reports/` 루트는 버전 레이아웃 이전의 자리라 지금은 아무도 읽지 않는다.
+    version = os.getenv(DATASET_VERSION_ENV, DEFAULT_DATASET_KEY)
+    default_dir = ROOT / "reports" / "current" / version
     parser = argparse.ArgumentParser()
-    parser.add_argument("--oof", type=Path, default=Path("reports/model_candidate_oof.csv"))
-    parser.add_argument("--output", type=Path, default=Path("reports/explanation_viewer.html"))
+    parser.add_argument("--oof", type=Path, default=default_dir / "model_candidate_oof.csv")
+    parser.add_argument("--output", type=Path, default=default_dir / "explanation_viewer.html")
     args = parser.parse_args()
     rows, _ = load_label_dataset()
     records = build_explanation_records(rows, args.oof)

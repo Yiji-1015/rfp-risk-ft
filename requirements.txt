@@ -23,9 +23,6 @@ pyyaml>=6.0
 tqdm>=4.65.0
 pydantic>=2.0.0
 
-# Experiment Tracking
-mlflow>=2.8.0
-
 # Reports (검토용 엑셀 출력 전용. 실험 결과에는 영향을 주지 않는다)
 openpyxl>=3.1.0
 
