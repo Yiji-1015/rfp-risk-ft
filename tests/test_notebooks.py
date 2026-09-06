@@ -23,6 +23,7 @@ EXPECTED_NOTEBOOKS = {
     "15_finetuning.ipynb",
     "17_rerun_agreement.ipynb",
     "18_decision_structure.ipynb",
+    "19_training_recipes.ipynb",
 }
 
 
