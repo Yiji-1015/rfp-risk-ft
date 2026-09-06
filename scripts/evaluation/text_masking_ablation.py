@@ -8,8 +8,9 @@
 점수를 올리려는 실험이 아니다. 떨어지는 폭이 곧 답이다 — 작으면 내용으로도 잡힌다는
 뜻이고, 크면 새 발주처가 표기를 바꿀 때 무너진다는 뜻이다.
 
-효과와 잡음은 평균 차이만으로 가르지 않는다. 문서가 10개뿐이라 fold 분산이 크므로
-**10 fold 중 우세 fold 수**를 함께 본다(결정 2026-08-23의 판정 기준).
+효과와 잡음은 평균 차이만으로 가르지 않는다. 문서 수가 적어 fold 분산이 크므로
+**우세 fold 수**를 함께 본다(결정 2026-08-23의 판정 기준). 분모는 데이터셋의 문서 수라
+v4는 10, v5는 13이다 — 사전 등록한 비율(80%)을 그 분모에 맞춰 환산해서 쓴다.
 """
 
 from __future__ import annotations
@@ -115,12 +116,21 @@ def compare(baseline: Sequence[FoldResult], variant: Sequence[FoldResult]) -> di
 
 
 def render_markdown(report: dict[str, Any]) -> str:
+    # fold 수는 데이터셋마다 다르다(v4는 문서 10개, v5는 13개). 예전에는 10으로 박아둬서
+    # v5 결과가 `9/10`처럼 잘못 찍혔다. 실제로 잰 값에서 꺼내 쓴다.
+    fold_count = next(
+        arm["comparison"]["fold_count"]
+        for arms in report["specs"].values()
+        for mask, arm in arms.items()
+        if mask != BASELINE
+    )
     lines = [
         f"# {report['dataset_version']} 양식 신호 마스킹 ablation",
         "",
-        "- 평가: 동결 앵커 100건을 제외한 924건, 학습 8 / 검증 1 / 평가 1 문서 LODO 10-fold",
-        "- 규칙은 v4 원문 위에 **하나씩만** 적용한다. 누적하지 않는다.",
-        "- 값은 fold 단순 평균이며, 우세는 10 fold 중 기준선을 넘은 fold 수다.",
+        f"- 평가: 동결 앵커를 제외한 문서 단위 LODO {fold_count}-fold "
+        "(학습 n-2 / 검증 1 / 평가 1 문서)",
+        "- 규칙은 원문 위에 적용한다. `+`로 이은 팔은 겹쳐 적용한 탐색 결과다.",
+        f"- 값은 fold 단순 평균이며, 우세는 {fold_count} fold 중 기준선을 넘은 fold 수다.",
         f"- 명령: `$env:{DATASET_VERSION_ENV}='{report['dataset_version']}'; "
         "python -m scripts.evaluation.text_masking_ablation`",
         "",
@@ -194,7 +204,8 @@ def main() -> None:
             change = arms[mask]["comparison"]["macro_f1"]["difference"]
             print(
                 f"  {spec.name:<36} {mask:<8} macro F1 {arms[mask]['macro_f1']:.3f} "
-                f"({change:+.3f}, 우세 {arms[mask]['comparison']['fold_wins']}/10)"
+                f"({change:+.3f}, 우세 {arms[mask]['comparison']['fold_wins']}"
+                f"/{arms[mask]['comparison']['fold_count']})"
             )
         report["specs"][spec.name] = arms
 
