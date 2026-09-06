@@ -63,23 +63,28 @@ def get_anthropic_client() -> Any:
 # 동적 인출은 건마다 앵커가 달라져 캐시 프리픽스가 매번 깨지므로 넣으면 손해다(결정 29).
 CACHEABLE_RETRIEVALS = frozenset({"global"})
 
+# `none`은 앵커를 아예 넣지 않는다(zero-shot). v6 계열 실험이 쓰는 조건이다.
+NO_RETRIEVAL = "none"
+
 
 def build_batch_requests(
     samples: list[dict[str, Any]],
     retriever: PureTfidfAnchorRetriever,
     retrieval: str = "stratified",
+    system_prompt: str | None = None,
 ) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     requests = []
     cache_anchors = retrieval in CACHEABLE_RETRIEVALS
     traces = {}
     label_schema = LabelResult.model_json_schema()
+    prompt = system_prompt or SYSTEM_PROMPT
 
     for r in samples:
         uid = r["requirement_uid"]
         name = r["requirement_name"]
         text = r["raw_requirement_text"]
 
-        anchors = retriever.retrieve(r, strategy=retrieval)
+        anchors = [] if retrieval == NO_RETRIEVAL else retriever.retrieve(r, strategy=retrieval)
         traces[uid] = [
             {
                 "requirement_uid": a["requirement_uid"],
@@ -96,7 +101,7 @@ def build_batch_requests(
         system_blocks: list[dict[str, Any]] = [
             {
                 "type": "text",
-                "text": SYSTEM_PROMPT,
+                "text": prompt,
                 "cache_control": {"type": "ephemeral", "ttl": "5m"},
             }
         ]
@@ -154,7 +159,10 @@ def cmd_submit(args: argparse.Namespace) -> None:
     samples = all_samples[start_idx:end_idx]
 
     print(f"총 추출 표본: {len(samples)}건 ({start_idx + 1}번 ~ {min(end_idx, len(all_samples))}번)")
-    requests, traces = build_batch_requests(samples, retriever, retrieval=args.retrieval)
+    system_prompt = args.prompt.read_text(encoding="utf-8") if args.prompt else SYSTEM_PROMPT
+    requests, traces = build_batch_requests(
+        samples, retriever, retrieval=args.retrieval, system_prompt=system_prompt
+    )
 
     if not args.execute:
         print(f"\n[dry-run] {len(requests)}건의 배치 요청 생성 완료 (네트워크 호출 생략)")
@@ -173,6 +181,9 @@ def cmd_submit(args: argparse.Namespace) -> None:
         "created_at": batch.created_at.isoformat() if hasattr(batch.created_at, "isoformat") else str(batch.created_at),
         "request_count": len(requests),
         "retrieval": args.retrieval,
+        "prompt_version": PROMPT_VERSION if not args.prompt else args.prompt.stem,
+        "prompt_sha256": __import__("hashlib").sha256(system_prompt.encode("utf-8")).hexdigest(),
+        "model": DEFAULT_MODEL,
         "anchor_block_version": (
             CONSTANT_ANCHOR_BLOCK_VERSION
             if args.retrieval in CACHEABLE_RETRIEVALS
@@ -249,17 +260,24 @@ def cmd_download(args: argparse.Namespace) -> None:
             if res_type == "succeeded":
                 message = result.result.message
                 # output_config.format을 쓰면 응답은 text 블록에 순수 JSON으로 온다.
+                # 구조화 출력은 output_config.format을 쓰면 text 블록으로 오지만,
+                # 툴 기반으로 제출한 옛 배치는 tool_use 블록의 input으로 온다.
+                # 결과는 29일간 보관되므로 그 사이 파서가 바뀌어도 옛 배치를
+                # 읽을 수 있어야 한다(이미 과금된 호출이다).
                 text_blocks = [
                     c.text for c in message.content if getattr(c, "type", "") == "text"
+                ]
+                tool_inputs = [
+                    c.input
+                    for c in message.content
+                    if getattr(c, "type", "") == "tool_use"
                 ]
                 # 한 건의 스키마 위반이 전체 다운로드를 중단시키면 안 된다.
                 # API 호출은 이미 과금됐으므로 실패 건도 원문과 함께 기록해
                 # 재시도와 원인 분석이 가능하게 한다.
                 failure = None
                 label_obj = None
-                if not text_blocks:
-                    failure = ("EmptyOutput", "구조화 출력 text 블록 없음", "")
-                else:
+                if text_blocks:
                     try:
                         label_obj = LabelResult.model_validate_json(text_blocks[0])
                     except ValidationError as exc:
@@ -268,6 +286,17 @@ def cmd_download(args: argparse.Namespace) -> None:
                             " ".join(str(exc).split())[:400],
                             text_blocks[0][:2000],
                         )
+                elif tool_inputs:
+                    try:
+                        label_obj = LabelResult.model_validate(tool_inputs[0])
+                    except ValidationError as exc:
+                        failure = (
+                            "ValidationError",
+                            " ".join(str(exc).split())[:400],
+                            json.dumps(tool_inputs[0], ensure_ascii=False)[:2000],
+                        )
+                else:
+                    failure = ("EmptyOutput", "구조화 출력 블록 없음(text/tool_use)", "")
 
                 if failure is None:
                     record = {
@@ -320,9 +349,12 @@ def main():
     parser.add_argument("--execute", action="store_true", help="실제 API 호출")
     parser.add_argument(
         "--retrieval",
-        choices=["stratified", "similarity", "global"],
+        choices=["stratified", "similarity", "global", NO_RETRIEVAL],
         default="stratified",
-        help="앵커 인출 방식. global만 앵커 블록이 system에 실려 캐시된다.",
+        help="앵커 인출 방식. none이면 zero-shot. global만 앵커 블록이 system에 실려 캐시된다.",
+    )
+    parser.add_argument(
+        "--prompt", type=Path, help="시스템 프롬프트 파일. 없으면 코드의 v5를 쓴다.",
     )
 
     args = parser.parse_args()

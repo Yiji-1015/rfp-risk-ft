@@ -39,14 +39,39 @@ TFIDF_MEMBERS = {
     "sv": "soft_vote_pred",
 }
 
+# 파인튜닝 멤버 태그는 `모델 크기 + seed + 마스킹` 으로 유일해야 한다. 예전에는
+# `ftL`·`ft42`·`ftM`으로 뭉뚱그려 같은 태그에 여러 실행이 들어왔고, 마지막 하나만
+# 남고 나머지는 조용히 사라졌다(large seed 7·13, 마스킹 seed 3개, KoELECTRA,
+# KoBigBird). 이름이 겹치면 지우지 말고 멈춘다.
+SIZE_CODES = {"small": "S", "base": "B", "large": "L"}
+ROBERTA = "klue/roberta-"
+
+
+def member_tag(config: dict[str, Any]) -> str:
+    """실행 설정에서 유일한 멤버 태그를 만든다.
+
+    기준 계열인 `klue/roberta-*`만 크기 약자(`ftS`·`ftB`·`ftL`)를 쓴다. 다른 계열은
+    이름 앞부분을 쓴다 — `kobigbird-bert-base`처럼 `base`로 끝나는 이름이 있어서
+    크기만 보면 roberta-base와 겹친다.
+    """
+    model = config["model"]
+    if model.startswith(ROBERTA):
+        size = SIZE_CODES.get(model[len(ROBERTA):].split("-")[0])
+        if size:
+            return f"ft{size}{config['seed']}{'M' if config.get('mask') else ''}"
+    stem = model.split("/")[-1].split("-")[0][:6]
+    return f"{stem}{config['seed']}{'M' if config.get('mask') else ''}"
+
+
 # 후보 조합. 점수를 보고 늘리지 않는다 — 계열을 섞는다는 원칙과 파인튜닝 멤버 수를
-# 바꿔보는 것까지가 사전에 정한 범위다.
+# 바꿔보는 것까지가 사전에 정한 범위다. 이름만 유일 태그로 바꿨고 구성은 그대로다
+# (`ft7`→`ftB7`, `ftL`→`ftL42`, `ftM`→`ftB13M`. 옛 태그가 실제로 가리키던 실행이다).
 CANDIDATE_COMBOS = (
-    ("wc",), ("ftL",), ("ft7",), ("sv",),
-    ("wc", "ft7", "ftL"), ("wc", "e5", "ftL"), ("e5", "ft7", "ftL"),
-    ("sv", "ft7", "ftL"), ("wc", "e5", "ft7"), ("wc", "ch", "ftL"),
-    ("wc", "ftL", "ftM"), ("ch", "e5", "ftL"), ("wc", "e5", "ftM"),
-    ("e5", "ftL", "ftM"), ("wc", "ch", "e5"), ("wc", "ch", "e5", "ft7", "ftL"),
+    ("wc",), ("ftL42",), ("ftB7",), ("sv",),
+    ("wc", "ftB7", "ftL42"), ("wc", "e5", "ftL42"), ("e5", "ftB7", "ftL42"),
+    ("sv", "ftB7", "ftL42"), ("wc", "e5", "ftB7"), ("wc", "ch", "ftL42"),
+    ("wc", "ftL42", "ftB13M"), ("ch", "e5", "ftL42"), ("wc", "e5", "ftB13M"),
+    ("e5", "ftL42", "ftB13M"), ("wc", "ch", "e5"), ("wc", "ch", "e5", "ftB7", "ftL42"),
 )
 
 
@@ -62,10 +87,19 @@ def load_members(runs_path: Path, oof_path: Path) -> tuple[dict[str, dict[str, s
         config = run["config"]
         if config["fold"] != -1 or not run["results"][0].get("predictions"):
             continue
-        size = config["model"].split("-")[-1]
-        tag = {"small": "ftS", "large": "ftL"}.get(size, f"ft{config['seed']}")
-        if config["mask"]:
-            tag = "ftM"
+        # 2분류 실행은 `검토필요`를 예측하므로 3분류 투표에 섞이면 안 된다.
+        # 섞이면 어느 라벨과도 맞지 않아 단독 macro F1이 0.27까지 떨어진다.
+        if config.get("binary"):
+            continue
+        tag = member_tag(config)
+        if tag in members:
+            # `run_id`는 기록할 때 박힌 값이라 겹친 실행을 정확히 지목한다.
+            # 옛 기록에는 없으므로 설정으로 대신 설명한다.
+            here = run.get("run_id") or f"{config['model']} seed{config['seed']}"
+            raise ValueError(
+                f"멤버 태그가 겹칩니다: {tag} ({here}). 같은 모델·seed·마스킹 실행이 "
+                f"둘 이상입니다. {runs_path}에서 오래된 쪽을 지우거나 설정을 구분하세요."
+            )
         members[tag] = {
             item["requirement_uid"]: item["pred"]
             for fold in run["results"]
@@ -229,15 +263,15 @@ def main() -> None:
     g = [gold[uid] for uid in uids]
     d = [documents[uid] for uid in uids]
 
+    # 목록을 손으로 적지 않는다. 적어두면 새 실행이 표에서 조용히 빠진다 —
+    # 멤버 태그가 겹쳐 실행이 사라지던 것과 같은 종류의 사고다.
+    display = {
+        "wc": "word+char TF-IDF", "ch": "char TF-IDF",
+        "e5": "TF-IDF+E5", "sv": "soft voting (TF-IDF 3종)",
+    }
     singles = {
-        name: describe(g, [members[tag][uid] for uid in uids], d)
-        for tag, name in (
-            ("wc", "word+char TF-IDF"), ("ch", "char TF-IDF"), ("e5", "TF-IDF+E5"),
-            ("sv", "soft voting (TF-IDF 3종)"), ("ftS", "FT small"), ("ft42", "FT base seed42"),
-            ("ft7", "FT base seed7"), ("ft13", "FT base seed13"), ("ftL", "FT large"),
-            ("ftM", "FT base +마스킹"),
-        )
-        if tag in members
+        display.get(tag, tag): describe(g, [members[tag][uid] for uid in uids], d)
+        for tag in sorted(members, key=lambda t: (t not in display, t))
     }
     ensembles = {
         "+".join(combo): describe(g, vote(members, combo, uids), d)
@@ -249,7 +283,7 @@ def main() -> None:
         "evaluated": len(uids),
         "singles": singles,
         "ensembles": ensembles,
-        "overlap": overlap(members, gold, uids, "wc", "ft7"),
+        "overlap": overlap(members, gold, uids, "wc", "ftB7"),
         "nested": nested_selection(members, gold, documents, uids),
     }
 

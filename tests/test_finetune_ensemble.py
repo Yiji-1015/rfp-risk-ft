@@ -1,4 +1,16 @@
-from scripts.evaluation.finetune_ensemble import describe, nested_selection, overlap, vote
+import json
+
+import pytest
+
+from scripts.evaluation.finetune_ensemble import (
+    TFIDF_MEMBERS,
+    describe,
+    load_members,
+    member_tag,
+    nested_selection,
+    overlap,
+    vote,
+)
 
 MEMBERS = {
     "a": {"u1": "통상수용", "u2": "견적반영", "u3": "계약·질의검토"},
@@ -55,3 +67,69 @@ def test_nested_selection_reports_which_combination_each_round_picked():
     # 문서가 둘이므로 선택도 두 번 일어난다.
     assert sum(result["selected"].values()) == 2
     assert set(result["selected"]) <= {"a", "b", "a+b+c"}
+
+
+class TestMemberTag:
+    """멤버 태그는 실행을 유일하게 가리켜야 한다.
+
+    예전 규칙은 크기와 seed를 뭉뚱그려 `ftL`·`ft42`·`ftM` 하나에 여러 실행이 들어왔고,
+    딕셔너리에 나중 것이 덮어써져 large seed 7·13과 마스킹 seed 3개가 조용히 사라졌다.
+    """
+
+    def test_roberta_sizes_get_short_codes(self):
+        assert member_tag({"model": "klue/roberta-large", "seed": 42}) == "ftL42"
+        assert member_tag({"model": "klue/roberta-base", "seed": 7}) == "ftB7"
+        assert member_tag({"model": "klue/roberta-small", "seed": 13}) == "ftS13"
+
+    def test_seeds_do_not_collide(self):
+        tags = {member_tag({"model": "klue/roberta-large", "seed": s}) for s in (42, 7, 13)}
+        assert len(tags) == 3
+
+    def test_masking_is_a_separate_member(self):
+        plain = member_tag({"model": "klue/roberta-base", "seed": 42})
+        masked = member_tag({"model": "klue/roberta-base", "seed": 42, "mask": "subject+ending+josa"})
+        assert plain != masked
+        assert masked.endswith("M")
+
+    def test_other_families_do_not_borrow_the_roberta_size_code(self):
+        # `kobigbird-bert-base`는 이름이 base로 끝나지만 roberta-base가 아니다.
+        big = member_tag({"model": "monologg/kobigbird-bert-base", "seed": 42})
+        assert big != member_tag({"model": "klue/roberta-base", "seed": 42})
+        assert member_tag({"model": "monologg/koelectra-base-v3-discriminator", "seed": 42}) != big
+
+
+class TestLoadMembersGuards:
+    def _write(self, tmp_path, configs):
+        runs = tmp_path / "runs.jsonl"
+        with runs.open("w", encoding="utf-8") as handle:
+            for config in configs:
+                handle.write(json.dumps({
+                    "config": {"fold": -1, "mask": None, **config},
+                    "results": [{"predictions": [{"requirement_uid": "u1", "pred": "통상수용"}]}],
+                }, ensure_ascii=False) + "\n")
+        oof = tmp_path / "oof.csv"
+        oof.write_text(
+            "requirement_uid,gold,test_document,"
+            + ",".join(TFIDF_MEMBERS.values())
+            + "\nu1,통상수용,d1," + ",".join(["통상수용"] * len(TFIDF_MEMBERS)) + "\n",
+            encoding="utf-8",
+        )
+        return runs, oof
+
+    def test_binary_runs_are_skipped(self, tmp_path):
+        # 2분류 실행은 `검토필요`를 예측하므로 3분류 투표에 들어가면 안 된다.
+        runs, oof = self._write(tmp_path, [
+            {"model": "klue/roberta-base", "seed": 42},
+            {"model": "klue/roberta-base", "seed": 42, "binary": True},
+        ])
+        members, _, _ = load_members(runs, oof)
+        assert "ftB42" in members
+        assert len([t for t in members if t.startswith("ftB42")]) == 1
+
+    def test_duplicate_runs_raise_instead_of_overwriting(self, tmp_path):
+        runs, oof = self._write(tmp_path, [
+            {"model": "klue/roberta-large", "seed": 42},
+            {"model": "klue/roberta-large", "seed": 42},
+        ])
+        with pytest.raises(ValueError, match="겹칩니다"):
+            load_members(runs, oof)
