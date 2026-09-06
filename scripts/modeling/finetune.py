@@ -35,6 +35,7 @@ from transformers import (
 )
 
 from scripts.evaluation.folds import make_lodo_folds
+from scripts.modeling.run_id import run_id
 from scripts.labeling.label_dataset import (
     DATASET_VERSION_ENV,
     DEFAULT_DATASET_KEY,
@@ -314,10 +315,19 @@ def main() -> None:
     version = os.getenv(DATASET_VERSION_ENV, DEFAULT_DATASET_KEY)
     output = args.output or ROOT / "reports" / "current" / version / "finetune_runs.jsonl"
     output.parent.mkdir(parents=True, exist_ok=True)
-    record = {"config": {**vars(args), "output": str(output)}, "device": str(device), "results": results}
+    config = {**vars(args), "output": str(output)}
+    # 실행을 유일하게 가리키는 이름을 **기록할 때** 붙인다. 읽는 쪽에서 설정을 보고
+    # 태그를 다시 만들면 규칙이 어긋날 때 조용히 겹치고, 겹친 실행은 딕셔너리에
+    # 덮어써져 사라진다(2026-09-06에 large seed 7·13과 마스킹 3개가 그렇게 없어졌다).
+    record = {
+        "run_id": run_id(config, version),
+        "config": config,
+        "device": str(device),
+        "results": results,
+    }
     with output.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(record, ensure_ascii=False, default=str) + "\n")
-    print(f"기록 추가: {output}")
+    print(f"기록 추가: {output}  (run_id={record['run_id']})")
 
 
 if __name__ == "__main__":
