@@ -23,10 +23,13 @@ from typing import Iterable
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE_DIR = ROOT / "RFP_data" / "md"
+# 새 문서는 원본에서 바로 읽는다. md는 예전 수동 변환본이다.
+EXTRA_SOURCE_DIR = ROOT / "RFP_data"
+SOURCE_SUFFIXES = (".md", ".hwp", ".xlsx")
 OUTPUT_DIR = ROOT / "data" / "processed"
 REVIEW_DIR = ROOT / "data" / "review"
 REPORT_DIR = ROOT / "reports" / "current"
-VERSION = "v0.3.0"
+VERSION = "v0.4.0"
 DATASET_VERSION = f"requirements_{VERSION}"
 
 ID_RE = re.compile(r"(?<![A-Z0-9])([A-Z]{2,8}(?:-+[A-Z0-9]{2,8})+)(?![A-Z0-9])")
@@ -73,7 +76,10 @@ DOCUMENTS = {
     },
     "생성형 AI 기반 침해대응체계 도입 및 구축 용역 제안요청서.md": {
         "document_id": "genai_incident_response",
-        "agency": None,
+        # 표지 기관명이 텍스트가 아니라 로고 이미지라 추출되지 않았다. 본문에서 확인된다
+        # — `KISA` 40회, `한국인터넷진흥원` 15회, 약칭 정의 `이하 "진흥원"`.
+        # 이 표의 다른 9개 기관명도 모두 손으로 적은 값이므로 같은 성격의 기재다(002).
+        "agency": "한국인터넷진흥원",
         "domain": "사이버보안",
     },
     "식약처_의약품 AI 심사 및 산업지원 체계 구축.md": {
@@ -90,6 +96,23 @@ DOCUMENTS = {
         "document_id": "kac_ai_work_platform",
         "agency": "한국공항공사",
         "domain": "공항·항공",
+    },
+    "대법원_사법부 AI 형사재판 및 양형지원 지능형 플랫폼 구축.hwp": {
+        "document_id": "supreme_court_sentencing",
+        "agency": "대법원",
+        "domain": "사법",
+    },
+    "한국석유공사_생성형 AI 플랫폼 구축 및 AX 개발.hwp": {
+        "document_id": "knoc_genai_platform",
+        "agency": "한국석유공사",
+        "domain": "에너지·자원",
+    },
+    "한국지역난방공사_AI 기반 플랜트 통합관리 시스템 구축.xlsx": {
+        "document_id": "kdhc_plant_integrated_mgmt",
+        # 표지에 기관명이 없다. 본문에서 확인된다 — `한국지역난방공사` 4회,
+        # `우리 공사` 99회, 정기점검보수·플랜트 통합관리 맥락(002의 KISA와 같은 기재).
+        "agency": "한국지역난방공사",
+        "domain": "에너지·열공급",
     },
     "한국철도공사_생성형 인공지능 시스템 구축 ISP·ISMP.md": {
         "document_id": "korail_genai_isp_ismp",
@@ -444,6 +467,18 @@ def write_review_queue(queue: list[dict[str, str]], output_path: Path) -> None:
         writer.writerows(queue)
 
 
+# 요구사항 ID가 담긴 셀의 라벨. 문서마다 표기가 다르다 —
+# `요구사항 고유번호`(대부분)·`요구사항 번호`(대법원)·`요구사항 ID`(일부 총괄표).
+# decisions-01 §3의 "셀 라벨 정규화" 단계이며, 여기 없는 표기는 요구사항을 통째로
+# 놓치므로 새 문서를 넣을 때 가장 먼저 확인할 자리다.
+ID_LABEL_SUBSTRINGS = ("요구사항고유번호", "요구사항번호")
+ID_LABEL_EXACT = frozenset({"요구사항ID", "고유번호"})
+
+
+def is_id_label(key: str) -> bool:
+    return any(part in key for part in ID_LABEL_SUBSTRINGS) or key in ID_LABEL_EXACT
+
+
 def row_value(row: list[Cell]) -> str:
     return clean_text("\n".join(cell.text for cell in row[1:]))
 
@@ -466,7 +501,7 @@ def find_requirement_id(table: Table) -> tuple[str | None, str | None]:
         if not row:
             continue
         key = key_text(row[0].text)
-        if "요구사항고유번호" in key or key in {"요구사항ID", "고유번호"}:
+        if is_id_label(key):
             for cell in row[1:]:
                 match = ID_RE.search(cell.text)
                 if match:
@@ -493,7 +528,7 @@ def split_requirement_blocks(table: Table) -> list[Table]:
         if not row:
             continue
         key = key_text(row[0].text)
-        if "요구사항고유번호" in key or key in {"요구사항ID", "고유번호"}:
+        if is_id_label(key):
             if any(ID_RE.search(cell.text) for cell in row[1:]):
                 marker_indexes.append(index)
 
@@ -514,12 +549,47 @@ def split_requirement_blocks(table: Table) -> list[Table]:
     return blocks
 
 
+def grid_to_table(grid: list[list[str]], index: int) -> Table:
+    """`행 → 셀 본문` 격자를 HTML 파서가 내놓는 `Table`과 같은 모양으로 바꾼다."""
+    rows = [[Cell(text=clean_text(cell)) for cell in row] for row in grid]
+    return Table(line=index, rows=rows, row_lines=[index] * len(rows))
+
+
+def read_source_tables(path: Path) -> tuple[list[Table], str, str]:
+    """원본에서 표를 읽는다.
+
+    :returns: (표 목록, 원본 SHA-256, `source_location` 접두어)
+
+    Markdown은 텍스트 해시를, 바이너리(`.hwp`·`.xlsx`)는 파일 바이트 해시를 쓴다.
+    HWP·XLSX는 표가 원본에 이미 격자로 있어 Markdown 변환을 거치지 않는다 —
+    decisions-01 §11.2가 경고한 변환 중 셀 경계 소실이 생길 자리가 없다.
+    """
+    suffix = path.suffix.lower()
+    if suffix == ".md":
+        markdown = path.read_text(encoding="utf-8")
+        digest = hashlib.sha256(markdown.encode("utf-8")).hexdigest()
+        return parse_tables(markdown), digest, "markdown_line"
+
+    digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    if suffix == ".hwp":
+        from scripts.data.hwp_tables import read_tables as read_hwp
+
+        grids = read_hwp(path)
+    elif suffix == ".xlsx":
+        from scripts.data.xlsx_tables import read_tables as read_xlsx
+
+        grids = read_xlsx(path)
+    else:
+        raise ValueError(f"지원하지 않는 원본 형식입니다: {path.name}")
+    tables = [grid_to_table(grid, index) for index, grid in enumerate(grids, start=1)]
+    return tables, digest, "table_index"
+
+
 def extract_document(path: Path, metadata: dict[str, str | None]) -> list[dict]:
-    markdown = path.read_text(encoding="utf-8")
-    source_sha256 = hashlib.sha256(markdown.encode("utf-8")).hexdigest()
+    source_tables, source_sha256, location_prefix = read_source_tables(path)
     records: list[dict] = []
 
-    for table_index, source_table in enumerate(parse_tables(markdown), start=1):
+    for table_index, source_table in enumerate(source_tables, start=1):
         for block_index, table in enumerate(split_requirement_blocks(source_table), start=1):
             source_requirement_id, adapter = find_requirement_id(table)
             if not source_requirement_id:
@@ -563,7 +633,7 @@ def extract_document(path: Path, metadata: dict[str, str | None]) -> list[dict]:
                     "raw_requirement_text": body,
                     "normalized_requirement_text": body,
                     "source_file": path.name,
-                    "source_location": f"markdown_line:{table.line}",
+                    "source_location": f"{location_prefix}:{table.line}",
                     "source_table_index": table_index,
                     "source_block_index": block_index,
                     "source_sha256": source_sha256,
@@ -757,9 +827,25 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    source_files = sorted(SOURCE_DIR.glob("*.md"), key=lambda path: path.name)
-    unknown = sorted(path.name for path in source_files if path.name not in DOCUMENTS)
-    missing = sorted(name for name in DOCUMENTS if not (SOURCE_DIR / name).exists())
+    # `md`는 통째로 훑어 미등록 파일을 잡아낸다. 원본 폴더에는 예전 변환의 원본
+    # (`.hwpx` 등)이 함께 있으므로 **등록된 이름만** 집는다.
+    markdown_files = sorted(SOURCE_DIR.glob("*.md"), key=lambda path: path.name)
+    unknown = sorted(path.name for path in markdown_files if path.name not in DOCUMENTS)
+
+    source_files = list(markdown_files)
+    missing: list[str] = []
+    for name in DOCUMENTS:
+        if name.lower().endswith(".md"):
+            if not (SOURCE_DIR / name).exists():
+                missing.append(name)
+            continue
+        path = EXTRA_SOURCE_DIR / name
+        if path.exists():
+            source_files.append(path)
+        else:
+            missing.append(name)
+    source_files.sort(key=lambda path: path.name)
+    missing.sort()
     if unknown or missing:
         raise SystemExit(f"source mapping mismatch: unknown={unknown}, missing={missing}")
 
@@ -769,7 +855,11 @@ def main() -> int:
         metadata = DOCUMENTS[path.name]
         document_records = extract_document(path, metadata)
         records.extend(document_records)
-        index_ids = extract_index_requirement_ids(path.read_text(encoding="utf-8"))
+        index_ids = (
+            extract_index_requirement_ids(path.read_text(encoding="utf-8"))
+            if path.suffix.lower() == ".md"
+            else []
+        )
         detail_ids = [row["requirement_id"] for row in document_records]
         index_comparisons[metadata["document_id"]] = compare_index_and_detail_ids(
             index_ids, detail_ids
