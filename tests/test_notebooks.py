@@ -24,6 +24,7 @@ EXPECTED_NOTEBOOKS = {
     "17_rerun_agreement.ipynb",
     "18_decision_structure.ipynb",
     "19_training_recipes.ipynb",
+    "20_boundary_cases.ipynb",
 }
 
 
