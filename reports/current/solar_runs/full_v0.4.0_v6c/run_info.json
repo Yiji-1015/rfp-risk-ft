@@ -1,0 +1,13 @@
+{
+  "model": "solar-pro4-260806",
+  "prompt_file": "C:\\Users\\nodap\\Desktop\\portfolio\\rfp-risk-ft\\notebooks\\prompts\\system_prompt_v6.txt",
+  "prompt_sha256": "77d8f8de2c9d49da9aea55105ae8190bc7b34c31178a6a1e5728a6f04719a6bf",
+  "prompt_version": "claude-rfp-risk-v6",
+  "retrieval": "none",
+  "hints_from": null,
+  "hint_count": 0,
+  "input_path": "C:\\Users\\nodap\\Desktop\\portfolio\\rfp-risk-ft\\data\\processed\\requirements_v0.4.0.jsonl",
+  "request_count": 1445,
+  "started_at": "2026-09-06T16:59:57.282657+00:00",
+  "base_url": "https://api.upstage.ai/v1"
+}

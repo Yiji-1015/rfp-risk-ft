@@ -44,7 +44,9 @@ def _write_run(tmp_path, name, rows):
 def runs_dir(tmp_path, monkeypatch):
     from scripts.labeling import build_label_dataset
 
-    monkeypatch.setattr(build_label_dataset, "RUNS_DIR", tmp_path)
+    # 실행 디렉터리가 `claude_runs`와 `claude_batches`로 갈려서 기준 경로 이름이
+    # `REPORTS_DIR`로 바뀌었다. 테스트는 그 아래에 바로 실행 폴더를 만든다.
+    monkeypatch.setattr(build_label_dataset, "REPORTS_DIR", tmp_path)
     return tmp_path
 
 

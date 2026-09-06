@@ -34,16 +34,19 @@ from scripts.labeling.label_schema import (
 from scripts.labeling.requirement_taxonomy import normalize_requirement_type
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_REQUIREMENTS = ROOT / "data" / "processed" / "requirements_v0.3.0.jsonl"
-DATASET_VERSION = "label_dataset_v4"
+DEFAULT_REQUIREMENTS = ROOT / "data" / "processed" / "requirements_v0.4.0.jsonl"
+DATASET_VERSION = "label_dataset_v6"
 DEFAULT_OUTPUT = ROOT / "data" / "labels" / f"{DATASET_VERSION}.jsonl"
-RUNS_DIR = ROOT / "reports" / "current" / "claude_runs"
+REPORTS_DIR = ROOT / "reports" / "current"
 
-# 전수 1,024건을 만든 실행들. Chunk 1 재실행 배치를 취소해서 경로가 섞여 있다(결정 27).
+# 전수를 만든 실행들. 경로가 `claude_runs`와 `claude_batches`로 갈려 있어 상대 경로로
+# 적는다. Chunk 1 재실행 배치를 취소해서 실행 경로도 섞여 있다(결정 27).
+#
+# 마지막 항목이 신규 3문서 421건이다. 프롬프트(v5)·앵커 풀(v2, sha256 일치)·인출
+# 전략(stratified)이 앞의 실행들과 같아서 한 데이터셋으로 합칠 수 있다. 조건이
+# 달랐다면 문서와 프롬프트가 얽혀 004(실행 경로 교란)를 새로 만들었을 것이다.
 SOURCE_RUNS: tuple[tuple[str, str], ...] = (
-    ("full_requirements_v0.2.0_fewshot_v5", "동기"),
-    ("batch_full_101_1024", "배치"),
-    ("batch_retry_4", "배치"),
+    ("claude_batches/full_v0.4.0_v6c", "배치"),
 )
 
 REQUIREMENT_FIELDS = (
@@ -80,8 +83,9 @@ def build_rows(
     corrections: list[dict[str, Any]] = []
     seen: dict[str, str] = {}
 
-    for run_name, execution_path in runs:
-        results = read_jsonl(RUNS_DIR / run_name / "results.jsonl")
+    for run_path, execution_path in runs:
+        run_name = Path(run_path).name
+        results = read_jsonl(REPORTS_DIR / run_path / "results.jsonl")
         for result in results:
             if result.get("status") != "ok":
                 continue
@@ -158,7 +162,7 @@ def main() -> None:
     parser.add_argument(
         "--expect",
         type=int,
-        default=1024,
+        default=1445,
         help="기대 건수. 다르면 실패한다. 0이면 검사하지 않는다.",
     )
     args = parser.parse_args()
@@ -192,9 +196,9 @@ def main() -> None:
             "sha256": sha256_of(args.requirements),
         },
         "source_runs": [
-            {"name": name, "execution_path": path,
-             "row_count": sum(1 for r in rows if r["source_run"] == name)}
-            for name, path in SOURCE_RUNS
+            {"name": Path(run_path).name, "execution_path": path,
+             "row_count": sum(1 for r in rows if r["source_run"] == Path(run_path).name)}
+            for run_path, path in SOURCE_RUNS
         ],
         "execution_path_counts": dict(Counter(r["execution_path"] for r in rows)),
         "requirement_type_counts": dict(
@@ -204,6 +208,18 @@ def main() -> None:
             Counter(r["requirement_type_source"] for r in rows)
         ),
         "primary_action_counts": dict(Counter(r["primary_action"] for r in rows)),
+        # 데이터셋 번호와 프롬프트 번호는 서로 다른 축이다. `label_dataset_v4`도
+        # 프롬프트 v5로 만들어졌다. 어떤 조건에서 나온 라벨인지 여기에 남긴다.
+        "labeling_conditions": {
+            "prompt_version": "claude-rfp-risk-v6c",
+            "prompt_file": "notebooks/prompts/system_prompt_v6.txt",
+            "prompt_sha256": sha256_of(ROOT / "notebooks" / "prompts" / "system_prompt_v6.txt"),
+            "retrieval": "none",
+            "anchor_pool": None,
+            "anchors_per_request": 0,
+            "hints": False,
+            "note": "zero-shot. 앵커를 넣지 않는다. 스키마 위반 6건은 같은 조건으로 동기 재시도해 회수했다.",
+        },
         "model_input": {
             "field": "model_text",
             "variant": "normalized-list",

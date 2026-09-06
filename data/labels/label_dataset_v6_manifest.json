@@ -1,0 +1,185 @@
+{
+  "dataset_version": "label_dataset_v6",
+  "built_at": "2026-09-06T18:11:28+00:00",
+  "row_count": 1445,
+  "schema_version": "4.0.0",
+  "requirements_source": {
+    "path": "data\\processed\\requirements_v0.4.0.jsonl",
+    "sha256": "0a83d457f04fa882fb355e829ea57a3cf55eb3b0a664cae1bb8593fb185a6b05"
+  },
+  "source_runs": [
+    {
+      "name": "full_v0.4.0_v6c",
+      "execution_path": "배치",
+      "row_count": 1445
+    }
+  ],
+  "execution_path_counts": {
+    "배치": 1445
+  },
+  "requirement_type_counts": {
+    "컨설팅": 29,
+    "제약사항": 85,
+    "데이터": 120,
+    "시스템장비구성": 107,
+    "인터페이스": 62,
+    "성능": 57,
+    "프로젝트관리": 195,
+    "프로젝트지원": 101,
+    "품질": 90,
+    "보안": 124,
+    "기능": 416,
+    "테스트": 57,
+    "기타": 2
+  },
+  "requirement_type_source_counts": {
+    "text": 1424,
+    "prefix": 19,
+    "none": 2
+  },
+  "primary_action_counts": {
+    "통상수용": 877,
+    "계약·질의검토": 187,
+    "견적반영": 381
+  },
+  "labeling_conditions": {
+    "prompt_version": "claude-rfp-risk-v6c",
+    "prompt_file": "notebooks/prompts/system_prompt_v6.txt",
+    "prompt_sha256": "77d8f8de2c9d49da9aea55105ae8190bc7b34c31178a6a1e5728a6f04719a6bf",
+    "retrieval": "none",
+    "anchor_pool": null,
+    "anchors_per_request": 0,
+    "hints": false,
+    "note": "zero-shot. 앵커를 넣지 않는다. 스키마 위반 6건은 같은 조건으로 동기 재시도해 회수했다."
+  },
+  "model_input": {
+    "field": "model_text",
+    "variant": "normalized-list",
+    "composition": "requirement_name + newline + normalized_requirement_text"
+  },
+  "rule_corrections": [
+    {
+      "requirement_uid": "defense_intelligent_platform:ECR-016",
+      "source_run": "full_v0.4.0_v6c",
+      "model": "통상수용",
+      "rule": "견적반영",
+      "blockers": [],
+      "cost_basis": "장비·인프라",
+      "reasoning": "KVM 스위치, 운영콘솔, 서버 연결 장치 등 규격이 명시된 하드웨어 장비 도입 요구로 「랙당 1개씩」「4사용자 30채널 이상」등 수량·규격으로 충족 가능하여 장비·인프라 원가로 견적반영하며 별도 blocker는 없음."
+    },
+    {
+      "requirement_uid": "defense_intelligent_platform:ECR-018",
+      "source_run": "full_v0.4.0_v6c",
+      "model": "견적반영",
+      "rule": "계약·질의검토",
+      "blockers": [
+        "라이선스·공급"
+      ],
+      "cost_basis": "라이선스",
+      "reasoning": "CC인증(EAL4) 및 방첩부대 보안기능점검표를 만족하는 서버접근통제 제품 조달이 필요하며, 「CC인증(EAL4) 및 보안기능확인서를 획득한 제품」요구로 실제 조달 가능 제품군이 제한될 수 있다. 라이선스·이중화 관리서버 비용이 견적에 반영되어야 한다.」"
+    },
+    {
+      "requirement_uid": "defense_intelligent_platform:SFR-054",
+      "source_run": "full_v0.4.0_v6c",
+      "model": "견적반영",
+      "rule": "계약·질의검토",
+      "blockers": [
+        "라이선스·공급",
+        "공급자종속"
+      ],
+      "cost_basis": "복합",
+      "reasoning": "「HDFS에 Encryption Zone을 설정」「SQL on Hadoop 수행 모니터링」등 Cloudera/Hortonworks류 특정 빅데이터 관리도구 기능과 거의 일치해 조달 가능 솔루션과 공급사가 제한될 수 있고, 이를 구현하려면 Hadoop 전문 아키텍트와 상용 클러스터관리·암호화 라이선스가 필요해 원가에 반영해야 한다.의"
+    },
+    {
+      "requirement_uid": "genai_incident_response:INR-002",
+      "source_run": "full_v0.4.0_v6c",
+      "model": "견적반영",
+      "rule": "통상수용",
+      "blockers": [],
+      "cost_basis": "없음",
+      "reasoning": "RAG 파이프라인 구축과 REST API/MCP 표준 인터페이스 연동은 기본 LLM·RAG 구축 역량 범위 내이며, 「응답 타임아웃·오류 코드 처리 기준」, 「오류 감지·알림·재시도 메커니즘」도 통상적 시스템 연동 설계 수준이다. 다만 악성코드분석·포렌식 등 다수 외부 도구별 규격 파악에는 침해대응 도메인 이해가 다소 필요하다."
+    },
+    {
+      "requirement_uid": "kac_ai_work_platform:PMR-009",
+      "source_run": "full_v0.4.0_v6c",
+      "model": "통상수용",
+      "rule": "견적반영",
+      "blockers": [],
+      "cost_basis": "장비·인프라",
+      "reasoning": "「사무환경 및 집기 비품, 개발에 필요한 장비(PC, S/W, 프로젝트 관리도구 등)는 제안사가 부담함」에 따라 장비·인프라 비용이 견적에 반영되어야 하나 통상적 사업수행 범위이며 blocker는 아니다."
+    },
+    {
+      "requirement_uid": "kdhc_plant_integrated_mgmt:PMR-006",
+      "source_run": "full_v0.4.0_v6c",
+      "model": "통상수용",
+      "rule": "견적반영",
+      "blockers": [],
+      "cost_basis": "장비·인프라",
+      "reasoning": "사무환경·집기비품·개발장비를 사업자가 부담하도록 명시되어 있어 「본 사업수행을 위한 사무환경 및 집기비품, 개발에 필요한 장비는 사업자 부담」이 견적반영 대상이며, 그 외 근무지·비품 제공 조건은 통상적 상주 계약 조건으로 통상수용 범위임.」."
+    },
+    {
+      "requirement_uid": "kexim_ai_platform:COR-006",
+      "source_run": "full_v0.4.0_v6c",
+      "model": "통상수용",
+      "rule": "견적반영",
+      "blockers": [],
+      "cost_basis": "고급·전문인력",
+      "reasoning": "법령에 따른 표준 SW사업정보 제출로 통상 범위이나, 「기능점수 측정 전문가 포함」은 기본 수행팀에 없는 전문인력 투입이 필요해 견적에 반영한다."
+    },
+    {
+      "requirement_uid": "kexim_ai_platform:PMR-013",
+      "source_run": "full_v0.4.0_v6c",
+      "model": "계약·질의검토",
+      "rule": "통상수용",
+      "blockers": [],
+      "cost_basis": "없음",
+      "reasoning": "과업변경 시 법령·지침에 따른 절차를 명시한 조항으로, 무제한 책임이나 원가 산정 불가 요소가 없어 통상적인 계약관리 절차이다."
+    },
+    {
+      "requirement_uid": "koen_ai_infrastructure:FUN-008",
+      "source_run": "full_v0.4.0_v6c",
+      "model": "통상수용",
+      "rule": "견적반영",
+      "blockers": [],
+      "cost_basis": "장비·인프라",
+      "reasoning": "데이터레이크 구조 설계·구현은 통상적 구축 범위이나 「대용량 데이터 저장 및 관리」 및 「확장 가능한 저장구조」를 위해 스토리지·인프라 장비 증설이 필요할 수 있어 견적반영으로 판단."
+    },
+    {
+      "requirement_uid": "koen_ai_infrastructure:PMR-010",
+      "source_run": "full_v0.4.0_v6c",
+      "model": "통상수용",
+      "rule": "견적반영",
+      "blockers": [],
+      "cost_basis": "장비·인프라",
+      "reasoning": "작업장소는 상호협의로 결정되고 보안요구사항 준수만 요구되며, 「사무환경 및 집기비품, 개발에 필요한 장비는 사업자가 부담함」은 통상적인 개발환경 구축 비용으로 견적에 반영 가능하다.ed"
+    },
+    {
+      "requirement_uid": "koen_ai_infrastructure:PMR-022",
+      "source_run": "full_v0.4.0_v6c",
+      "model": "통상수용",
+      "rule": "견적반영",
+      "blockers": [],
+      "cost_basis": "장비·인프라",
+      "reasoning": "「정보화기기, S/W, 사무용품 등은 사업자가 준비함」에 따라 PC 등 장비 구매 원가가 발생하며, 반출입 승인·보안규정 준수는 통상적인 공공 보안작업장 절차로 견적으로 감당 가능하다."
+    },
+    {
+      "requirement_uid": "mfds_drug_ai_review:PSR-006",
+      "source_run": "full_v0.4.0_v6c",
+      "model": "통상수용",
+      "rule": "견적반영",
+      "blockers": [],
+      "cost_basis": "외주·전문기관",
+      "reasoning": "「전문업체를 통하여 개인정보 영향평가와 정보보호컨설팅을 실시」로 명시되어 외부 전문기관 용역 비용으로 견적에 반영 가능하며, 법정 절차이므로 불확실성이 없다.​"
+    },
+    {
+      "requirement_uid": "supreme_court_sentencing:PMR-005",
+      "source_run": "full_v0.4.0_v6c",
+      "model": "통상수용",
+      "rule": "견적반영",
+      "blockers": [],
+      "cost_basis": "고급·전문인력",
+      "reasoning": "권장사항으로 명시된 PM 직급·소속 요건이며, 일정 수준 이상 직급의 관리자 투입은 「일정 수준 이상 직급의 직원」으로 고급 인력 투입 원가로 견적에 반영 가능하고 이행 불능이나 무제한 손해로 이어지지 않는다."
+    }
+  ],
+  "output_sha256": "27f8f2ed1477ba59d26fdb8e545e01285aa9b4149d06fede8f92e0c8d64568ed"
+}

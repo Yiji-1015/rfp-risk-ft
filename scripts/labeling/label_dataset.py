@@ -30,6 +30,7 @@ ROOT = Path(__file__).resolve().parents[2]
 DATASET_VERSION = "label_dataset_v4"
 DEFAULT_PATH = ROOT / "data" / "labels" / "label_dataset_v4.jsonl"
 FROZEN_SHA256 = "f8c1eb25e31ea28dc11ed3eb51faaf6cbbe61f128959e857e122c8fea1167b79"
+# 기본 데이터셋의 건수. 스펙마다 다르므로 실제 검사는 `spec["rows"]`로 한다.
 EXPECTED_ROWS = 1024
 
 DATASET_SPECS = {
@@ -38,12 +39,32 @@ DATASET_SPECS = {
         "path": ROOT / "data" / "labels" / "label_dataset_v3.jsonl",
         "sha256": "cacd75695b01b2d6a51bc2933041488c375c4212e7d43bb7dd113321cb7c7684",
         "has_model_text": False,
+        "rows": 1024,
     },
     "v4": {
         "dataset_version": DATASET_VERSION,
         "path": DEFAULT_PATH,
         "sha256": FROZEN_SHA256,
         "has_model_text": True,
+        "rows": 1024,
+    },
+    # 요구사항 v0.4.0(13문서 1,445건)에 같은 조건(프롬프트 v5 · anchor_pool_v2 ·
+    # 층화 인출)으로 라벨을 붙인 것. v4를 대체하지 않고 나란히 둔다.
+    "v5": {
+        "dataset_version": "label_dataset_v5",
+        "path": ROOT / "data" / "labels" / "label_dataset_v5.jsonl",
+        "sha256": "5ca9e2ea47663e9a0c0cafcc1fde38cfdd74a1da24f9c0b7a4e31c4d026e160c",
+        "has_model_text": True,
+        "rows": 1445,
+    },
+    # 같은 요구사항 1,445건에 프롬프트 v6c·zero-shot으로 라벨을 붙인 것.
+    # v5와 데이터·모델이 같고 프롬프트와 인출만 다르므로 두 축의 효과를 잰다.
+    "v6": {
+        "dataset_version": "label_dataset_v6",
+        "path": ROOT / "data" / "labels" / "label_dataset_v6.jsonl",
+        "sha256": "27f8f2ed1477ba59d26fdb8e545e01285aa9b4149d06fede8f92e0c8d64568ed",
+        "has_model_text": True,
+        "rows": 1445,
     },
 }
 DEFAULT_DATASET_KEY = "v4"
@@ -159,8 +180,9 @@ def load_label_dataset(
         if line.strip()
     ]
 
-    if len(rows) != EXPECTED_ROWS:
-        _fail(f"{EXPECTED_ROWS}건을 기대했으나 {len(rows)}건입니다.")
+    expected = spec.get("rows", EXPECTED_ROWS)
+    if len(rows) != expected:
+        _fail(f"{expected}건을 기대했으나 {len(rows)}건입니다.")
 
     uids = [r.get("requirement_uid") for r in rows]
     if len(set(uids)) != len(uids):
