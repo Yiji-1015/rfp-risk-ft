@@ -51,3 +51,42 @@
   - `reports/current/README.md`에 `v4/`·`v5/`·`claude_batches/`·`solar_runs/` 추가.
 
 - 산출물: 이 항목과 위 문서들. 코드·데이터·보고서는 변경 없음.
+
+## 2026-09-07 14:30
+
+- 결정: **v5 파인튜닝 재학습으로 v5 최고 구성이 정해졌다.** `wc + ftB7 + ftL42` 다수결이
+  fold 평균 macro F1 **0.671** / 통합 OOF 0.691이다. 기준선 `word+char` 0.6395 대비
+  **+0.031**로 측정 하한 0.016을 넘고, 중첩 선택 13/13이 같은 조합을 골랐다.
+  NEXT.md가 적어둔 기대치(~0.67)에 들어맞았다. gcube RTX 4090, 하이퍼파라미터는 v4 실행과 동일.
+
+  | 설정 | v4 fold 평균 | **v5 fold 평균** | v5 통합 OOF | 오답 | 경계 혼동 |
+  |---|---:|---:|---:|---:|---:|
+  | word+char TF-IDF | 0.614 | 0.640 | 0.654 | 401 | 127 |
+  | roberta-base seed 7 (`ftB7`) | 0.609 | 0.634 | 0.661 | 391 | 125 |
+  | roberta-large seed 42 (`ftL42`) | 0.617 | **0.655** | 0.677 | 379 | 134 |
+  | **wc + ftB7 + ftL42** | 0.643 | **0.671** | **0.691** | **356** | **117** |
+
+- 이유: 데이터 확충(+0.025)과 앙상블(+0.029, v4)이 측정 가능한 유일한 두 레버였고,
+  둘을 합치니 그대로 더해졌다(0.614 → 0.671). 오답 겹침은 v4와 같은 구조다 —
+  word+char 401 / 파인튜닝 391 중 둘 다 틀린 것 252, 오라클 정확도 0.813.
+
+- 관측 — **large 단독이 기준선보다 +0.016.** v4에서는 +0.003이었다. 하한에 정확히
+  걸치고 seed 하나뿐이라 "파인튜닝 단독이 기준선을 넘는다"고는 아직 적지 않는다.
+  v4의 large seed 범위가 0.024였다.
+
+- 관측 — **경계 혼동이 127 → 117로 10건 줄었다.** v4 앙상블은 98 → 97이었다. 처음으로
+  경계가 움직인 것처럼 보이지만, 앙상블 멤버의 seed에 따라 오가는 폭인지 seed 추가 실행
+  뒤에 다시 본다. 오답 감소 45건 중 35건은 여전히 경계 밖이다.
+
+- 조치 — `finetune_ensemble`이 요구하는 v5용 TF-IDF 후보 OOF가 없어서
+  `embeddings`(E5 캐시를 `multilingual-e5-small.v5.npz`로 따로 둠) → `candidate_ensemble`
+  순으로 만들었다. v5에서도 TF-IDF+E5 결합(0.619)과 soft voting(0.632)은 기준선을 넘지
+  않는다. `finetune_ensemble.py`의 보고서 머리말이 924건·10-fold를 하드코딩하고 있어
+  실제 평가 건수·문서 수를 쓰도록 고쳤다. v4 보고서는 같은 값으로 재현된다.
+
+- 다음: seed 범위. large seed 7·13, base seed 42·13을 같은 설정으로 돌려 앙상블 점수를
+  단일 값이 아니라 범위로 적는다. NEXT.md 1번에 명령을 적었다.
+
+- 산출물: `reports/current/v5/finetune_runs.jsonl`(gcube 커밋 `b7cf282`),
+  `reports/current/v5/{finetune_results.md,finetune_results.json,model_candidates.json,model_candidate_oof.csv}`,
+  `scripts/evaluation/finetune_ensemble.py` 보고서 머리말 수정.

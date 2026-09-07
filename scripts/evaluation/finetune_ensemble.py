@@ -186,7 +186,8 @@ def render(report: dict[str, Any]) -> str:
     lines = [
         f"# {report['dataset_version']} 파인튜닝 실행과 앙상블",
         "",
-        "- 평가: 동결 앵커 100건을 제외한 924건, 학습 8 / 검증 1 / 평가 1 문서 LODO 10-fold",
+        f"- 평가: 동결 앵커 100건을 제외한 {report['evaluated']}건, "
+        f"학습 {report['documents'] - 2} / 검증 1 / 평가 1 문서 LODO {report['documents']}-fold",
         "- 앙상블 멤버는 새로 학습하지 않는다. 저장된 OOF 예측을 다수결로 묶는다.",
         f"- 명령: `$env:{DATASET_VERSION_ENV}='{report['dataset_version']}'; "
         "python -m scripts.evaluation.finetune_ensemble`",
@@ -234,8 +235,9 @@ def render(report: dict[str, Any]) -> str:
         "",
         "## 조합 선택이 채점표에 기대는가",
         "",
-        f"문서 하나를 빼고 나머지 아홉으로 조합을 고른 뒤 뺀 문서에서 평가하면 **{n['macro_f1']:.3f}**이다.",
-        f"열 번의 선택 결과: {n['selected']}",
+        f"문서 하나를 빼고 나머지 {report['documents'] - 1}개로 조합을 고른 뒤 뺀 문서에서 평가하면 "
+        f"**{n['macro_f1']:.3f}**이다.",
+        f"{report['documents']}번의 선택 결과: {n['selected']}",
         "",
         "선택이 특정 문서에 기대고 있었다면 이 값이 내려앉는다. 같으면 조합이 안정적이라는 뜻이다.",
         "",
@@ -243,7 +245,7 @@ def render(report: dict[str, Any]) -> str:
         "",
         "- 파인튜닝 멤버의 seed를 바꾸면 앙상블 점수도 바뀐다. 하나의 값이 아니라 **범위**로 읽는다.",
         "- 앙상블은 오답을 줄이지만 **경계 혼동은 줄이지 않는다.** 위 표의 마지막 두 열을 함께 본다.",
-        "- 확정은 새 RFP에서 한다. 여기 모든 값은 같은 924건에서 나왔다.",
+        f"- 확정은 새 RFP에서 한다. 여기 모든 값은 같은 {report['evaluated']}건에서 나왔다.",
     ]
     return "\n".join(lines) + "\n"
 
@@ -281,6 +283,7 @@ def main() -> None:
     report = {
         "dataset_version": version,
         "evaluated": len(uids),
+        "documents": len(set(d)),
         "singles": singles,
         "ensembles": ensembles,
         "overlap": overlap(members, gold, uids, "wc", "ftB7"),

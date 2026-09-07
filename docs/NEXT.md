@@ -16,60 +16,56 @@ TF-IDF는 다시 돌리면 그만이지만 **GPU 파인튜닝은 예산을 그�
 
 ---
 
-## 1. 파인튜닝 v5 재학습 ← **여기부터**
+## 1. 파인튜닝 v5 — 두 멤버는 끝났고, seed 범위가 남았다 ← **여기부터**
 
-현재 `reports/current/v4/finetune_*`는 전부 **v4 라벨** 기준이다. v5 최고 구성은 미정.
+**2026-09-07 14:30 결과** (decisions-09): `wc + ftB7 + ftL42` fold 평균 **0.671** / 통합 0.691.
+기준선 0.6395 대비 +0.031, 중첩 선택 13/13 동일. `reports/current/v5/finetune_results.md`.
 
-**왜 이것부터인가.** 지금까지 측정된 개입 중 측정 하한(0.016)을 넘는 것이 둘뿐이고
-(파인튜닝+앙상블 +0.029, 문서 확충 +0.021), 그중 코드가 이미 있는 쪽이다.
-
-### 최소 실행 — 앙상블 최고 조합의 두 멤버
-
-v4 최고 앙상블은 `wc + ftB7 + ftL42`였다(fold 평균 0.643, 중첩 선택 10/10 안정).
-`wc`는 TF-IDF라 CPU로 이미 있다. GPU가 필요한 건 나머지 둘이다.
+남은 것은 **범위**다. 지금 값은 seed 하나씩이라 "0.671"이 아니라 "0.6x~0.6x"로 적어야 한다.
+v4에서 base seed 범위가 0.038, large가 0.024였다. 같은 설정으로 네 번 더 돌린다.
 
 ```bash
 RFP_DATASET_VERSION=v5 python -m scripts.modeling.finetune \
-  --model klue/roberta-base --seed 7 --fold -1 \
+  --model klue/roberta-large --seed 7 --fold -1 \
+  --epochs 6 --lr 2e-5 --batch-size 8 --grad-accum 4 --max-length 512
+```
+
+```bash
+RFP_DATASET_VERSION=v5 python -m scripts.modeling.finetune \
+  --model klue/roberta-large --seed 13 --fold -1 \
+  --epochs 6 --lr 2e-5 --batch-size 8 --grad-accum 4 --max-length 512
+```
+
+```bash
+RFP_DATASET_VERSION=v5 python -m scripts.modeling.finetune \
+  --model klue/roberta-base --seed 42 --fold -1 \
   --epochs 6 --lr 2e-5 --batch-size 32 --grad-accum 1 --max-length 512
 ```
 
 ```bash
 RFP_DATASET_VERSION=v5 python -m scripts.modeling.finetune \
-  --model klue/roberta-large --seed 42 --fold -1 \
-  --epochs 6 --lr 2e-5 --batch-size 8 --grad-accum 4 --max-length 512
+  --model klue/roberta-base --seed 13 --fold -1 \
+  --epochs 6 --lr 2e-5 --batch-size 32 --grad-accum 1 --max-length 512
 ```
 
-`--fold -1`이 13 fold 전체다(도움말에 "10 fold"라고 적혀 있는데 옛말이다).
-하이퍼파라미터는 v4 실행과 **같게 맞췄다** — 데이터셋만 바뀌어야 비교가 된다.
-`large`가 `batch-size 8 × grad-accum 4`인 것은 메모리 때문이며 유효 배치는 32로 같다.
+실행마다 `reports/current/v5/finetune_runs.jsonl`을 커밋·push한다. 컨테이너가 끝나면 사라진다.
 
-### 그다음 앙상블
+### 그다음 앙상블 (로컬 CPU, 몇 초)
 
 ```bash
 RFP_DATASET_VERSION=v5 python -m scripts.evaluation.finetune_ensemble
 ```
 
-앙상블은 **학습하지 않는다.** 저장된 OOF 예측을 묶기만 하므로 CPU로 몇 초다.
-멤버 태그가 겹치면 멈추게 돼 있으니(`member_tag`), 태그 충돌이 나면 seed나 마스킹
-표기를 확인한다.
+v5용 TF-IDF 후보 OOF(`model_candidate_oof.csv`)는 이미 만들어져 있다. 멤버 태그가 겹치면
+멈추게 돼 있으니(`member_tag`), 같은 seed를 두 번 돌렸다면 jsonl에서 오래된 줄을 지운다.
 
-### 기대치와 판정
+### 읽는 법
 
-| | v4 실측 | v5 기대 |
-|---|---:|---:|
-| word+char 단독 | 0.614 | **0.6395** (측정됨) |
-| 최고 단일 파인튜닝 `ftL42` | 0.617 | ? |
-| **최고 앙상블** | **0.643** | **~0.67** |
-
-- 점수는 **fold 평균 macro F1**으로 읽는다. 통합 OOF는 같은 모델에서도 0.02쯤 높다.
-- **측정 하한은 0.016이다**(fold 표준편차 0.0286, 평균의 SE 0.0079의 2배).
-  이보다 작은 차이는 잡음이니 해석하지 않는다.
-- 파인튜닝 **단독은 기준선과 거의 같을 것이다**(v4에서 0.617 대 0.614). 실망하지 말 것 —
-  이득은 섞을 때 나온다.
-- seed에 따라 흔들리므로 **단일 값이 아니라 범위로** 적는다.
-
----
+- 점수는 **fold 평균 macro F1**. 통합 OOF는 같은 모델에서도 0.02쯤 높다.
+- **측정 하한 0.016**(fold SE 0.0079의 2배). 이보다 작은 차이는 해석하지 않는다.
+- large 단독이 기준선보다 +0.016으로 하한에 걸쳐 있다. seed 7·13이 나오면
+  "파인튜닝 단독이 기준선을 넘는가"에 처음으로 답할 수 있다.
+- 경계 혼동이 127 → 117로 줄었다. seed 범위 안의 흔들림인지 이때 같이 본다.
 
 ## 2. 보조 헤드 — **이미 해봤고 효과가 없다** (순위 내림)
 
