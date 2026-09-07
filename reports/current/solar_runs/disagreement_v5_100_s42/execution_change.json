@@ -1,0 +1,8 @@
+{
+  "at": "2026-09-07T08:32:38.196378+00:00",
+  "completed_reused": 5,
+  "possibly_interrupted_uid": "ccrs_ai_platform:PSR-002",
+  "reason": "Serial worker interrupted while waiting; resume with concurrency 2. The in-flight request may be billed; its token usage is unavailable.",
+  "concurrency_before": 1,
+  "concurrency_after": 2
+}

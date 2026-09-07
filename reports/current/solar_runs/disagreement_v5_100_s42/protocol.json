@@ -1,0 +1,164 @@
+{
+  "experiment": "solar-disagreement-v5-100-s42-v1",
+  "dataset": "v5",
+  "seed": 42,
+  "members": [
+    "wc",
+    "ftB7",
+    "ftL42"
+  ],
+  "settings": {
+    "model": "solar-pro4-260806",
+    "temperature": 0,
+    "reasoning_effort": "low",
+    "max_tokens": 4096
+  },
+  "base_url": "https://api.upstage.ai/v1",
+  "sampling": "document x distinct vote count; proportional largest remainder; without gold",
+  "sample_size": 100,
+  "eligible": 435,
+  "strata": [
+    {
+      "document": "ccrs_ai_platform",
+      "distinct_votes": 2,
+      "eligible": 37,
+      "sample": 9
+    },
+    {
+      "document": "ccrs_ai_platform",
+      "distinct_votes": 3,
+      "eligible": 2,
+      "sample": 1
+    },
+    {
+      "document": "defense_intelligent_platform",
+      "distinct_votes": 2,
+      "eligible": 54,
+      "sample": 12
+    },
+    {
+      "document": "genai_incident_response",
+      "distinct_votes": 2,
+      "eligible": 23,
+      "sample": 5
+    },
+    {
+      "document": "genai_incident_response",
+      "distinct_votes": 3,
+      "eligible": 2,
+      "sample": 0
+    },
+    {
+      "document": "incheon_airport_digital_work",
+      "distinct_votes": 2,
+      "eligible": 19,
+      "sample": 4
+    },
+    {
+      "document": "incheon_airport_digital_work",
+      "distinct_votes": 3,
+      "eligible": 3,
+      "sample": 1
+    },
+    {
+      "document": "kac_ai_work_platform",
+      "distinct_votes": 2,
+      "eligible": 19,
+      "sample": 4
+    },
+    {
+      "document": "kac_ai_work_platform",
+      "distinct_votes": 3,
+      "eligible": 2,
+      "sample": 0
+    },
+    {
+      "document": "kangwon_land_genai",
+      "distinct_votes": 2,
+      "eligible": 10,
+      "sample": 2
+    },
+    {
+      "document": "kdhc_plant_integrated_mgmt",
+      "distinct_votes": 2,
+      "eligible": 55,
+      "sample": 13
+    },
+    {
+      "document": "kdhc_plant_integrated_mgmt",
+      "distinct_votes": 3,
+      "eligible": 5,
+      "sample": 1
+    },
+    {
+      "document": "kexim_ai_platform",
+      "distinct_votes": 2,
+      "eligible": 41,
+      "sample": 9
+    },
+    {
+      "document": "knoc_genai_platform",
+      "distinct_votes": 2,
+      "eligible": 20,
+      "sample": 5
+    },
+    {
+      "document": "knoc_genai_platform",
+      "distinct_votes": 3,
+      "eligible": 6,
+      "sample": 1
+    },
+    {
+      "document": "koen_ai_infrastructure",
+      "distinct_votes": 2,
+      "eligible": 21,
+      "sample": 5
+    },
+    {
+      "document": "korail_genai_isp_ismp",
+      "distinct_votes": 2,
+      "eligible": 11,
+      "sample": 3
+    },
+    {
+      "document": "mfds_drug_ai_review",
+      "distinct_votes": 2,
+      "eligible": 48,
+      "sample": 11
+    },
+    {
+      "document": "mfds_drug_ai_review",
+      "distinct_votes": 3,
+      "eligible": 3,
+      "sample": 1
+    },
+    {
+      "document": "supreme_court_sentencing",
+      "distinct_votes": 2,
+      "eligible": 50,
+      "sample": 12
+    },
+    {
+      "document": "supreme_court_sentencing",
+      "distinct_votes": 3,
+      "eligible": 4,
+      "sample": 1
+    }
+  ],
+  "retrieval": "none",
+  "hints": "none",
+  "prompt_basis": "claude-rfp-risk-v5 + quotation format only",
+  "adoption": "valid Solar result -> derive_primary_action; failed/unattempted -> original ensemble",
+  "interpretation": "Exploratory v5 silver-label agreement. v5 used few-shot; Solar is zero-shot. Not a provider-only comparison or independent real-world accuracy.",
+  "sources_sha256": {
+    "labels": "5ca9e2ea47663e9a0c0cafcc1fde38cfdd74a1da24f9c0b7a4e31c4d026e160c",
+    "runs": "d2ca3c3f10b6136843e2f944f75cd2485fce193faae6b2fe437563c737ab8fc4",
+    "oof": "8bcca93a0a9cf052df0c858b09e5b5f30d6274c02fdb68fc38213e573a1d55b8"
+  },
+  "files_sha256": {
+    "requests.jsonl": "9b5657948abd33b5215b767d99b6757922fda7e1bbc1e3648757f8fa916e8ef2",
+    "evaluation.json": "b2eff2b087cc1a50e047faa2af7cf1b445980bc98f145763c34376eddcbde5af",
+    "system_prompt.txt": "15e61555cea815acaa6475abfa0824be1f787cf0d27cdcbf7a4084bd6d2f7ef6",
+    "schema.json": "05fb6961a128fef94aaafa8595b259493d55a7752b1ba0eafadea5f3042ba220"
+  }
+}

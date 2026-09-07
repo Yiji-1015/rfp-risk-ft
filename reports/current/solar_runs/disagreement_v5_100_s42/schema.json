@@ -1,0 +1,81 @@
+{
+  "additionalProperties": false,
+  "properties": {
+    "requirement_uid": {
+      "minLength": 1,
+      "title": "Requirement Uid",
+      "type": "string"
+    },
+    "primary_action": {
+      "enum": [
+        "통상수용",
+        "견적반영",
+        "계약·질의검토"
+      ],
+      "title": "Primary Action",
+      "type": "string"
+    },
+    "blockers": {
+      "items": {
+        "enum": [
+          "범위·책임",
+          "검수·성능기준",
+          "기술실현성",
+          "라이선스·공급",
+          "공급자종속"
+        ],
+        "type": "string"
+      },
+      "title": "Blockers",
+      "type": "array"
+    },
+    "cost_basis": {
+      "enum": [
+        "없음",
+        "고급·전문인력",
+        "장비·인프라",
+        "라이선스",
+        "외부인증",
+        "외주·전문기관",
+        "복합"
+      ],
+      "title": "Cost Basis",
+      "type": "string"
+    },
+    "domain_dependency": {
+      "enum": [
+        "높음",
+        "보통",
+        "낮음"
+      ],
+      "title": "Domain Dependency",
+      "type": "string"
+    },
+    "build_difficulty": {
+      "enum": [
+        "높음",
+        "보통",
+        "낮음"
+      ],
+      "title": "Build Difficulty",
+      "type": "string"
+    },
+    "reasoning": {
+      "maxLength": 300,
+      "minLength": 1,
+      "title": "Reasoning",
+      "type": "string"
+    }
+  },
+  "required": [
+    "requirement_uid",
+    "primary_action",
+    "blockers",
+    "cost_basis",
+    "domain_dependency",
+    "build_difficulty",
+    "reasoning"
+  ],
+  "title": "LabelResult",
+  "type": "object"
+}

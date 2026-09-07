@@ -1,0 +1,15 @@
+{
+  "checked_at": "2026-09-07T08:35:19.372008+00:00",
+  "source": "https://www.upstage.ai/pricing/api",
+  "currency": "USD",
+  "input_per_million": 0.03,
+  "cached_input_per_million": 0.006,
+  "output_per_million": 0.12,
+  "valid_until_utc": "2026-09-11T00:00:00Z",
+  "vat_included": false,
+  "planning_input_token_proxy": 863032,
+  "planning_method": "UTF-8 byte count plus per-request overhead used as a conservative estimate, not measured model tokens. No cache assumed.",
+  "output_token_cap_per_request": 4096,
+  "planning_cost_usd_no_retries": 0.075043,
+  "billing_note": "Interrupted in-flight request and SDK retries may incur charges without recorded usage."
+}

@@ -1,0 +1,1 @@
+{"at": "2026-09-07T08:48:51.320634+00:00", "completed_reused": 56, "possibly_interrupted_uids": ["kexim_ai_platform:INR-DTL-003", "kexim_ai_platform:PSR-002"], "reason": "Replace two-request batches with a rolling queue, still concurrency 2. In-flight requests may be billed without recorded usage."}

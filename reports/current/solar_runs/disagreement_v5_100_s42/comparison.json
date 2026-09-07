@@ -1,0 +1,1569 @@
+{
+  "requested": 100,
+  "attempted": 100,
+  "ok": 82,
+  "failed": 18,
+  "not_attempted": 0,
+  "changes": {
+    "fixed": 16,
+    "harmed": 17,
+    "kept_correct": 43,
+    "still_wrong": 24
+  },
+  "net_correct": -1,
+  "sample_before": {
+    "pooled_macro_f1": 0.5877250054218174,
+    "fold_mean_macro_f1": 0.5099895830665061,
+    "per_label_f1": {
+      "통상수용": 0.6436781609195402,
+      "견적반영": 0.4528301886792453,
+      "계약·질의검토": 0.6666666666666666
+    },
+    "errors": 40,
+    "boundary_errors": 9
+  },
+  "sample_after": {
+    "pooled_macro_f1": 0.5652744943525084,
+    "fold_mean_macro_f1": 0.5114147290617879,
+    "per_label_f1": {
+      "통상수용": 0.6666666666666666,
+      "견적반영": 0.5185185185185185,
+      "계약·질의검토": 0.5106382978723404
+    },
+    "errors": 41,
+    "boundary_errors": 8
+  },
+  "full_oof_before": {
+    "pooled_macro_f1": 0.6912711835752908,
+    "fold_mean_macro_f1": 0.6713947088554829,
+    "per_label_f1": {
+      "통상수용": 0.8348306841741534,
+      "견적반영": 0.5916398713826366,
+      "계약·질의검토": 0.6473429951690821
+    },
+    "errors": 356,
+    "boundary_errors": 117
+  },
+  "full_oof_after_only_sample_replaced": {
+    "pooled_macro_f1": 0.6889325147374911,
+    "fold_mean_macro_f1": 0.6731212069648381,
+    "per_label_f1": {
+      "통상수용": 0.8348183687457162,
+      "견적반영": 0.5971107544141252,
+      "계약·질의검토": 0.6348684210526315
+    },
+    "errors": 357,
+    "boundary_errors": 116
+  },
+  "rule_corrections": 0,
+  "valid_quotes": 50,
+  "usage": {
+    "prompt_tokens": 122935,
+    "completion_tokens": 157848
+  },
+  "cases": [
+    {
+      "requirement_uid": "ccrs_ai_platform:CNR-002",
+      "document": "ccrs_ai_platform",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "견적반영",
+        "통상수용",
+        "통상수용"
+      ],
+      "after": "통상수용",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "목표시스템 아키텍처 설계, 데이터 거버넌스 체계 설계, 품질 기준 수립, 요건 명세화 및 검증은 일반적인 ISP·AI 컨설팅 범위로, 구체적 수치 목표나 특정 제품·라이선스 요구, 무제한 재작업 조건이 없어 기본 수행팀이 수행 가능하다. 별도 고급 인력·장비·인증이 필요하지 않아 추가 원가 없음. 발주기관 고유 업무 지식 없이도 거버넌스 프레임워크 설계는 가능해 도메인 의존도 낮음, 순수 구축 난이도는 보통 수준."
+    },
+    {
+      "requirement_uid": "ccrs_ai_platform:COR-006",
+      "document": "ccrs_ai_platform",
+      "gold": "견적반영",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "통상수용",
+        "계약·질의검토",
+        "계약·질의검토"
+      ],
+      "after": "통상수용",
+      "change": "still_wrong",
+      "api_ok": true,
+      "reasoning": "사업 기간 내 IDC 상면료·전용회선료를 제안서 및 사업비에 포함하도록 명시한 요구사항으로, '27년 이후 비용은 제외하여 범위가 한정됨. 구성도·연결 방안 제시와 폐쇄망 보안 준수 조건은 일반적인 네트워크 설계 수준에서 처리 가능하며, 구체적 성능 목표나 무제한 재작업, 조달 불확실 요소가 없음. 따라서 별도 원가 반영 없이 기본 수행팀이 통상 수용 가능."
+    },
+    {
+      "requirement_uid": "ccrs_ai_platform:INR-002",
+      "document": "ccrs_ai_platform",
+      "gold": "견적반영",
+      "baseline": "통상수용",
+      "votes": [
+        "계약·질의검토",
+        "통상수용",
+        "통상수용"
+      ],
+      "after": "통상수용",
+      "change": "still_wrong",
+      "api_ok": true,
+      "reasoning": "모델 추상화 레이어와 OpenAI API 호환, 설정 기반 매핑은 일반적인 아키텍처 설계·구현 범위로, 구체적 성능 수치나 특정 제품 지정, 무제한 재작업 조건이 없어 기본 수행팀이 수행 가능하다. 「모델 교체 또는 업그레이드 시 상위 서비스의 코드 수정 없이 설정 변경만으로 전환」은 표준적인 추상화 요구사항이며, 향후 정부 표준 대응도 설계상 고려사항일 뿐 현 시점 blocker가 아니다."
+    },
+    {
+      "requirement_uid": "ccrs_ai_platform:INR-004",
+      "document": "ccrs_ai_platform",
+      "gold": "통상수용",
+      "baseline": "견적반영",
+      "votes": [
+        "통상수용",
+        "견적반영",
+        "견적반영"
+      ],
+      "after": "계약·질의검토",
+      "change": "still_wrong",
+      "api_ok": true,
+      "reasoning": "「기존 콜센터 STT 엔진」의 실시간 스트리밍 출력 규격·프로토콜·세션 관리 방식이 특정되지 않아, 연동 인터페이스·화자 구분 신호·오류 코드 체계를 정의하기 전에 연계 범위를 먼저 확인해야 한다. 요구사항 자체는 ‘정의’ 수준이므로 추가 원가는 발생하지 않으나, 제안 전 STT 엔진 정보 확인이 없으면 정의 범위를 안전하게 산정할 수 없다."
+    },
+    {
+      "requirement_uid": "ccrs_ai_platform:PMR-001",
+      "document": "ccrs_ai_platform",
+      "gold": "계약·질의검토",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "계약·질의검토",
+        "견적반영"
+      ],
+      "after": "견적반영",
+      "change": "still_wrong",
+      "api_ok": true,
+      "reasoning": "PM은 「AI 플랫폼 또는 생성형 AI 관련 시스템 구축 사업에서 관리자(PM/PL) 경력」을 보유한 전문 인력으로 요구되어, 일반 PM 대비 고급 전문인력 단가로 견적반영 대상이다. 조직 구성안 제시, 인력 교체 절차(14일 전 통보·15일 내 교체), 품질 저하 금지 등은 표준 공공사업 관리 조건으로 기본 수행팀이 통상 수용하며 blocker는 없다."
+    },
+    {
+      "requirement_uid": "ccrs_ai_platform:PSR-002",
+      "document": "ccrs_ai_platform",
+      "gold": "계약·질의검토",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "계약·질의검토",
+        "계약·질의검토",
+        "견적반영"
+      ],
+      "after": "견적반영",
+      "change": "harmed",
+      "api_ok": true,
+      "reasoning": "「파트별 최소 1명의 기술 인력이 상주」, 「기술지원부서 및 전문 인력을 확보」, 「문제 해결 시까지 필요한 인력을 투입」 등 인력 상주 및 전문 인력 확보 요구가 기본 수행팀 범위를 넘어 추가 원가를 발생시키므로 견적반영 대상이다. SLA 기준과 장애 등급별 세부 시간이 기술협상 시 확정되나 구체적 수치가 없어 blocker는 아니다. 「문제 해결 시까지 필요한 인력 투입」은 무제한 의무로 해석될 여지가 있으나 중대한 결함 조건으로 한정되므로 통상 수용 가능하다."
+    },
+    {
+      "requirement_uid": "ccrs_ai_platform:PSR-003",
+      "document": "ccrs_ai_platform",
+      "gold": "계약·질의검토",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "계약·질의검토",
+        "계약·질의검토",
+        "견적반영"
+      ],
+      "after": "계약·질의검토",
+      "change": "kept_correct",
+      "api_ok": false,
+      "reasoning": null
+    },
+    {
+      "requirement_uid": "ccrs_ai_platform:QUR-001",
+      "document": "ccrs_ai_platform",
+      "gold": "통상수용",
+      "baseline": "견적반영",
+      "votes": [
+        "통상수용",
+        "견적반영",
+        "견적반영"
+      ],
+      "after": "견적반영",
+      "change": "still_wrong",
+      "api_ok": false,
+      "reasoning": null
+    },
+    {
+      "requirement_uid": "ccrs_ai_platform:SER-008",
+      "document": "ccrs_ai_platform",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "통상수용",
+        "견적반영"
+      ],
+      "after": "견적반영",
+      "change": "harmed",
+      "api_ok": true,
+      "reasoning": "「모델 파일 등록 시 해시값(SHA-256 이상) 검증」과 「외부에서 반입하는 모든 모델 패키지에 대해 악성코드 검사, 무결성 해시 확인(SHA-256 이상), 라이선스 검토를 수행」은 표준 보안 통제이며, 구체적 성능 수치나 무제한 재작업 조건이 없어 blocker 없음. 악성코드 검사 구현에 상용 솔루션 라이선스가 필요할 수 있어 비용 반영 가능."
+    },
+    {
+      "requirement_uid": "ccrs_ai_platform:SFR-002",
+      "document": "ccrs_ai_platform",
+      "gold": "견적반영",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "견적반영",
+        "계약·질의검토",
+        "계약·질의검토"
+      ],
+      "after": "견적반영",
+      "change": "fixed",
+      "api_ok": true,
+      "reasoning": "「HWP 파싱에 상용 솔루션 도입 시 해당 비용을 제안가에 포함」이라 명시되어 접근 방식에 따른 라이선스 비용이 발생하며, VLM/OCR 처리도 인프라 비용이 붙을 수 있다. 구체적 성능 수치 목표나 무제한 재작업 조건은 없어 blocker는 없다. 다중 포맷 파싱·구조 인식 청킹·검수 UI·승인 워크플로우까지 범위가 넓어 구축 난이도는 높고, 문서 유형별 청킹 규칙 설계에 일부 도메인 이해가 필요해 도메인 의존도는 보통이다."
+    },
+    {
+      "requirement_uid": "defense_intelligent_platform:DAR-001",
+      "document": "defense_intelligent_platform",
+      "gold": "견적반영",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "통상수용",
+        "계약·질의검토"
+      ],
+      "after": "견적반영",
+      "change": "fixed",
+      "api_ok": true,
+      "reasoning": "CC인증 DB 암호화 솔루션 도입, 암호화 키 관리체계, 가명처리 기술 지원은 모두 공공 보안 구축에서 표준적으로 수행되는 항목이다. 「CC인증을 받은 DB 암호화 솔루션을 통해 암호화하여 관리함」에 따라 CC인증 제품 선정·도입이 필요하며, 이는 라이선스 원가로 반영된다. 특정 제품이 지정되지 않아 공급 가능성은 확인 가능하나, 인증 제품 제약으로 공급자 선택 폭이 제한될 수 있다. 가명처리 기술 지원은 플랫폼 기능 개발 범위이며 별도 외부 인증·무한 재작업 조건은 없다."
+    },
+    {
+      "requirement_uid": "defense_intelligent_platform:DAR-003",
+      "document": "defense_intelligent_platform",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "견적반영",
+        "통상수용",
+        "통상수용"
+      ],
+      "after": "통상수용",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "「국방 및 각군, 외부기관의 출처별로 오너쉽을 식별」은 메타데이터 관리 기능이며, 「오류 내용을 전달하고 해결을 요청, 처리결과를 회신 받는 등의 프로세스」는 업무 흐름 설계 요구로 구체적 수치 목표나 무제한 재작업 조건이 없다. 데이터 변경 이력 관리도 표준 플랫폼 기능으로 기본 수행팀 범위 내 구현 가능하다."
+    },
+    {
+      "requirement_uid": "defense_intelligent_platform:ECR-012",
+      "document": "defense_intelligent_platform",
+      "gold": "계약·질의검토",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "계약·질의검토",
+        "계약·질의검토",
+        "견적반영"
+      ],
+      "after": "계약·질의검토",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "「스위칭 용량 : 양방향 51.2Tbps 이상」 등 구체적 성능 수치는 현행 상용 하이엔드 스위치로 충족 가능하나, 「국방데이터통합센터(DIDC)의 네트워크 장비 호환성 유지」는 기존 인프라 분석 전 공급 가능 벤더 범위가 제한될 수 있어 사전 확인이 필요하다. 「네트워크 구성에 필요한 GBIC은 사업수행사에서 제공」은 장비·인프라 원가로 반영한다."
+    },
+    {
+      "requirement_uid": "defense_intelligent_platform:PMR-001",
+      "document": "defense_intelligent_platform",
+      "gold": "계약·질의검토",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "통상수용",
+        "계약·질의검토"
+      ],
+      "after": "통상수용",
+      "change": "still_wrong",
+      "api_ok": true,
+      "reasoning": "프로젝트 관리 방법론 제시, 관리 도구 활용, 프로토타입 개발, 안정화 지원 등은 일반적인 사업관리 요구사항으로 기본 수행팀이 수행 가능하며 추가 원가 없음. 발주기관 시스템 사용 조건은 구체성이 부족하나 blocker로 보지 않음. 「프로젝트 관리 방법론을 통한 체계적인 사업관리 방안」, 「프로토타입을 개발」 등 표준적 내용임."
+    },
+    {
+      "requirement_uid": "defense_intelligent_platform:PMR-005",
+      "document": "defense_intelligent_platform",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "통상수용",
+        "계약·질의검토"
+      ],
+      "after": "통상수용",
+      "change": "kept_correct",
+      "api_ok": false,
+      "reasoning": null
+    },
+    {
+      "requirement_uid": "defense_intelligent_platform:PMR-007",
+      "document": "defense_intelligent_platform",
+      "gold": "계약·질의검토",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "통상수용",
+        "계약·질의검토",
+        "계약·질의검토"
+      ],
+      "after": "견적반영",
+      "change": "harmed",
+      "api_ok": true,
+      "reasoning": "국방 CBD 방법론 v2.0 및 MND-AF v1.5 산출물 작성, MND-ARMS 등록·적합성 평가 대응, PMIS 등록 등 국방 표준 공정 매핑이 요구된다. 「아키텍처 산출물 현행화 작업을 위한 SW, 전문가 등은 사업수행사가 조치」와 같이 국방 특화 방법론·아키텍처 전문가가 필요하여 기본 수행팀 범위를 넘는 고급·전문인력 원가가 발생한다. 보완 요구는 「합의한 일정에 제출」로 bounded이고 적합성 평가는 표준 검토 절차이므로 blocker는 아니다."
+    },
+    {
+      "requirement_uid": "defense_intelligent_platform:SFR-007",
+      "document": "defense_intelligent_platform",
+      "gold": "견적반영",
+      "baseline": "견적반영",
+      "votes": [
+        "견적반영",
+        "견적반영",
+        "통상수용"
+      ],
+      "after": "견적반영",
+      "change": "kept_correct",
+      "api_ok": false,
+      "reasoning": null
+    },
+    {
+      "requirement_uid": "defense_intelligent_platform:SFR-015",
+      "document": "defense_intelligent_platform",
+      "gold": "통상수용",
+      "baseline": "견적반영",
+      "votes": [
+        "견적반영",
+        "통상수용",
+        "견적반영"
+      ],
+      "after": "통상수용",
+      "change": "fixed",
+      "api_ok": true,
+      "reasoning": "통합검색 기능은 여러 플랫폼의 카탈로그를 통합하고 속성 필터링과 유사도 검색을 요구하나, 구체적 성능 수치나 무제한 재작업 조건이 없으며, 표준 검색 엔진과 퍼지 검색으로 구현 가능해 기술적 실현성 문제 없음. 추가 고급 인력이나 라이선스 불필요. 도메인 지식은 플랫폼 카탈로그 구조 이해 정도라 낮음."
+    },
+    {
+      "requirement_uid": "defense_intelligent_platform:SFR-022",
+      "document": "defense_intelligent_platform",
+      "gold": "견적반영",
+      "baseline": "견적반영",
+      "votes": [
+        "통상수용",
+        "견적반영",
+        "견적반영"
+      ],
+      "after": "통상수용",
+      "change": "harmed",
+      "api_ok": true,
+      "reasoning": "데이터 권한·감사·워크플로우 권한 관리 등은 표준 보안 플랫폼 기능으로 기본 수행팀 범위다. 「전군 사용자 정보관리체계(MOUS)와의 LDAP/AD 연계를 통한 통합인증(SSO) 구현」은 특정 군 체계 연계이나 LDAP/AD 기반 SSO는 일반 패턴이므로, 연계 규격·접근 가능성이 확인되면 통상 수용 가능하다. 다만 수행사 도메인 지식이 없으므로 MOUS 연계 방식·네트워크·인증 프로토콜 확인은 입찰 전 질의검토가 안전하다. 구체적 수치 목표나 무제한 재작업 조건은 없어 blocker는 아니다."
+    },
+    {
+      "requirement_uid": "defense_intelligent_platform:SFR-024",
+      "document": "defense_intelligent_platform",
+      "gold": "견적반영",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "통상수용",
+        "견적반영"
+      ],
+      "after": "통상수용",
+      "change": "still_wrong",
+      "api_ok": true,
+      "reasoning": "「데이터 품질 활동 수행을 위한 데이터 품질관리 기능 제공」 등 프로파일링, 검증 규칙, DQI/CTQ, 대시보드 등 표준 기능만 요구하며, 구체적 수치 목표나 무제한 재작업 조건, 특정 제품·라이선스 요구가 없어 기본 수행팀 범위로 구현 가능하다."
+    },
+    {
+      "requirement_uid": "defense_intelligent_platform:SFR-032",
+      "document": "defense_intelligent_platform",
+      "gold": "견적반영",
+      "baseline": "견적반영",
+      "votes": [
+        "견적반영",
+        "견적반영",
+        "통상수용"
+      ],
+      "after": "통상수용",
+      "change": "harmed",
+      "api_ok": true,
+      "reasoning": "「실시간 데이터 처리 엔진」, 「데이터 카탈로그」, 「데이터 리니지」 등 일반적 데이터 플랫폼 기능 요구로, 특정 제품·성능 수치·무제한 재작업 조건이 없어 blocker 없음. 기본 수행팀이 오픈소스 또는 자체 개발로 구현 가능해 추가 원가 없음. 발주기관 고유 업무 지식 없이 구축 가능한 일반 기능이며, 구현 난이도는 보통 수준."
+    },
+    {
+      "requirement_uid": "defense_intelligent_platform:SFR-064",
+      "document": "defense_intelligent_platform",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "견적반영",
+        "통상수용",
+        "통상수용"
+      ],
+      "after": "통상수용",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "로그 모니터링, 대시보드, 알림, 감사로그 및 위변조 방지 기능은 클라우드 플랫폼의 일반적인 기능으로, 구체적 수치 목표나 특정 제품·라이선스 요구가 없어 기본 수행팀이 구현 가능하다. 위변조 방지는 설계·구현 과제이나 고급 인력이나 외부 인증이 필요하지 않아 추가 원가 없음."
+    },
+    {
+      "requirement_uid": "genai_incident_response:INR-010",
+      "document": "genai_incident_response",
+      "gold": "통상수용",
+      "baseline": "견적반영",
+      "votes": [
+        "통상수용",
+        "견적반영",
+        "견적반영"
+      ],
+      "after": "통상수용",
+      "change": "fixed",
+      "api_ok": true,
+      "reasoning": "MCP는 공개 프로토콜로 조달 불확실성이 없고, 구체적 수치 목표나 무제한 재작업 조건도 없어 blocker는 없다. 에이전트 호출 API 정의·인증·로그·오류처리·Fallback·확장성·버전관리 등은 표준 인터페이스 설계 및 구현 범위로, 기본 수행팀이 통상 수행 가능한 수준이다. 발주기관 고유 업무 지식보다 기술 인터페이스 설계 역량이 중심이므로 domain_dependency는 낮음, 구축 난이도는 보통으로 본다."
+    },
+    {
+      "requirement_uid": "genai_incident_response:PSR-006",
+      "document": "genai_incident_response",
+      "gold": "통상수용",
+      "baseline": "견적반영",
+      "votes": [
+        "견적반영",
+        "통상수용",
+        "견적반영"
+      ],
+      "after": "통상수용",
+      "change": "fixed",
+      "api_ok": true,
+      "reasoning": "「소프트웨어 진흥법」 제46조에 따른 SW사업정보 데이터 작성·제출은 법정 행정 보고 의무로, 구체적 수치 목표·성능 기준·특정 제품 조달이 없고 기본 수행팀이 통상 처리한다. 투입공수(M/M) 기반 실적 정보 제출은 이미 M/M 방식 대가 산정 사업의 자연스러운 산출물이므로 별도 고급 인력·라이선스·외부 인증 등 추가 원가가 발생하지 않는다. 따라서 blocker 없이 통상수용한다."
+    },
+    {
+      "requirement_uid": "genai_incident_response:SER-009",
+      "document": "genai_incident_response",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "계약·질의검토",
+        "통상수용",
+        "통상수용"
+      ],
+      "after": "통상수용",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "DB 암호화, 백업 격리, 접근통제, 인증, 로그 저장 등은 일반적인 보안 조치로 기본 수행팀이 수행 가능. 「가명정보 처리 가이드라인」 준수는 공개된 지침으로 별도 전문 인력 없이 준수 가능. 구체적 수치 목표나 무제한 재작업 조건 없어 blocker 없음. 추가 원가도 발생하지 않음."
+    },
+    {
+      "requirement_uid": "genai_incident_response:SFR-004",
+      "document": "genai_incident_response",
+      "gold": "견적반영",
+      "baseline": "견적반영",
+      "votes": [
+        "견적반영",
+        "계약·질의검토",
+        "견적반영"
+      ],
+      "after": "견적반영",
+      "change": "kept_correct",
+      "api_ok": false,
+      "reasoning": null
+    },
+    {
+      "requirement_uid": "genai_incident_response:TER-001",
+      "document": "genai_incident_response",
+      "gold": "계약·질의검토",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "견적반영",
+        "계약·질의검토",
+        "계약·질의검토"
+      ],
+      "after": "계약·질의검토",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "「오케스트레이터 포함 복합 멀티스텝 분석 시 30초 이내 최종 결과 반환」은 구체적 수치 목표로, 멀티스텝 분석 구성과 인프라 조건에서 달성 가능성을 사전 확인해야 한다. 테스트셋 6,000건 구축은 침해대응 도메인 전문가 투입이 필요하고, 8개 지표 Judge 모델 자동 채점은 AI/ML 고급 기술자 영역이다. 6종 sLLM의 구체적 모델명이 명시되지 않아 평가 도구 설계 시 대상 범위 확인이 필요하다."
+    },
+    {
+      "requirement_uid": "incheon_airport_digital_work:COR-003",
+      "document": "incheon_airport_digital_work",
+      "gold": "통상수용",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "통상수용",
+        "계약·질의검토",
+        "계약·질의검토"
+      ],
+      "after": "통상수용",
+      "change": "fixed",
+      "api_ok": true,
+      "reasoning": "감리 대응은 정보시스템 감리 가이드에 따른 표준 절차로, 산출물 대비표 작성·제출 및 감리 결과 보완·재작성 요청은 공공 IT 사업의 통상적 범위다. '특별한 사유가 없는 한 수용' 조건이 있고 구체적 수치 목표나 무제한 무상 재작업 명시도 없어 기본 수행팀이 통상 처리한다. 별도 고급 인력·장비·라이선스 추가 원가는 발생하지 않는다."
+    },
+    {
+      "requirement_uid": "incheon_airport_digital_work:PMR-008",
+      "document": "incheon_airport_digital_work",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "견적반영",
+        "계약·질의검토"
+      ],
+      "after": "통상수용",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "원격지 개발은 선택사항이며 공사 제공 장소에서 무상 작업 가능하므로 추가 원가 없음. 보안 지침 제28조 및 제28조의2 준수는 원격 개발 시 적용 조건으로, 원격 개발을 강제하지 않아 입찰 전 확인 필요한 blocker 아님. 별도 장비·S/W 부담은 원격 개발 선택 시 계약상대자 부담이나 기본 수행팀은 현장 근무로 회피 가능."
+    },
+    {
+      "requirement_uid": "incheon_airport_digital_work:PSR-002",
+      "document": "incheon_airport_digital_work",
+      "gold": "견적반영",
+      "baseline": "통상수용",
+      "votes": [
+        "견적반영",
+        "통상수용",
+        "통상수용"
+      ],
+      "after": "통상수용",
+      "change": "still_wrong",
+      "api_ok": true,
+      "reasoning": "준공 후 12개월 장애 대응·복구체계 운영, 중요 장애 시 즉각 조치, 주기적 모니터링·백업/복구·작업관리 지원은 구체적 수치 목표나 무제한 무상 재작업 조건이 없는 일반적 유지보수 범위다. 「신속한 대응」, 「즉각 조치」는 정성적 표현으로 달성 가능성 검증이 필요한 명시적 기준이 아니며, 기본 수행팀이 통상 처리할 수 있어 별도 원가 발생 요인이 없다."
+    },
+    {
+      "requirement_uid": "incheon_airport_digital_work:PSR-006",
+      "document": "incheon_airport_digital_work",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "계약·질의검토",
+        "통상수용"
+      ],
+      "after": "통상수용",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "소스코드 기술이전과 시스템 운영자의 자체 유지관리능력 배양을 위한 기술지원은 공공 SI 사업의 통상적 이행 범위에 속한다. 「개발된 응용프로그램의 기능을 보완하고자 할 경우 필요한 제반기술 사항을 지원」은 운영담당자 독자 처리 역량 확보를 위한 기술이전 맥락으로, 무제한·무상 재작업이나 구체적 수치 목표가 없어 기본 수행팀이 통상 처리한다. 별도 고급인력·라이선스·외부인증 등 추가 원가 요소도 관찰되지 않는다."
+    },
+    {
+      "requirement_uid": "incheon_airport_digital_work:SFR-011",
+      "document": "incheon_airport_digital_work",
+      "gold": "계약·질의검토",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "계약·질의검토",
+        "견적반영",
+        "계약·질의검토"
+      ],
+      "after": "계약·질의검토",
+      "change": "kept_correct",
+      "api_ok": false,
+      "reasoning": null
+    },
+    {
+      "requirement_uid": "kac_ai_work_platform:COR-001",
+      "document": "kac_ai_work_platform",
+      "gold": "계약·질의검토",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "통상수용",
+        "계약·질의검토",
+        "계약·질의검토"
+      ],
+      "after": "계약·질의검토",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "「사업 기간 중 관련 법률 및 고시가 변경되면 새로운 지침을 준수하여야 함」 및 「새로운 관련 지침 변경으로 인한 사업 지연은 전체 사업 기간에 불포함」 조건은 변경 발생 시 일정·원가 영향과 변경 관리 절차를 사전에 확인해야 안전하게 수용할 수 있어 blocker로 판단함. 그 외 법규 준수 목록, 개발보안·형상관리·표준 준수 등은 기본 수행팀이 통상 처리하는 범위이며 추가 원가 요소는 없음."
+    },
+    {
+      "requirement_uid": "kac_ai_work_platform:GW-011",
+      "document": "kac_ai_work_platform",
+      "gold": "견적반영",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "견적반영",
+        "통상수용"
+      ],
+      "after": "통상수용",
+      "change": "still_wrong",
+      "api_ok": true,
+      "reasoning": "ToDo 등록·필터·프로젝트 관리·권한 구분 등 전형적인 협업 도구 기능 요구로, 「개인 할 일과 프로젝트 연결 할 일을 통합 관리」, 「프로젝트ToDo는 최소2Depth 이상 등록」 등 구체적 기능 명세이나 AI·특수 기술이나 외부 인증·라이선스 이슈가 없다. 기본 수행팀이 통상 구현 가능한 범위이며, 발주기관 고유 업무 지식 없이도 설계·개발이 가능해 blocker 없이 통상수용한다."
+    },
+    {
+      "requirement_uid": "kac_ai_work_platform:GW-014",
+      "document": "kac_ai_work_platform",
+      "gold": "견적반영",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "계약·질의검토",
+        "계약·질의검토",
+        "견적반영"
+      ],
+      "after": "견적반영",
+      "change": "fixed",
+      "api_ok": true,
+      "reasoning": "「SW 화상회의에서 참석자별 발언을 실시간으로 음성 기록하여 텍스트로 변환, 다국어 회의도 실시간 번역 제공」 및 「AI가 중요한 내용을 정리하여 회의록 자동 생성」은 기본 LLM·RAG 범위를 넘는 실시간 음성인식·번역·요약 AI 역량을 요구한다. 구체적 수치 목표나 특정 제품이 명시되지 않아 blocker는 아니나, 실시간 음성처리 및 다국어 번역 연동은 고급 전문인력 또는 외부 AI 서비스 검토가 필요해 견적반영 대상이다."
+    },
+    {
+      "requirement_uid": "kac_ai_work_platform:PSR-001",
+      "document": "kac_ai_work_platform",
+      "gold": "계약·질의검토",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "계약·질의검토",
+        "통상수용",
+        "계약·질의검토"
+      ],
+      "after": "통상수용",
+      "change": "harmed",
+      "api_ok": true,
+      "reasoning": "기술이전 계획 수립·제출, 소스코드 이관, 운영담당자 대상 기술지원, 하자보수 기간 내 지원 등은 기본 수행팀이 통상 수행하는 범위다. '공사와 협의하여 결정'이라는 문구가 있으나 이는 공공 RFP에서 기술이전 계획 조정 절차로 일반적이며, 구체적 수치목표·무한재작업·조달불확실성·특정시스템 연계범위 불명확 등 blocker 조건은 관찰되지 않는다. 별도 고급인력·라이선스·외부인증·외주 등 추가 원가 요소도 없다."
+    },
+    {
+      "requirement_uid": "kangwon_land_genai:PMR-004",
+      "document": "kangwon_land_genai",
+      "gold": "견적반영",
+      "baseline": "통상수용",
+      "votes": [
+        "견적반영",
+        "통상수용",
+        "통상수용"
+      ],
+      "after": "견적반영",
+      "change": "fixed",
+      "api_ok": true,
+      "reasoning": "기능점수 측정 전문가 포함은 기본 수행팀 범위를 넘는 전문 인력 투입이 필요하므로 견적에 반영한다. 소프트웨어 사업정보 데이터 작성·제출 및 SPIR-KR 안내 문서 참조, 단계별 산출물 리스트 명시는 행정·문서 준수 사항으로 통상 수행 가능하다. 별도 기술적 blocker는 없다."
+    },
+    {
+      "requirement_uid": "kangwon_land_genai:PSR-002",
+      "document": "kangwon_land_genai",
+      "gold": "계약·질의검토",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "계약·질의검토",
+        "계약·질의검토",
+        "통상수용"
+      ],
+      "after": "계약·질의검토",
+      "change": "kept_correct",
+      "api_ok": false,
+      "reasoning": null
+    },
+    {
+      "requirement_uid": "kdhc_plant_integrated_mgmt:COR-004",
+      "document": "kdhc_plant_integrated_mgmt",
+      "gold": "통상수용",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "통상수용",
+        "계약·질의검토",
+        "계약·질의검토"
+      ],
+      "after": "통상수용",
+      "change": "fixed",
+      "api_ok": true,
+      "reasoning": "표준 SOA 기술(SOAP, UDDI, WSDL) 준수, 공통 컴포넌트 활용계획, 방법론 준수, 하드웨어/OS 비종속, 감독 협의, 연계 시스템 영향 금지, ActiveX·하드코딩 배제 등은 모두 기본 수행팀이 통상 처리하는 개발 제약사항이다. 구체적 수치 목표나 조달 불확실 제품, 무제한 재작업 조건도 없어 blocker는 없다. 추가 원가도 발생하지 않는다."
+    },
+    {
+      "requirement_uid": "kdhc_plant_integrated_mgmt:INR-002",
+      "document": "kdhc_plant_integrated_mgmt",
+      "gold": "견적반영",
+      "baseline": "견적반영",
+      "votes": [
+        "통상수용",
+        "견적반영",
+        "견적반영"
+      ],
+      "after": "견적반영",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "「SAP ECC 6.0 연계를 위한 SAP 컨설턴트 및 ABAP 개발자」, 「CBO 분석 및 설계」, 「STD, CBO 개발 및 EAI 작성」은 기본 수행팀 범위를 넘는 전문 인력이 필요하므로 견적에 반영한다. 요구 내용이 명확하고 실현 가능한 기술 범위이며, 무제한 재작업이나 달성 불가능 수치 목표가 없어 blocker는 아니다. SAP ECC 6.0 특정 제품 명시로 공급 가능 업체가 제한될 수 있다."
+    },
+    {
+      "requirement_uid": "kdhc_plant_integrated_mgmt:PER-001",
+      "document": "kdhc_plant_integrated_mgmt",
+      "gold": "계약·질의검토",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "계약·질의검토",
+        "통상수용",
+        "계약·질의검토"
+      ],
+      "after": "계약·질의검토",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "「모든 기능은 요청하는 시간으로 부터 3,000ms 내에 결과를 보여주도록 구현」은 구체적 수치 목표이나 '모든 기능'이라는 포괄적 범위와 대용량 처리 시 달성 가능성을 먼저 확인해야 한다. 기능 범위와 데이터 볼륨에 따라 기술적 실현성 및 성능 기준 충족 여부를 계약 전 질의·검토해야 하는 blocker에 해당한다."
+    },
+    {
+      "requirement_uid": "kdhc_plant_integrated_mgmt:PMR-001",
+      "document": "kdhc_plant_integrated_mgmt",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "계약·질의검토",
+        "통상수용",
+        "통상수용"
+      ],
+      "after": "통상수용",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "착수계·과업수행계획서 제출 및 PM 선임서류, WBS, 인력투입계획, 보안·청렴 서약서 등은 공공 IT 사업의 표준적인 수행계획 수립·제출 요구로, 기본 수행팀의 PM이 통상 처리한다. 구체적 수치 목표나 무제한 재작업 조건, 조달 불확실 제품, 기술 실현성 검증 필요 사항이 없어 blocker는 없다. 별도 고급 인력·장비·라이선스·외부 인증도 요구되지 않아 추가 원가 없음."
+    },
+    {
+      "requirement_uid": "kdhc_plant_integrated_mgmt:SER-003",
+      "document": "kdhc_plant_integrated_mgmt",
+      "gold": "통상수용",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "통상수용",
+        "계약·질의검토",
+        "계약·질의검토"
+      ],
+      "after": "통상수용",
+      "change": "fixed",
+      "api_ok": true,
+      "reasoning": "보안위규 처리 기준은 심각·중대·보통·경미 등급별 조치사항을 정의한 발주기관 보안 관리 지침으로, 「보안위규 사항 - 심각 (처리기준 : 사업참여 제한, 위규자 중징계...)」 등 구체적 수치 목표나 기술 실현성 검증이 필요한 조건이 아니다. 특정 제품·모델·장비·라이선스 조달이 요구되지 않으며, 기본 수행팀이 보안 관리 준수 차원에서 통상 처리할 수 있어 blocker 및 추가 원가 모두 없음."
+    },
+    {
+      "requirement_uid": "kdhc_plant_integrated_mgmt:SER-006",
+      "document": "kdhc_plant_integrated_mgmt",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "계약·질의검토",
+        "견적반영"
+      ],
+      "after": "통상수용",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "비밀번호·백신·내PC지킴이 등 보안 설정과 SSL/TLS·VPN·VM·전송자료 암호화, 국가 표준 알고리즘 적용, 구간 암호화 등은 기본 수행팀이 구현 가능한 일반적 요구사항이며 무제한 재작업이나 달성 가능성 검증이 필요한 구체적 수치 목표가 없음. 「사전 정해진 데이터 형식만 전달」은 발주기관 제공 전제로 통상 수용 가능하며, 별도 고급 인력·장비·라이선스 추가 원가가 발생하지 않음."
+    },
+    {
+      "requirement_uid": "kdhc_plant_integrated_mgmt:SFR-002",
+      "document": "kdhc_plant_integrated_mgmt",
+      "gold": "계약·질의검토",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "견적반영",
+        "계약·질의검토",
+        "계약·질의검토"
+      ],
+      "after": "계약·질의검토",
+      "change": "kept_correct",
+      "api_ok": false,
+      "reasoning": null
+    },
+    {
+      "requirement_uid": "kdhc_plant_integrated_mgmt:SFR-007",
+      "document": "kdhc_plant_integrated_mgmt",
+      "gold": "견적반영",
+      "baseline": "견적반영",
+      "votes": [
+        "통상수용",
+        "견적반영",
+        "견적반영"
+      ],
+      "after": "통상수용",
+      "change": "harmed",
+      "api_ok": true,
+      "reasoning": "설비 BOM 등록/수정/삭제/이력/복제 기능은 기본 수행팀 범위 내. (CNR-002)의 O/H 대상 설비마스터 BOM 구성 DB화 방안 제시 및 수행 용역은 도메인 지식이 필요하나, 분석·설계·구현이 포함되어 기본 수행팀이 수행 가능. 별도 원가 발생 요소 없음. 단, O/H 대상 설비마스터 범위 불명확 시 질의 필요."
+    },
+    {
+      "requirement_uid": "kdhc_plant_integrated_mgmt:SFR-014",
+      "document": "kdhc_plant_integrated_mgmt",
+      "gold": "견적반영",
+      "baseline": "견적반영",
+      "votes": [
+        "통상수용",
+        "견적반영",
+        "견적반영"
+      ],
+      "after": "견적반영",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "「SAP 실시간 연계」는 표준 연동 가능하나 전문 인력·라이선스 비용 발생 가능, 「창고 및 보관위치 QR 코드 발행 및 부착 용역 포함」은 물리적 작업으로 별도 원가 필요. 입출고 수정 시 결재 승인 및 감사 로그 영구 보관은 일반 기능으로 blocker 아님. 추가 원가 복합, 도메인 의존도 낮음, 구축 난이도 보통."
+    },
+    {
+      "requirement_uid": "kdhc_plant_integrated_mgmt:SFR-028",
+      "document": "kdhc_plant_integrated_mgmt",
+      "gold": "계약·질의검토",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "통상수용",
+        "견적반영"
+      ],
+      "after": "통상수용",
+      "change": "still_wrong",
+      "api_ok": true,
+      "reasoning": "「전산화 방안 제시」는 설계 단계의 산출물로 기본 수행팀이 처리 가능하며, 「SAP ERP와 동일한 소수점 처리 라이브러리/로직」 적용은 SAP의 소수점 처리 규칙을 재현하는 수준으로 해석되어 별도 라이선스나 외부 인증 없이 구현 가능하다. 다차원 분류·이력 관리·일괄적용·규칙 설정 등은 일반적인 데이터베이스 및 설정 기능 개발 범위에 속한다. 따라서 blocker는 없으며 추가 원가도 발생하지 않는다."
+    },
+    {
+      "requirement_uid": "kdhc_plant_integrated_mgmt:SFR-044",
+      "document": "kdhc_plant_integrated_mgmt",
+      "gold": "통상수용",
+      "baseline": "견적반영",
+      "votes": [
+        "통상수용",
+        "견적반영",
+        "견적반영"
+      ],
+      "after": "통상수용",
+      "change": "fixed",
+      "api_ok": true,
+      "reasoning": "「차수(이력)는 제한없이 증가」는 무제한 이력 증가를 요구하나 일반적인 이력·비교 관리 구현 범위이며, 무제한 재작업이나 기술 실현성 검증 필요 조건으로 보지 않는다. SAP 연계 불필요로 연계 불확실성도 없다. 지사/본사 역할 구분, 예산 등록·조정·확정·긴급 신청·실적 관리 등은 일반 웹 개발 범위로 고급 인력·별도 장비·라이선스 추가가 필요하지 않다. 발주기관 고유 업무 용어(주관부서(과)/종류 등) 이해에 약간의 도메인 지식이 필요해 도메인 의존성은 보통, 순수 구축 난이도도 보통이다."
+    },
+    {
+      "requirement_uid": "kdhc_plant_integrated_mgmt:SFR-063",
+      "document": "kdhc_plant_integrated_mgmt",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "통상수용",
+        "견적반영"
+      ],
+      "after": "견적반영",
+      "change": "harmed",
+      "api_ok": true,
+      "reasoning": "「Real Time Annotate Collaboration 기능 추가 · 단일 파일(성과물/VP) 동시에 검토의견 입력 · 공통의견 한번 입력으로 전체파일에 반영」은 기본 CRUD를 넘는 실시간 협업 기능으로, WebSocket 기반 동기화·충돌 해결·실시간 입력창 생성 등에 고급·전문 인력 투입이 필요하다. HWP 저장 기능은 라이브러리/라이선스 확인이 필요할 수 있다. 알람 로직(14일, 토·일·공휴일 산입하지 않고 15일째 알람 ON)은 명확한 업무 규칙으로 구현 가능하다."
+    },
+    {
+      "requirement_uid": "kdhc_plant_integrated_mgmt:SFR-067",
+      "document": "kdhc_plant_integrated_mgmt",
+      "gold": "통상수용",
+      "baseline": "견적반영",
+      "votes": [
+        "통상수용",
+        "견적반영",
+        "견적반영"
+      ],
+      "after": "통상수용",
+      "change": "fixed",
+      "api_ok": true,
+      "reasoning": "「프로젝트 폴더 분류는 표준 분류체계 내용대로 생성(OBS, FBS, PBS로 구성)」, 「설계 품질등급(1, 2, 3) 설정 기능(사업규모, 기간, 계약금액으로 자동설정)」 등 플랜트 건설 도메인 용어와 업무 규칙이 다수 포함되어 있어 발주기관 도메인 지식 없이는 구조 설계가 어렵다. 기능 목록은 방대하나 워크플로우·템플릿·코드관리 등 표준 웹 개발 범위이며 특정 제품·인증·무제한 재작업 조건이 없어 blocker는 없다."
+    },
+    {
+      "requirement_uid": "kdhc_plant_integrated_mgmt:TER-002",
+      "document": "kdhc_plant_integrated_mgmt",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "계약·질의검토",
+        "통상수용",
+        "통상수용"
+      ],
+      "after": "통상수용",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "개발초기부터 구축 완료까지 지속적 테스트, 단위테스트 자체 수행·보고, 통합테스트 수행팀 주관 현업 입회 및 품질서버 적용 후 결과 보고는 통상적인 테스트 수행·보고 범위로, 구체적 수치 목표나 무제한 재작업 조건이 없어 blocker가 아니다. 「세부 사항은 협의 후 실시」는 통합테스트 일정·시나리오 등 세부 조율을 의미하며 열린 범위로 보지 않는다. 기본 수행팀 범위 내 수행 가능하므로 추가 원가는 없다."
+    },
+    {
+      "requirement_uid": "kexim_ai_platform:ASR-004",
+      "document": "kexim_ai_platform",
+      "gold": "계약·질의검토",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "계약·질의검토",
+        "견적반영",
+        "계약·질의검토"
+      ],
+      "after": "계약·질의검토",
+      "change": "kept_correct",
+      "api_ok": false,
+      "reasoning": null
+    },
+    {
+      "requirement_uid": "kexim_ai_platform:COR-003",
+      "document": "kexim_ai_platform",
+      "gold": "계약·질의검토",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "통상수용",
+        "계약·질의검토",
+        "계약·질의검토"
+      ],
+      "after": "통상수용",
+      "change": "harmed",
+      "api_ok": true,
+      "reasoning": "법령·가이드라인 변경 시 당행과 협의하여 반영하도록 한 유연성 조항으로, 구체적 수치 목표나 무제한 재작업 조건이 아니며 변경 시행일을 고려하므로 blocker 아님. 기본 수행팀이 통상 대응 가능한 범위이며, 변경 발생 시 협의를 통해 추가 비용 여부를 결정하므로 별도 원가 없음. 도메인 지식은 당행이 변경된 규정을 제공하므로 낮음, 구축 난이도도 낮음."
+    },
+    {
+      "requirement_uid": "kexim_ai_platform:INF-003",
+      "document": "kexim_ai_platform",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "견적반영",
+        "통상수용"
+      ],
+      "after": "계약·질의검토",
+      "change": "harmed",
+      "api_ok": true,
+      "reasoning": "연계 대상 시스템이 특정되지 않아 「각 연계 대상 시스템의 연계 표준 및 프로토콜 분석」의 범위 산정이 불가하고, 「EAI/FEP 등 연계 시스템」과 「eCAMS 활용 배포」의 실제 조달·라이선스 가능 여부를 먼저 확인해야 한다. 당행 내부 시스템(형상관리·ITSM 등) 연계도 구체적 규격이 불명확하여 사전 협의가 필요하다."
+    },
+    {
+      "requirement_uid": "kexim_ai_platform:INR-007",
+      "document": "kexim_ai_platform",
+      "gold": "계약·질의검토",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "계약·질의검토",
+        "계약·질의검토",
+        "견적반영"
+      ],
+      "after": "계약·질의검토",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "「당행 모든 사이트에서 자유롭게 사용 가능한 형태의 라이선스 정책 필요」, 「영구 라이선스로 도입, 향후 사용량에 따른 추가 요금이 발생하지 않아야 함」, 「성능문제 등으로 자원용량 추가 시, 필요한 S/W 라이선스도 제공」은 특정 상용 S/W가 전 사이트 영구 라이선스 및 무상 추가 라이선스 제공을 충족하는지 조달 가능성을 먼저 확인해야 하는 조건이다. 일부 제품은 구독형만 제공하거나 사이트/코어 수 기반 과금이라 충족 여부가 불확실하므로 계약·질의검토 대상이다. 충족 시 라이선스 비용이 견적에 반영된다."
+    },
+    {
+      "requirement_uid": "kexim_ai_platform:INR-DTL-003",
+      "document": "kexim_ai_platform",
+      "gold": "견적반영",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "계약·질의검토",
+        "계약·질의검토",
+        "견적반영"
+      ],
+      "after": "견적반영",
+      "change": "fixed",
+      "api_ok": true,
+      "reasoning": "x86 서버 3대의 구체적 사양(CPU·Memory·Disk·NIC·이중화·부속품)과 3년 유지관리(무상1년+유상2년) 금액을 제안에 포함하라는 요구다. 「제안한 H/W는 도입시점에서 최신형으로 공급」, 「사업 최종검수완료 후 3년 유지관리 금액을 포함하여 제안」은 조달 가능성이 명확하고 달성 가능성을 별도 검증할 수치 목표도 없어 blocker가 아니다. 다만 서버 장비 구매비와 3년 유지관리 비용은 기본 수행팀 범위를 벗어나므로 견적에 장비·인프라 및 유지보수 비용으로 명시 반영해야 한다."
+    },
+    {
+      "requirement_uid": "kexim_ai_platform:PSR-002",
+      "document": "kexim_ai_platform",
+      "gold": "계약·질의검토",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "계약·질의검토",
+        "계약·질의검토",
+        "통상수용"
+      ],
+      "after": "통상수용",
+      "change": "harmed",
+      "api_ok": true,
+      "reasoning": "「당행 직원의 전문능력 배양을 위한 기술이전 계획 제시」, 「생산된 모든 문서, 산출물, 매뉴얼, 적용기술 등이 체계적으로 이전되었음을 당행으로부터 확인」, 「인력 변경에 따른 인계인수 또는 기술이전 등에 활용 가능」, 「지속적인 정보제공 및 기술자문에 응해야 함」은 공공 AI 구축에서 일반적인 기술이전·문서화·자문 요구로, 구체적 수치 목표나 무제한 무상 재작업, 특정 제품·모델 조달 조건이 없어 blocker가 아니다. 별도 고급 인력·라이선스·외부 인증 요구도 드러나지 않아 기본 수행팀 범위로 통상 수용한다."
+    },
+    {
+      "requirement_uid": "kexim_ai_platform:SER-004",
+      "document": "kexim_ai_platform",
+      "gold": "계약·질의검토",
+      "baseline": "견적반영",
+      "votes": [
+        "계약·질의검토",
+        "견적반영",
+        "견적반영"
+      ],
+      "after": "견적반영",
+      "change": "still_wrong",
+      "api_ok": false,
+      "reasoning": null
+    },
+    {
+      "requirement_uid": "kexim_ai_platform:SYS-001",
+      "document": "kexim_ai_platform",
+      "gold": "견적반영",
+      "baseline": "견적반영",
+      "votes": [
+        "계약·질의검토",
+        "견적반영",
+        "견적반영"
+      ],
+      "after": "견적반영",
+      "change": "kept_correct",
+      "api_ok": false,
+      "reasoning": null
+    },
+    {
+      "requirement_uid": "kexim_ai_platform:TER-005",
+      "document": "kexim_ai_platform",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "계약·질의검토",
+        "통상수용",
+        "통상수용"
+      ],
+      "after": "통상수용",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "요구사항은 「신규 모델의 성능 테스트를 위한 기준(정확도, 응답속도, 일관성, 안정성 등)을 제시하고 테스트 방안(테스트 데이터 셋 및 테스트 환경) 제시」로, 구체적 수치 목표나 달성 의무가 없어 blocker가 아니다. 기본 수행팀이 테스트 설계 시 통상 수행하는 범위이며 추가 원가도 발생하지 않는다. 도메인 지식 없이도 일반적인 AI 모델 테스트 방법론을 제시할 수 있어 domain_dependency는 낮고, 구축 난이도도 낮다."
+    },
+    {
+      "requirement_uid": "knoc_genai_platform:DAR-003",
+      "document": "knoc_genai_platform",
+      "gold": "계약·질의검토",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "견적반영",
+        "계약·질의검토",
+        "계약·질의검토"
+      ],
+      "after": "견적반영",
+      "change": "harmed",
+      "api_ok": true,
+      "reasoning": "「C/S/O 등급 분류는 데이터, 보안, 개인정보보호 등 이해를 보유한 전문 인력이 수행하여야 함」이라는 명시적 전문 인력 요구로 인해 고급·전문인력 원가가 발생한다. 데이터 식별·전사 카탈로그 설계·C/S/O 분류체계 수립은 컨설팅/설계 범위로 기본 수행팀이 수행 가능하나, 조직 내 산재 데이터 접근과 공사 협의가 필요하여 도메인 의존도는 보통이다. N2SF 가이드라인 초안 반영 조건은 미래 불확실성이나 blocker는 아니다."
+    },
+    {
+      "requirement_uid": "knoc_genai_platform:DAR-005",
+      "document": "knoc_genai_platform",
+      "gold": "견적반영",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "견적반영",
+        "통상수용"
+      ],
+      "after": "통상수용",
+      "change": "still_wrong",
+      "api_ok": false,
+      "reasoning": null
+    },
+    {
+      "requirement_uid": "knoc_genai_platform:FUR-004",
+      "document": "knoc_genai_platform",
+      "gold": "계약·질의검토",
+      "baseline": "견적반영",
+      "votes": [
+        "계약·질의검토",
+        "견적반영",
+        "견적반영"
+      ],
+      "after": "견적반영",
+      "change": "still_wrong",
+      "api_ok": true,
+      "reasoning": "구체적 수치 목표나 특정 제품 요구가 없어 blocker는 없음. 다만 석유지질 도메인 지식베이스·전문용어 사전 구축과 지질 단면도·탄성파 도면 등 멀티모달 이해·생성은 발주기관 도메인 지식 없이 수행이 어렵고(높음), 고급 AI 인력 및 도메인 전문가 투입이 필요해 견적반영 대상임. 「지질 단면도, 탄성파 해석 도면 등 멀티모달 자료를 이해하고 생성」, 「표, 이미지, 그래프 등의 비정형 데이터를 정확하게 파싱 및 맥락을 이해」는 순수 구축 난이도도 높음."
+    },
+    {
+      "requirement_uid": "knoc_genai_platform:GOV-001",
+      "document": "knoc_genai_platform",
+      "gold": "통상수용",
+      "baseline": "견적반영",
+      "votes": [
+        "견적반영",
+        "견적반영",
+        "통상수용"
+      ],
+      "after": "견적반영",
+      "change": "still_wrong",
+      "api_ok": false,
+      "reasoning": null
+    },
+    {
+      "requirement_uid": "knoc_genai_platform:PMR-002",
+      "document": "knoc_genai_platform",
+      "gold": "견적반영",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "계약·질의검토",
+        "견적반영"
+      ],
+      "after": "견적반영",
+      "change": "fixed",
+      "api_ok": true,
+      "reasoning": "조직 구성안·운영방안 제시, 근로기준법 준수, 공동수급 시 역할 정의, PM 상주, 인력 교체 시 사전 공유·공동근무·비용 부담 등은 제안·계약 관행상 통상수용 범위다. 다만 「생성형 AI 시스템 구축‧운영 등의 수행 경력이 있는 전문 인력을 사업기간 동안 투입」은 일반 분석·설계 인력만으로 충족하기 어려워 고급 전문인력 투입이 필요할 수 있어 견적반영 대상이다. 구체적 수치 목표나 무제한 재작업 조건, 조달 불확실 제품은 없어 blocker는 없다."
+    },
+    {
+      "requirement_uid": "knoc_genai_platform:PMR-009",
+      "document": "knoc_genai_platform",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "통상수용",
+        "계약·질의검토"
+      ],
+      "after": "통상수용",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "착수·중간·완료 보고회 및 주/월간 업무일지 작성·제출, 비정기 보고, 타 기관 협조 시 보고 후 별도지시 준수 등은 공공 IT 용역의 표준 보고 관리 요구사항이다. 「최종 완료보고회는 과업 성과물을 총 정리한 종합보고가 되어야 하며, 이때 공사에서 보완 또는 수정 지시하는 사항이 있을 경우 내용을 보완하여 최종보고서를 제출」은 통상적인 보완 절차이며 무제한 무상 재작업 조건이 아니다. 별도 원가 발생 없음."
+    },
+    {
+      "requirement_uid": "koen_ai_infrastructure:FUN-004",
+      "document": "koen_ai_infrastructure",
+      "gold": "견적반영",
+      "baseline": "통상수용",
+      "votes": [
+        "견적반영",
+        "통상수용",
+        "통상수용"
+      ],
+      "after": "통상수용",
+      "change": "still_wrong",
+      "api_ok": true,
+      "reasoning": "요구사항에서 구체적인 성능 목표나 무제한 재작업 조건이 없고, 연계 구조 정의는 기본 분석·설계 범위다. 「업무시스템별 연계 구조 및 연계 방식 정의」는 통상 컨설팅/설계 과제이며, 별도 고급 인력이나 라이선스 필요를 명시하지 않았다. 따라서 blocker 없고 추가 원가도 없음."
+    },
+    {
+      "requirement_uid": "koen_ai_infrastructure:FUN-019",
+      "document": "koen_ai_infrastructure",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "견적반영",
+        "통상수용",
+        "통상수용"
+      ],
+      "after": "통상수용",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "「AI 서비스 운영 상태 조회 기능 제공」, 「시스템 자원 사용 현황 모니터링 기능 제공」, 「장애발생시 알림 및 원인파악 기능 제공」은 표준 모니터링·알림 구현 범위로, 구체적 수치 목표나 무제한 재작업 조건, 특정 제품·라이선스 요구가 없어 blocker가 아니다. 기본 수행팀이 통상 처리 가능한 기능 구현이므로 추가 원가는 발생하지 않는다."
+    },
+    {
+      "requirement_uid": "koen_ai_infrastructure:PMR-019",
+      "document": "koen_ai_infrastructure",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "통상수용",
+        "계약·질의검토"
+      ],
+      "after": "통상수용",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "보안 관련법규 준수, 정보보호계획 제시, 비밀 보안 준수 등은 공공 RFP의 표준 보안 요구사항이며, 구체적 수치 목표나 무제한 재작업 조건, 조달 불확실 제품이 없다. 「구체적인 정보보호계획 및 방안을 제시」는 통상 컨설팅 산출물로 기본 수행팀이 처리 가능하며 별도 원가나 계약 전 확인 조건이 아니다."
+    },
+    {
+      "requirement_uid": "koen_ai_infrastructure:SER-003",
+      "document": "koen_ai_infrastructure",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "통상수용",
+        "계약·질의검토"
+      ],
+      "after": "통상수용",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "「관계 법령을 준수하여 보안정책을 수립하고 이행」, 「당사의 규정 및 지침을 준수」는 공공 RFP의 일반적 준수사항으로, 구체적 수치 목표나 무제한 재작업 조건이 없어 blocker가 아니다. 보안정책 수립·이행은 기본 수행팀이 통상 처리하므로 추가 원가는 발생하지 않는다."
+    },
+    {
+      "requirement_uid": "koen_ai_infrastructure:TST-002",
+      "document": "koen_ai_infrastructure",
+      "gold": "계약·질의검토",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "계약·질의검토",
+        "계약·질의검토",
+        "견적반영"
+      ],
+      "after": "통상수용",
+      "change": "harmed",
+      "api_ok": true,
+      "reasoning": "구체적 수치 목표나 무제한 재작업 조건 없이 성능 시험 수행과 결과 보고서 작성만 요구하므로, 기본 수행팀이 통상 처리할 수 있는 테스트 활동이다. 「AI 서비스 응답 성능 검증을 위한 성능 시험 수행」, 「성능 시험결과 기록 및 성능 시험 결과 보고서 작성」은 별도 고급 인력·장비·라이선스 없이 수용 가능하다."
+    },
+    {
+      "requirement_uid": "korail_genai_isp_ismp:CSR-002",
+      "document": "korail_genai_isp_ismp",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "견적반영",
+        "통상수용",
+        "통상수용"
+      ],
+      "after": "통상수용",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "「최신 AI 기술 트렌드 분석」, 「주요 경쟁사의 도입 사례 조사」, 「벤치마킹 결과... 문제 해결 방안 수립」 등은 ISP/ISMP 단계의 표준 컨설팅 범위다. 구체적 수치 목표나 구현 의무, 특정 제품 요구가 없어 blocker는 없다. 기본 수행팀의 분석·설계 역량으로 수행 가능하며 별도 고급 인력이나 장비·라이선스 원가가 발생하지 않아 견적반영 사항은 없다."
+    },
+    {
+      "requirement_uid": "korail_genai_isp_ismp:CSR-012",
+      "document": "korail_genai_isp_ismp",
+      "gold": "견적반영",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "계약·질의검토",
+        "통상수용",
+        "계약·질의검토"
+      ],
+      "after": "통상수용",
+      "change": "still_wrong",
+      "api_ok": true,
+      "reasoning": "제안요청서 작성은 ISP/ISMP의 일반적 산출물로, 구체적 성능목표나 무제한 재작업 조건이 없으며, FP/M/M 산정과 예산 측정도 기본 수행팀 범위 내이다. 「특히 개발이 필요한 사항에 대해서는 FP 또는 M/M 방식으로 투입공수를 제시」는 추정 작업일 뿐 별도 고급 인력이나 외부 인증을 요구하지 않는다."
+    },
+    {
+      "requirement_uid": "korail_genai_isp_ismp:PMR-004",
+      "document": "korail_genai_isp_ismp",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "계약·질의검토",
+        "통상수용"
+      ],
+      "after": "통상수용",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "「투입인원의 교체 시 일정 및 인수인계 절차를 발주기관에 알려야 함」 등 인력교체 절차와 관리방법론에 따른 인계·인수, 안정화 및 결과 보고만을 요구하며, 구체적 수치 목표나 무제한 재작업 조건이 없어 기본 수행팀이 통상 처리 가능하다. 추가 원가 요소도 없다."
+    },
+    {
+      "requirement_uid": "mfds_drug_ai_review:PER-005",
+      "document": "mfds_drug_ai_review",
+      "gold": "계약·질의검토",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "계약·질의검토",
+        "계약·질의검토",
+        "통상수용"
+      ],
+      "after": "계약·질의검토",
+      "change": "kept_correct",
+      "api_ok": false,
+      "reasoning": null
+    },
+    {
+      "requirement_uid": "mfds_drug_ai_review:PMR-019",
+      "document": "mfds_drug_ai_review",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "통상수용",
+        "계약·질의검토"
+      ],
+      "after": "통상수용",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "「제안요청서, 제안서, 협상 결과, 계약서, 사업수행계획서 등과 일치하지 않을 경우 지체 없이 보완 후 재검수를 받아야 함」은 공공 RFP에서 일반적인 재검수 절차이며, 무제한·무상 재작업이나 구체적 수치 목표가 명시되지 않았다. 「시스템 납품설치와 정상가동 여부 확인, 시스템 관리·기술지원 등 운영 제반사항 포함」도 통상적 검수 범위다. 별도 원가나 blocker는 없다."
+    },
+    {
+      "requirement_uid": "mfds_drug_ai_review:PSR-001",
+      "document": "mfds_drug_ai_review",
+      "gold": "통상수용",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "통상수용",
+        "계약·질의검토",
+        "계약·질의검토"
+      ],
+      "after": "계약·질의검토",
+      "change": "still_wrong",
+      "api_ok": false,
+      "reasoning": null
+    },
+    {
+      "requirement_uid": "mfds_drug_ai_review:PSR-006",
+      "document": "mfds_drug_ai_review",
+      "gold": "계약·질의검토",
+      "baseline": "통상수용",
+      "votes": [
+        "계약·질의검토",
+        "통상수용",
+        "통상수용"
+      ],
+      "after": "견적반영",
+      "change": "still_wrong",
+      "api_ok": true,
+      "reasoning": "「전문업체를 통하여 개인정보 영향평가와 정보보호컨설팅을 실시」하라는 명확한 요구사항으로, 수행 범위가 열려 있거나 무제한 재작업 의무가 부과되지 않아 blocker는 아니다. 다만 전문업체 활용이 명시되어 있어 외부 전문기관 비용이 발생하며, 개인정보 영향평가는 표준화된 컨설팅 과제로 발주기관 고유 업무 지식 없이도 수행 가능하다."
+    },
+    {
+      "requirement_uid": "mfds_drug_ai_review:SFR-006",
+      "document": "mfds_drug_ai_review",
+      "gold": "계약·질의검토",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "견적반영",
+        "통상수용"
+      ],
+      "after": "계약·질의검토",
+      "change": "fixed",
+      "api_ok": true,
+      "reasoning": "「AI 검색결과에 대한 성능 강화를 위한 방안을 마련하여 발주기관과 협의 후 기능 개발」은 구체적 성능 강화 방안이 명시되지 않아 열린 범위이며, 협의 결과에 따라 추가 기능 개발 범위가 무제한 확대될 가능성이 있어 blocker로 판단한다. 나머지 기능은 RAG 기반 검색 관리, 유사도 점수 수정·검증, 만족도 현황 확인 등으로 기본 수행팀 범위 내 구축 가능하다."
+    },
+    {
+      "requirement_uid": "mfds_drug_ai_review:SFR-012",
+      "document": "mfds_drug_ai_review",
+      "gold": "견적반영",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "계약·질의검토",
+        "견적반영"
+      ],
+      "after": "통상수용",
+      "change": "still_wrong",
+      "api_ok": true,
+      "reasoning": "「AI 모델을 활용하여 민원신청 입력내용의 적합여부를 검토하는 기능 개발」 및 253종 화면 개선, WEB API 구축을 요구한다. 구체적 성능 수치나 무제한 재작업 조건이 없어 blocker는 아니다. 기본 수행팀의 LLM·RAG 역량으로 구축 가능하나, 의약품 규제 도메인 지식이 검증 기준 수립에 필수적이어서 domain_dependency는 높다."
+    },
+    {
+      "requirement_uid": "mfds_drug_ai_review:SFR-019",
+      "document": "mfds_drug_ai_review",
+      "gold": "견적반영",
+      "baseline": "견적반영",
+      "votes": [
+        "통상수용",
+        "견적반영",
+        "견적반영"
+      ],
+      "after": "견적반영",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "「비전 AI 모델을 활용하여 실시간 제출자료 정보 추출」과 여권·항공권·진단서·처방전 등 다양한 서식의 자동비교 기능 구축은 구체적 성능 수치 목표가 없어 blocker는 아니다. 다만 문서 종류가 다양하고 추출·비교 로직 구현에 고급 기술자 또는 전문 인력 투입 가능성이 있어 기본 수행팀 범위를 넘는 원가로 판단된다. 의약품통합정보시스템·의약품안전나라 연계 대상은 특정되어 있어 연계 범위 산정은 가능하다."
+    },
+    {
+      "requirement_uid": "mfds_drug_ai_review:SFR-036",
+      "document": "mfds_drug_ai_review",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "통상수용",
+        "견적반영"
+      ],
+      "after": "통상수용",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "제출자료 목록 출력, 파일 미리보기·다운로드, 선택 문장 검토서 삽입 기능은 표준적인 웹/앱 개발 범위로, 구체적 수치 목표나 무제한 재작업 조건, 특정 제품·라이선스 요구가 없어 blocker는 없다. 「CTD 등 모든 제출자료」라는 표현이 있으나 데이터 구조 정의 후 기본 수행팀이 구현 가능한 수준이며, 별도 고급 인력·장비·라이선스 원가가 발생하지 않는다."
+    },
+    {
+      "requirement_uid": "mfds_drug_ai_review:SFR-041",
+      "document": "mfds_drug_ai_review",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "통상수용",
+        "견적반영"
+      ],
+      "after": "통상수용",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "구체적 수치 목표나 무제한 재작업 조건, 조달 불확실한 제품이 없어 blocker는 없다. CTD·안유·기시 등 의약품 제출자료의 구조 관리와 등록·수정·조회 기능 개발은 일반 웹 개발 범위이며, 전자서식 데이터셋 전처리 후 초기데이터 구축도 기본 수행팀 범위로 추가 원가는 발생하지 않는다. 다만 의약품 CTD 구조와 민원서식 표준화(DAR-005) 이해에 발주기관 도메인 지식이 필요해 domain_dependency는 높음, 순수 구축 난이도는 보통이다."
+    },
+    {
+      "requirement_uid": "mfds_drug_ai_review:SFR-048",
+      "document": "mfds_drug_ai_review",
+      "gold": "통상수용",
+      "baseline": "견적반영",
+      "votes": [
+        "통상수용",
+        "견적반영",
+        "견적반영"
+      ],
+      "after": "계약·질의검토",
+      "change": "still_wrong",
+      "api_ok": true,
+      "reasoning": "「의약품통합정보시스템의 허가·심사 관련 정보 등 연계」가 구체적 인터페이스·데이터 범위 없이 제시되어 연계 가능성·범위 확인이 필요하므로 blocker. 나머지 기능은 기본 수행팀 범위로 추가 원가 없음. 도메인 지식 없이 수행이 어려워 domain_dependency 높음, 순수 구축은 데이터 관리·벡터DB 색인 등 표준 기능이라 build_difficulty 보통."
+    },
+    {
+      "requirement_uid": "mfds_drug_ai_review:SFR-057",
+      "document": "mfds_drug_ai_review",
+      "gold": "견적반영",
+      "baseline": "견적반영",
+      "votes": [
+        "통상수용",
+        "견적반영",
+        "견적반영"
+      ],
+      "after": "통상수용",
+      "change": "harmed",
+      "api_ok": true,
+      "reasoning": "통합로그인, 첨부파일 관리, 알림서비스 구축은 일반 개발 범위이며, 「국가정보자원관리원 MGov를 연계한 카카오 알림톡 및 SMS(LMS) 메시지 전송 기능」은 표준 API 연동으로 추가 원가 없이 기본 수행팀 수행 가능. 구체적 수치 목표나 무제한 재작업 조건 없어 blocker 없음."
+    },
+    {
+      "requirement_uid": "mfds_drug_ai_review:TER-004",
+      "document": "mfds_drug_ai_review",
+      "gold": "계약·질의검토",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "계약·질의검토",
+        "통상수용",
+        "계약·질의검토"
+      ],
+      "after": "통상수용",
+      "change": "harmed",
+      "api_ok": true,
+      "reasoning": "목표성능이 사전 정의되지 않고 발주기관과 협의하여 확정하는 방식이며, 미달 시 튜닝·재시험을 요구하나 무제한 재작업이나 구체적 수치 목표가 명시되지 않아 blocker는 아님. 성능 테스트·튜닝은 기본 수행팀 범위로 추가 원가 없음. 성능 측정은 업무 지식 의존도가 낮아 domain_dependency 낮음, 테스트 설계·수행은 통상 난이도로 build_difficulty 보통."
+    },
+    {
+      "requirement_uid": "supreme_court_sentencing:CSR-001",
+      "document": "supreme_court_sentencing",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "견적반영",
+        "통상수용",
+        "통상수용"
+      ],
+      "after": "계약·질의검토",
+      "change": "harmed",
+      "api_ok": true,
+      "reasoning": "「사법부 인공지능 활용 원칙 및 가이드라인(예정)」이 아직 확정되지 않아 분석·반영 요건 도출이 불가능하므로 계약·질의검토가 필요하다. 나머지는 AI 원칙 분석, Code of Conduct 수립, 오남용 방지 가이드라인, 법관 인터뷰 기반 요구사항 정의, 통계분석 연계 방안 정의 등 컨설팅·요건정의 성격으로 기본 수행팀 범위 내이다. 형사 법관 인터뷰와 양형 업무 맥락은 발주기관 도메인 지식이 필요하나, 인터뷰 자체가 도메인 정보 획득 경로이므로 domain_dependency는 보통이다."
+    },
+    {
+      "requirement_uid": "supreme_court_sentencing:DAR-009",
+      "document": "supreme_court_sentencing",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "통상수용",
+        "견적반영"
+      ],
+      "after": "통상수용",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "백업 관리체계 운영, 주기적 백업, 장애·보안사고 시 데이터 복구 및 정합성 점검, 작업 전 백업본 마련 등은 일반적인 시스템 운영·백업 복구 범위에 해당한다. 「서비스 연속성 확보를 위한 백업 관리체계 운영」, 「데이터 유실 발생 시 총괄센터의 데이터 복구 수행」 등 구체적 수치 목표나 무제한 무상 재작업 조건, 특정 제품·라이선스 요구가 없어 blocker가 아니다. 별도 고급 인력·장비·라이선스도 명시되지 않아 기본 수행팀 범위로 통상 수용 가능하다."
+    },
+    {
+      "requirement_uid": "supreme_court_sentencing:DAR-011",
+      "document": "supreme_court_sentencing",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "견적반영",
+        "통상수용",
+        "통상수용"
+      ],
+      "after": "통상수용",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "품질목표 설정·진단·튜닝·구조 최적화 방안 제시를 요구하나, 구체적 수치 목표나 무제한 재작업 조건이 없고 DBMS 튜닝·쿼리 튜닝·인덱스 조정 등은 일반 DB 수행팀 범위로 보인다. 「문제되는 쿼리 사전 발견 및 튜닝 방안 제시」, 「DB 구조 최적화, DBMS 튜닝」은 고급 인력이나 별도 장비·라이선스를 명시적으로 요구하지 않으므로 추가 원가 없이 통상 수용 가능하다."
+    },
+    {
+      "requirement_uid": "supreme_court_sentencing:PER-001",
+      "document": "supreme_court_sentencing",
+      "gold": "통상수용",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "계약·질의검토",
+        "통상수용",
+        "계약·질의검토"
+      ],
+      "after": "통상수용",
+      "change": "fixed",
+      "api_ok": true,
+      "reasoning": "「동시 사용자 접속 수 산정」, 「트랜잭션 양 산정」, 「시나리오 검토」, 「최적 방향 검토」, 「가이드라인 제시」를 요구하는 용량산정·성능설계 활동으로, 구체적 수치 목표나 달성 의무·무제한 재작업 조건이 없고 표준 ISP/ISMP 범위에서 기본 수행팀이 처리 가능하다. 업무특성 고려가 필요하나 발주기관 협의로 산정 가능하여 별도 원가는 발생하지 않는다."
+    },
+    {
+      "requirement_uid": "supreme_court_sentencing:PER-002",
+      "document": "supreme_court_sentencing",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "통상수용",
+        "계약·질의검토"
+      ],
+      "after": "통상수용",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "「기능 수행 시 응답 처리시간과 처리율을 최적화될 수 있도록 고려」 등 구체적 수치 목표나 무제한 재작업 조건이 없고, 시뮬레이션·개선방향 제시·갭 분석은 기본 수행팀이 통상 수행하는 성능 분석 범위이므로 blocker 없음. 별도 고급 인력·장비·라이선스 요구가 없어 추가 원가 없음."
+    },
+    {
+      "requirement_uid": "supreme_court_sentencing:PMR-006",
+      "document": "supreme_court_sentencing",
+      "gold": "계약·질의검토",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "계약·질의검토",
+        "계약·질의검토",
+        "견적반영"
+      ],
+      "after": "통상수용",
+      "change": "harmed",
+      "api_ok": true,
+      "reasoning": "표준 사업관리 조직 및 방법론 제안 요구로, 「정해진 사업기간 내 정상적인 과업 수행이 불가능하다고 판단될 경우 발주처는 인력 추가 투입 등을 요구할 수 있으며」는 일반적 계약 리스크 관리 조항이며 무제한 무상 재작업 조건이 아니므로 blocker 아님. M/M 참여율 제한 및 안정화 기간 운영 지원도 기본 수행팀 범위 내 통상 수용 가능하여 추가 원가 없음."
+    },
+    {
+      "requirement_uid": "supreme_court_sentencing:PSR-005",
+      "document": "supreme_court_sentencing",
+      "gold": "견적반영",
+      "baseline": "견적반영",
+      "votes": [
+        "견적반영",
+        "통상수용",
+        "견적반영"
+      ],
+      "after": "견적반영",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "blocker 아님. EA 작업팀 구성과 EAMS 등록·검수는 표준 이행 절차이며, 「기능점수 데이터의 작성을 위해 사업수행 인원 중 기능점수 측정 전문가를 포함토록 함」에 따라 전문 인력 투입이 필요함. 기능점수 측정 전문가는 일반 개발 인력과 구분되는 고급·전문인력으로 견적에 반영해야 함. EA 현행화 및 SW 사업정보 작성은 표준 업무이나 수행 기간 중 지속적 관리가 필요해 구축 난이도는 보통임."
+    },
+    {
+      "requirement_uid": "supreme_court_sentencing:QUR-007",
+      "document": "supreme_court_sentencing",
+      "gold": "계약·질의검토",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "통상수용",
+        "계약·질의검토"
+      ],
+      "after": "통상수용",
+      "change": "still_wrong",
+      "api_ok": false,
+      "reasoning": null
+    },
+    {
+      "requirement_uid": "supreme_court_sentencing:SFR-NSS-001",
+      "document": "supreme_court_sentencing",
+      "gold": "통상수용",
+      "baseline": "통상수용",
+      "votes": [
+        "통상수용",
+        "견적반영",
+        "계약·질의검토"
+      ],
+      "after": "통상수용",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "AI를 활용한 적용법조·죄명 선별은 NLP 분류 태스크로 기본 LLM 역량으로 구현 가능하며, 95% 신뢰수준·표준오차 5% 샘플링은 표준 통계 계산이다. 특정 제품·모델 지정이나 무제한 재작업 조건이 없고, 구체적 성능 수치 목표도 제시되지 않아 blocker는 없다. 다만 적용법조/죄명 분류와 확정사건·형종 필터링은 법률 도메인 지식이 필요해 domain_dependency는 높음, 샘플링과 분류 구현 자체는 보통 난이도로 본다."
+    },
+    {
+      "requirement_uid": "supreme_court_sentencing:SFR-SCF-001",
+      "document": "supreme_court_sentencing",
+      "gold": "계약·질의검토",
+      "baseline": "견적반영",
+      "votes": [
+        "견적반영",
+        "통상수용",
+        "견적반영"
+      ],
+      "after": "통상수용",
+      "change": "still_wrong",
+      "api_ok": true,
+      "reasoning": "구체적 수치 목표나 특정 제품 요구가 없고, '개선방안 제시'는 통상 제안 요구이므로 blocker 없음. LLM·RAG·벡터DB 활용은 기본 수행팀 역량 범위이며, 듀얼 색인·캐싱 등은 설계 사항. 양형 도메인 이해가 검색 설계에 필요하나 보통 수준, 구현 난이도도 보통. 추가 원가 요소 없음."
+    },
+    {
+      "requirement_uid": "supreme_court_sentencing:SFR-SIE-002",
+      "document": "supreme_court_sentencing",
+      "gold": "견적반영",
+      "baseline": "계약·질의검토",
+      "votes": [
+        "계약·질의검토",
+        "통상수용",
+        "계약·질의검토"
+      ],
+      "after": "계약·질의검토",
+      "change": "still_wrong",
+      "api_ok": false,
+      "reasoning": null
+    },
+    {
+      "requirement_uid": "supreme_court_sentencing:SFR-SIM-008",
+      "document": "supreme_court_sentencing",
+      "gold": "통상수용",
+      "baseline": "견적반영",
+      "votes": [
+        "견적반영",
+        "통상수용",
+        "견적반영"
+      ],
+      "after": "견적반영",
+      "change": "still_wrong",
+      "api_ok": false,
+      "reasoning": null
+    },
+    {
+      "requirement_uid": "supreme_court_sentencing:TER-006",
+      "document": "supreme_court_sentencing",
+      "gold": "견적반영",
+      "baseline": "견적반영",
+      "votes": [
+        "통상수용",
+        "견적반영",
+        "견적반영"
+      ],
+      "after": "견적반영",
+      "change": "kept_correct",
+      "api_ok": true,
+      "reasoning": "RAID1, 디스크 순간 복제, VTL/LTO, 자동화 백업 장비 등은 표준 백업 인프라 기술로 기본 수행팀이 아키텍처 설계·구현 가능하다. 다만 2차 백업 환경 구축, 자동화 백업 장비, VTL/LTO 장치, 디스크 순간 복제 솔루션 등은 실제 장비·라이선스 조달이 수반될 수 있어 견적에 장비·인프라 비용으로 반영해야 한다. 구체적 복구 시간 목표나 무제한 재작업 조건은 없어 blocker는 아니다."
+    }
+  ],
+  "interpretation": "Exploratory v5 silver-label agreement. v5 used few-shot; Solar is zero-shot. Not a provider-only comparison or independent real-world accuracy.",
+  "recorded_usage_cost_usd_ex_vat": 0.02263,
+  "billing_note": "Interrupted in-flight request and SDK retries may incur charges without recorded usage."
+}

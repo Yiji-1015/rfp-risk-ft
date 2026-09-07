@@ -1,0 +1,101 @@
+{
+  "interpretation": "Post-hoc diagnostic only: remove only the reasoning length limit, leaving all other schema and UID checks. No API calls. Does not replace the frozen primary result.",
+  "recovered_count": 12,
+  "full_oof": {
+    "pooled_macro_f1": 0.6868235210617836,
+    "fold_mean_macro_f1": 0.6708529880067593,
+    "per_label_f1": {
+      "통상수용": 0.8333333333333334,
+      "견적반영": 0.5967741935483871,
+      "계약·질의검토": 0.6303630363036303
+    },
+    "errors": 359,
+    "boundary_errors": 115
+  },
+  "recovered_cases": [
+    {
+      "uid": "ccrs_ai_platform:PSR-003",
+      "reasoning_chars": 302,
+      "prediction": "계약·질의검토",
+      "baseline": "계약·질의검토",
+      "gold": "계약·질의검토"
+    },
+    {
+      "uid": "defense_intelligent_platform:PMR-005",
+      "reasoning_chars": 345,
+      "prediction": "통상수용",
+      "baseline": "통상수용",
+      "gold": "통상수용"
+    },
+    {
+      "uid": "defense_intelligent_platform:SFR-007",
+      "reasoning_chars": 380,
+      "prediction": "통상수용",
+      "baseline": "견적반영",
+      "gold": "견적반영"
+    },
+    {
+      "uid": "genai_incident_response:SFR-004",
+      "reasoning_chars": 399,
+      "prediction": "견적반영",
+      "baseline": "견적반영",
+      "gold": "견적반영"
+    },
+    {
+      "uid": "kangwon_land_genai:PSR-002",
+      "reasoning_chars": 301,
+      "prediction": "통상수용",
+      "baseline": "계약·질의검토",
+      "gold": "계약·질의검토"
+    },
+    {
+      "uid": "kdhc_plant_integrated_mgmt:SFR-002",
+      "reasoning_chars": 382,
+      "prediction": "계약·질의검토",
+      "baseline": "계약·질의검토",
+      "gold": "계약·질의검토"
+    },
+    {
+      "uid": "kexim_ai_platform:ASR-004",
+      "reasoning_chars": 325,
+      "prediction": "통상수용",
+      "baseline": "계약·질의검토",
+      "gold": "계약·질의검토"
+    },
+    {
+      "uid": "kexim_ai_platform:SYS-001",
+      "reasoning_chars": 351,
+      "prediction": "통상수용",
+      "baseline": "견적반영",
+      "gold": "견적반영"
+    },
+    {
+      "uid": "knoc_genai_platform:DAR-005",
+      "reasoning_chars": 331,
+      "prediction": "통상수용",
+      "baseline": "통상수용",
+      "gold": "견적반영"
+    },
+    {
+      "uid": "knoc_genai_platform:GOV-001",
+      "reasoning_chars": 318,
+      "prediction": "계약·질의검토",
+      "baseline": "견적반영",
+      "gold": "통상수용"
+    },
+    {
+      "uid": "supreme_court_sentencing:SFR-SIE-002",
+      "reasoning_chars": 368,
+      "prediction": "견적반영",
+      "baseline": "계약·질의검토",
+      "gold": "견적반영"
+    },
+    {
+      "uid": "supreme_court_sentencing:SFR-SIM-008",
+      "reasoning_chars": 343,
+      "prediction": "통상수용",
+      "baseline": "견적반영",
+      "gold": "통상수용"
+    }
+  ]
+}
