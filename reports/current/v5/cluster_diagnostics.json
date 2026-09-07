@@ -1,0 +1,201 @@
+{
+ "dataset": "v5",
+ "rows": 1445,
+ "k_neighbors": 5,
+ "k_clusters": 80,
+ "cross_document_label_consistency": {
+  "전체": {
+   "agree": 929,
+   "n": 1445,
+   "rate": 0.6429065743944636,
+   "wilson95": [
+    0.617852400646345,
+    0.6672029152694873
+   ]
+  },
+  "모델이 맞힌 건": {
+   "agree": 745,
+   "n": 944,
+   "rate": 0.7891949152542372,
+   "wilson95": [
+    0.7620294231888459,
+    0.8140161945599423
+   ]
+  },
+  "경계 밖 오답": {
+   "agree": 83,
+   "n": 274,
+   "rate": 0.3029197080291971,
+   "wilson95": [
+    0.25154254998325254,
+    0.3597467601848433
+   ]
+  },
+  "경계 혼동": {
+   "agree": 33,
+   "n": 127,
+   "rate": 0.25984251968503935,
+   "wilson95": [
+    0.19141857187461628,
+    0.3423688474171074
+   ]
+  },
+  "v5·v6 일치": {
+   "agree": 729,
+   "n": 1075,
+   "rate": 0.6781395348837209,
+   "wilson95": [
+    0.6496194145160438,
+    0.7053909966508968
+   ]
+  },
+  "v5·v6 불일치": {
+   "agree": 200,
+   "n": 370,
+   "rate": 0.5405405405405406,
+   "wilson95": [
+    0.48960378074083843,
+    0.5906441103445839
+   ]
+  },
+  "라벨=통상수용": {
+   "agree": 565,
+   "n": 750,
+   "rate": 0.7533333333333333,
+   "wilson95": [
+    0.7212426240716028,
+    0.7828420536644096
+   ]
+  },
+  "라벨=견적반영": {
+   "agree": 178,
+   "n": 333,
+   "rate": 0.5345345345345346,
+   "wilson95": [
+    0.480870185437122,
+    0.5874111669849067
+   ]
+  },
+  "라벨=계약·질의검토": {
+   "agree": 186,
+   "n": 362,
+   "rate": 0.5138121546961326,
+   "wilson95": [
+    0.46244995581246984,
+    0.5648842784572251
+   ]
+  }
+ },
+ "knn_macro_f1": 0.5982072057230515,
+ "outliers": {
+  "threshold": 0.9157193899154663,
+  "count": 73,
+  "error_rate": {
+   "outlier": [
+    21,
+    68
+   ],
+   "rest": [
+    380,
+    1277
+   ]
+  },
+  "top15": [
+   {
+    "uid": "defense_intelligent_platform:ECR-019",
+    "nearest_sim": 0.8913403749465942,
+    "label": "견적반영",
+    "name": "백업SW"
+   },
+   {
+    "uid": "defense_intelligent_platform:INR-003",
+    "nearest_sim": 0.8932853937149048,
+    "label": "통상수용",
+    "name": "기관내 표준연동모듈 사용"
+   },
+   {
+    "uid": "mfds_drug_ai_review:PSR-010",
+    "nearest_sim": 0.8960151672363281,
+    "label": "계약·질의검토",
+    "name": "웹접근성 인증"
+   },
+   {
+    "uid": "kdhc_plant_integrated_mgmt:INR-002",
+    "nearest_sim": 0.8983556032180786,
+    "label": "견적반영",
+    "name": "인터페이스 설계"
+   },
+   {
+    "uid": "mfds_drug_ai_review:SIR-008",
+    "nearest_sim": 0.8986605405807495,
+    "label": "계약·질의검토",
+    "name": "프로토콜 지원 및 변환"
+   },
+   {
+    "uid": "supreme_court_sentencing:ECR-003",
+    "nearest_sim": 0.9007306694984436,
+    "label": "통상수용",
+    "name": "도입자원의 라이선스 등 명세"
+   },
+   {
+    "uid": "incheon_airport_digital_work:SFR-015",
+    "nearest_sim": 0.9013756513595581,
+    "label": "계약·질의검토",
+    "name": "(과제 12) 눈으로 듣는 사내방송"
+   },
+   {
+    "uid": "supreme_court_sentencing:SFR-SIM-006",
+    "nearest_sim": 0.9019060134887695,
+    "label": "견적반영",
+    "name": "적용법조 분할"
+   },
+   {
+    "uid": "korail_genai_isp_ismp:SAR-001",
+    "nearest_sim": 0.9019560217857361,
+    "label": "계약·질의검토",
+    "name": "안전보건관리체계 일반"
+   },
+   {
+    "uid": "mfds_drug_ai_review:PSR-013",
+    "nearest_sim": 0.901965320110321,
+    "label": "통상수용",
+    "name": "기능점수 자료제출"
+   },
+   {
+    "uid": "supreme_court_sentencing:SFR-LDA-003",
+    "nearest_sim": 0.9033221006393433,
+    "label": "통상수용",
+    "name": "레이블 파일 포맷"
+   },
+   {
+    "uid": "incheon_airport_digital_work:SFR-004",
+    "nearest_sim": 0.9033688306808472,
+    "label": "계약·질의검토",
+    "name": "(과제 2) 스마트 워크 플레이스"
+   },
+   {
+    "uid": "incheon_airport_digital_work:COR-002",
+    "nearest_sim": 0.9047423601150513,
+    "label": "통상수용",
+    "name": "자료관리 규정 준수"
+   },
+   {
+    "uid": "kac_ai_work_platform:PSR-004",
+    "nearest_sim": 0.9049896001815796,
+    "label": "견적반영",
+    "name": "사용자 헬프데스크 운영"
+   },
+   {
+    "uid": "incheon_airport_digital_work:DAR-002",
+    "nearest_sim": 0.9051417112350464,
+    "label": "통상수용",
+    "name": "데이터 표준화 및 코드 통합"
+   }
+  ]
+ },
+ "anchors": {
+  "clusters_covered": 48,
+  "uncovered_rows": 413,
+  "mixed_cluster_rows": 437
+ }
+}
