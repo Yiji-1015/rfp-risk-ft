@@ -25,6 +25,7 @@ EXPECTED_NOTEBOOKS = {
     "18_decision_structure.ipynb",
     "19_training_recipes.ipynb",
     "20_boundary_cases.ipynb",
+    "21_cluster_diagnostics.ipynb",
 }
 
 

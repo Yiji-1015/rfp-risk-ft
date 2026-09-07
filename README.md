@@ -217,6 +217,26 @@ python -m scripts.labeling.run_claude_labeling `
 고정되어야 캐시 프리픽스가 유지되기 때문이다. 동적 인출은 건마다 앵커가 달라져
 system에 올리면 오히려 손해다(결정 29).
 
+## Solar 이견 재판정 파일럿
+
+v5의 `wc+ftB7+ftL42` 이견 435건 중 문서·표결 유형에 비례해 100건을 고정 추출한다.
+Solar Pro 4에 원문과 v5 판단 기준을 주고, 기존 정답·해설·모델 예측은 입력에서 제외한다.
+기존 라벨은 유지하며, 실패한 호출은 기존 앙상블 예측을 사용한다.
+
+```powershell
+# 준비 및 조건 고정 — API 호출 없음
+python -m scripts.evaluation.solar_disagreement_pilot
+# .env의 UPSTAGE_API_KEY 사용 — 실제 100건 호출, 성공·실패 기록이 있으면 건너뜀
+python -m scripts.evaluation.solar_disagreement_pilot --execute
+# 추가 호출 없이 결과만 다시 집계
+python -m scripts.evaluation.solar_disagreement_pilot --report
+```
+
+결과는 `reports/current/solar_runs/disagreement_v5_100_s42/comparison.md`에 저장한다.
+표본 100건의 점수와 그 100건만 교체한 전체 OOF 점수를 구분한다. 이 실험은 LLM 생성
+v5 라벨의 재현도를 보는 탐색이며 소형 모델 단독 성능이 아니다. v5 생성은 few-shot,
+이번 Solar 추론은 zero-shot이므로 모델만 바꾼 통제 비교로 해석하지 않는다.
+
 ## 노트북
 
 | # | 노트북 | 내용 |
@@ -242,6 +262,7 @@ system에 올리면 오히려 손해다(결정 29).
 | 18 | `18_decision_structure.ipynb` | OvR·OvO·캐스케이드 비교 |
 | 19 | `19_training_recipes.ipynb` | 학습 방식 네 가지의 코드와 성적표 |
 | 20 | `20_boundary_cases.ipynb` | v5 경계 사례와 v5·v6 라벨 불안정 |
+| 21 | `21_cluster_diagnostics.ipynb` | 문서 간 이웃 라벨 일관성 — 경계 혼동은 비슷한 조항이 다른 RFP에서 다른 라벨을 받은 자리 |
 
 비교·분석은 스크립트가 아니라 노트북으로 만든다. 노트북은 사용법만 보여주고
 실제 로직은 `scripts/` 모듈이 기준이다.
