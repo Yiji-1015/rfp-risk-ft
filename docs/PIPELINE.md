@@ -1,7 +1,8 @@
 # 라벨 데이터셋 생성 절차
 
-> 기준일: 2026-08-25
-> 대상: `requirements_v0.3.0` 1,024건 → 라벨 데이터셋
+> 기준일: 2026-09-07
+> 대상: `requirements_v0.3.0` 1,024건 → `label_dataset_v4`, 그 위에 3문서를 더한
+> `requirements_v0.4.0` 1,445건 → `label_dataset_v5`(주 데이터셋)
 
 > **문서 역할:** 원본 RFP에서 라벨 데이터셋까지 **재현 가능한 실행 순서**를 기록한다.
 > 연구 설계의 근거는 [`PROJECT_DIRECTION.md`](PROJECT_DIRECTION.md), 각 선택의 이유는
@@ -10,22 +11,29 @@
 ## 전체 흐름
 
 ```
-[1] 원본 RFP                RFP_data/*.pdf, *.hwpx
-      ↓  (수동 변환)
+[1] 원본 RFP                RFP_data/*.pdf, *.hwpx           (10건, 수동 변환)
+                            RFP_data/*.hwp, *.xlsx           (3건, 직접 추출 — 아래 절)
+      ↓  (수동 변환)              ↓  hwp_tables.py / xlsx_tables.py
 [2] 분석용 Markdown          RFP_data/md/*.md
       ↓  build_dataset.py
-[3] 요구사항 데이터셋         data/processed/requirements_v0.3.0.jsonl   (1,024건)
+[3] 요구사항 데이터셋         data/processed/requirements_v0.4.0.jsonl   (1,445건 · 13문서)
+                            (v0.3.0 = 앞의 10문서 1,024건)
       ↓  sample_100_anchor_candidates.py + 3회 스크리닝
 [4] 앵커 풀                  data/anchors/anchor_pool_v2.jsonl          (100건, 동결)
       ↓  run_claude_batch.py (층화 퓨샷)
-[5] 라벨링 실행 결과          reports/current/claude_runs/*/results.jsonl (1,024건)
+[5] 라벨링 실행 결과          reports/current/claude_runs/*/results.jsonl   (1,024건)
+                            reports/current/claude_batches/new_docs_v0.4.0 (421건)
       ↓  build_label_dataset.py
-[6] 라벨 데이터셋            data/labels/label_dataset_v4.jsonl         (1,024건)
-      ↓  (예정)
-[7] ML 비교 실험
+[6] 라벨 데이터셋            data/labels/label_dataset_v5.jsonl         (1,445건, 주 데이터셋)
+                            label_dataset_v4.jsonl (1,024건) · v6 (v6c zero-shot, 기각)
+      ↓  RFP_DATASET_VERSION=v5
+[7] ML 비교 실험             scripts/evaluation/*, scripts/modeling/finetune.py
 ```
 
 각 단계는 앞 단계의 산출물만 있으면 독립적으로 재실행할 수 있다.
+
+아래 1~6단계는 v0.3.0 → v4 기준으로 적은 원래 절차다. 2026-09-07에 더한 3문서는
+마지막 절 "v0.4.0·v5 추가분"에 있다.
 
 ---
 
@@ -322,3 +330,36 @@ Sonnet 5 도입가($2/$10 per MTok, 2026-08-31까지) 기준, 환율 1,416원.
 4. **새로 만드는 데이터셋은 한 방식으로 통일한다.** 현재 데이터셋이 혼합인 경위는 위 절에 있다.
 5. **캐시 절감은 인출 방식에 따라 다르다.** 고정 앵커(`--strategy fewshot-global`)만 앵커
    블록이 캐시되며, 층화·유사도는 앵커가 건마다 달라져 캐시되지 않는다(결정 29).
+
+---
+
+## v0.4.0·v5 추가분 (2026-09-07)
+
+근거와 실측은 `history/decisions-07.md` 2026-09-07 03:04 항목에 있다.
+
+**원본에서 직접 표를 읽는다.** 신규 3건(대법원 `.hwp`, 한국석유공사 `.hwp`,
+한국지역난방공사 `.xlsx`)은 Markdown으로 변환하지 않고 `scripts/data/hwp_tables.py`·
+`xlsx_tables.py`가 `표 → 행 → 셀`을 내놓아 `build_dataset`의 뒷단을 그대로 쓴다.
+HWP 5.0은 셀마다 행·열 좌표가 레코드에 있어 중첩 표의 셀 경계가 붙는 변환 손실(§11.2)이
+없다. 파일은 `build_dataset.py`의 등록된 이름만 집는다(`.hwpx` 원본이 함께 있어서다).
+
+```bash
+python -m scripts.data.build_dataset --strict     # → data/processed/requirements_v0.4.0.jsonl
+python -m pytest tests/test_hwp_tables.py tests/test_xlsx_tables.py tests/test_build_dataset.py -q
+```
+
+**라벨링 조건은 동결본과 같아야 한다.** 프롬프트 v5, `anchor_pool_v2`(sha256 일치),
+`fewshot-stratified`. 조건이 하나라도 다르면 문서와 프롬프트가 얽혀 004를 새로 만든다.
+신규 421건은 `reports/current/claude_batches/new_docs_v0.4.0/`에 있고, `batch_info.json`에
+`prompt_version`·`prompt_sha256`·`model`이 기록된다.
+
+**`build_label_dataset.py`는 마지막으로 만든 버전에 맞춰져 있다.** 현재 `SOURCE_RUNS`와
+`DATASET_VERSION`이 v6(`claude_batches/full_v0.4.0_v6c`) 기준이므로 v4·v5를 다시 만들려면
+그 두 상수를 되돌린다. 세 데이터셋 모두 `DATASET_SPECS`에 sha256이 박혀 있고
+`RFP_DATASET_VERSION`으로 고른다. 기본값은 아직 `v4`다(감사 테스트가 기본값에 기대고 있다).
+
+| key | 파일 | 건수 | 조건 |
+|---|---|---:|---|
+| `v4` | `label_dataset_v4.jsonl` | 1,024 | 프롬프트 v5 · 층화 |
+| `v5` | `label_dataset_v5.jsonl` | 1,445 | 프롬프트 v5 · 층화 — **주 데이터셋** |
+| `v6` | `label_dataset_v6.jsonl` | 1,445 | 프롬프트 v6c · zero-shot — 기각, 비교용 |

@@ -3,8 +3,12 @@
 공공 AI·IT 구축 RFP에서 요구사항을 뽑아, **제안 견적에 반영해야 할 조항**과 **계약 전
 질의·검토가 필요한 조항**을 가려내는 연구 프로젝트다.
 
-10개 RFP · 요구사항 1,024건을 Claude로 전수 라벨링해 동결하고, 문서 단위 LODO로
-Dummy부터 경량 인코더 파인튜닝까지 **23종을 같은 분할에서 비교**했다.
+13개 RFP · 요구사항 1,445건을 Claude로 전수 라벨링해 동결하고(`label_dataset_v5`),
+문서 단위 LODO로 Dummy부터 경량 인코더 파인튜닝까지 **23종을 같은 분할에서 비교**했다.
+
+> 아래 결과표와 "모델 비교" 절의 수치는 **10개 RFP · 1,024건(`v4`)** 기준이다.
+> v5(13문서)에서는 단독 기준선 word+char **0.6395**(fold 평균, v4 0.6144)만 측정됐고
+> 파인튜닝·앙상블 재학습은 [`docs/NEXT.md`](docs/NEXT.md)에 있다.
 
 ## 결과
 
@@ -47,6 +51,7 @@ E5 임베딩, 한국어 의존구문, 요구사항 유형·구조·수치 featur
 | [`docs/PROJECT_DIRECTION.md`](docs/PROJECT_DIRECTION.md) | 연구 설계와 범위 |
 | [`docs/PIPELINE.md`](docs/PIPELINE.md) | 원본 RFP → 라벨 데이터셋 실행 절차 |
 | [`docs/WORKLOG.md`](docs/WORKLOG.md) | 날짜별 진행 상황과 현재 위치 |
+| [`docs/NEXT.md`](docs/NEXT.md) | 이어서 할 작업 — 다른 컴퓨터에서 이어받을 때 |
 | [`docs/history/`](docs/history/) | 결정과 그 근거 |
 | [`docs/issues/`](docs/issues/) | 알려진 데이터 문제 |
 
@@ -66,15 +71,24 @@ python -m scripts.labeling.label_dataset
 
 ## 라벨 데이터셋
 
-분석과 실험은 모두 `data/labels/label_dataset_v4.jsonl`에서 출발한다. v4는 v3의
-라벨과 원문을 그대로 보존하고, 재현 가능한 전처리 본문과 모델 입력을 추가했다.
+주 데이터셋은 `data/labels/label_dataset_v5.jsonl`(1,445건 · 13문서)이다. 코드 기본값은
+아직 `v4`라서 실험 명령에 `RFP_DATASET_VERSION=v5`를 붙여야 한다(2026-09-07 03:17).
 
-| 항목 | 값 |
-|---|---|
-| 건수 | 1,024 (10개 RFP 문서) |
-| 주 라벨 | 통상수용 512 (50.0%) / 계약·질의검토 270 (26.4%) / 견적반영 242 (23.6%) |
-| 스키마 | v4.0.0 (7필드) |
-| 생성 | Claude Sonnet 5, 층화 few-shot, 프롬프트 v5 |
+| key | 건수 | 문서 | 프롬프트 · 인출 | 상태 |
+|---|---:|---:|---|---|
+| `v4` | 1,024 | 10 | v5 · 층화 few-shot | 동결. 아래 결과표의 기준 |
+| **`v5`** | **1,445** | **13** | v5 · 층화 few-shot | **동결. 주 데이터셋** |
+| `v6` | 1,445 | 13 | v6c · zero-shot | 동결. 기각(0.5991). 프롬프트 효과 기록용 |
+
+v4는 v3의 라벨과 원문을 그대로 보존하고, 재현 가능한 전처리 본문과 모델 입력을
+추가했다. v5는 v4의 1,024건에 신규 3문서 421건을 같은 조건으로 더한 것이다.
+
+| 항목 | v4 | v5 |
+|---|---|---|
+| 건수 | 1,024 (10개 RFP 문서) | 1,445 (13개) |
+| 주 라벨 | 통상수용 512 (50.0%) / 계약·질의검토 270 (26.4%) / 견적반영 242 (23.6%) | 통상수용 750 (51.9%) / 계약·질의검토 362 (25.1%) / 견적반영 333 (23.0%) |
+| 스키마 | v4.0.0 (7필드) | 같음 |
+| 생성 | Claude Sonnet 5, 층화 few-shot, 프롬프트 v5 | 같음 |
 
 `normalized_requirement_text`는 줄 시작 불릿을 `-`로 통일한 본문이고,
 `model_text`는 `요구사항명 + 줄바꿈 + normalized_requirement_text`다.
@@ -82,8 +96,10 @@ python -m scripts.labeling.label_dataset
 실험 입력은 환경 변수 하나로 바꾼다. 미지정 기본값은 `v4`다.
 
 ```powershell
-$env:RFP_DATASET_VERSION = "v3"  # 원문 본문
-$env:RFP_DATASET_VERSION = "v4"  # 요구사항명 + 불릿 정규화 본문
+$env:RFP_DATASET_VERSION = "v3"  # 원문 본문 (1,024건)
+$env:RFP_DATASET_VERSION = "v4"  # 요구사항명 + 불릿 정규화 본문 (1,024건)
+$env:RFP_DATASET_VERSION = "v5"  # 13문서 1,445건 — 주 데이터셋
+$env:RFP_DATASET_VERSION = "v6"  # 같은 1,445건, 프롬프트 v6c zero-shot (기각, 비교용)
 python -m scripts.evaluation.baselines
 ```
 
@@ -119,6 +135,10 @@ python -m scripts.labeling.build_label_dataset
 
 `reports/current/claude_runs/`의 실행 디렉터리 세 곳에서 직접 읽어 재생성한다.
 빌더가 결정적이라 같은 입력에서 **바이트까지 동일한 파일**이 나온다.
+
+> **주의(2026-09-07)**: 현재 `build_label_dataset.py`의 `SOURCE_RUNS`·`DATASET_VERSION`은
+> 마지막으로 만든 **v6** 기준이다. 그대로 실행하면 v6이 나온다. v4·v5를 다시 만들려면
+> 두 상수를 해당 실행 목록으로 되돌려야 한다.
 
 정리하는 것은 셋이다.
 
@@ -214,6 +234,14 @@ system에 올리면 오히려 손해다(결정 29).
 | 10 | `10_explainable_classical_search.ipynb` | 검증 선택 Logistic·NB-SVM·fastText와 근거 feature·오류 시각화 |
 | 11 | `11_dependency_features.ipynb` | 한국어 의존구문 feature 통제 비교·계수·문서 분포 시각화 |
 | 12 | `12_candidate_ensemble.ipynb` | 0.6 이상 후보 3개의 합의·오류 겹침·고정 결합 비교 |
+| 13 | `13_label_boundary.ipynb` | `견적반영`↔`계약·질의검토` 경계 혼동과 확률 여유 |
+| 14 | `14_text_masking.ipynb` | 양식 표현 마스킹 R1/R2/R3 ablation |
+| 15 | `15_finetuning.ipynb` | 파인튜닝 실행 결과와 앙상블 |
+| 05 | `05_finetune_analysis.ipynb` | 파인튜닝 실행 분석·임계값 스윕 (번호 중복은 알려진 문제) |
+| 17 | `17_rerun_agreement.ipynb` | 실행 간 라벨 일치율 (v6b·v6c 재점검) |
+| 18 | `18_decision_structure.ipynb` | OvR·OvO·캐스케이드 비교 |
+| 19 | `19_training_recipes.ipynb` | 학습 방식 네 가지의 코드와 성적표 |
+| 20 | `20_boundary_cases.ipynb` | v5 경계 사례와 v5·v6 라벨 불안정 |
 
 비교·분석은 스크립트가 아니라 노트북으로 만든다. 노트북은 사용법만 보여주고
 실제 로직은 `scripts/` 모듈이 기준이다.

@@ -1,7 +1,7 @@
 # 다음에 할 일
 
 작성 2026-09-07. 다른 컴퓨터에서 이어받을 때 이 파일만 읽으면 된다.
-브랜치 `add-three-rfps-and-v5-dataset`.
+`main`에 있다(브랜치 `add-three-rfps-and-v5-dataset`과 같은 커밋).
 
 ---
 
@@ -78,7 +78,8 @@ RFP_DATASET_VERSION=v5 python -m scripts.evaluation.finetune_ensemble
 보조 축은 `blockers`(다중 라벨 BCE) + `cost_basis` + `build_difficulty` +
 `domain_dependency`이고, 인코더의 `[CLS]` 표현을 공유한다.
 
-결과가 신통치 않다. `reports/current/v4/finetune_results.md`(aux-heads 브랜치) 기준.
+결과가 신통치 않다. `reports/current/v4/finetune_results.md`(aux-heads 브랜치) 기준이며,
+결정 기록은 `docs/history/decisions-09.md` 2026-09-07 09:30에 있다.
 
 | 설정 | +aux | 원본 | 차이 | 경계 혼동 |
 |---|---:|---:|---:|---:|
@@ -138,6 +139,15 @@ RFP_DATASET_VERSION=v5 python -m scripts.evaluation.finetune_ensemble
 
 **새 실험을 고를 때 기준: 기대 효과가 0.016 미만이면 돌리지 않는다.**
 결과가 어느 쪽으로 나와도 해석할 수 없다.
+
+## 미뤄둔 것 (우선순위 없음, WORKLOG에서 옮김)
+
+- `무작위 few-shot` 실험 (§8.2) — 무작위와 층화가 비슷하면 앵커 검색기를 유지할 이유가 사라진다
+- Chunk 1 배치 재실행 (약 1,350원) — 실행 경로 통일 + 동기/배치 비교 확보 (issues/004)
+- `산출정보` 추출 — 넣기로 한다면 100건 파일럿(약 800원)으로 먼저 판단 (issues/007)
+- `data/processed/`가 gitignore라 `requirements_v0.4.0.jsonl`이 저장소에 없다. 다른
+  컴퓨터에서는 `python -m scripts.data.build_dataset --strict`로 먼저 만든다
+  (decisions-06 2026-09-06 21:30 "남은 판단")
 
 ---
 
