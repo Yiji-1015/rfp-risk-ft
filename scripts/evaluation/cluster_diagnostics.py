@@ -100,13 +100,28 @@ def main() -> None:
         lo, hi = wilson(k, t)
         consistency[name] = {"agree": k, "n": t, "rate": k / t if t else None, "wilson95": [lo, hi]}
         print(f"  {name:<14} {k:4d}/{t:4d} = {k / t * 100:5.1f}%  (95% {lo * 100:.1f}~{hi * 100:.1f})")
-    knn_macro = None
-    try:
-        from sklearn.metrics import f1_score
-        knn_macro = float(f1_score(lab, nn_major, labels=LABELS, average="macro"))
-        print(f"  참고: 이 다수결을 예측으로 쓰면 macro F1 {knn_macro:.3f} (학습 없음, 문서 간 kNN)")
-    except Exception:
-        pass
+    from sklearn.metrics import f1_score
+    knn_macro = float(f1_score(lab, nn_major, labels=LABELS, average="macro"))
+    print(f"  참고: 이 다수결을 예측으로 쓰면 macro F1 {knn_macro:.3f} (학습 없음, 문서 간 kNN)")
+
+    # 같은 것을 기준선과 같은 word+char TF-IDF 유사도로 다시 잰다. 임베딩 선택에 기대는
+    # 결과인지 확인하는 대조군이다. 벡터라이저는 전체에 비지도로 맞춘다(라벨 안 씀).
+    from scripts.evaluation import baselines as B
+    x = B.WORD_CHAR_BALANCED.build().steps[0][1].fit_transform(B._select_text(rows)).tocsr()
+    sim_t = np.where(same_doc, -np.inf, (x @ x.T).toarray())
+    nn_t = np.argsort(-sim_t, axis=1)[:, :K_NEIGHBORS]
+    major_t = np.array([collections.Counter(lab[i]).most_common(1)[0][0] for i in nn_t])
+    agree_t = major_t == lab
+    overlap = float(np.mean([len(set(a) & set(b)) / K_NEIGHBORS for a, b in zip(nn, nn_t)]))
+    print(f"  대조군 — TF-IDF word+char 이웃 (E5와 이웃 겹침 {overlap * 100:.1f}%)")
+    consistency_tfidf = {}
+    for name, m in groups.items():
+        k, t = int(agree_t[m].sum()), int(m.sum())
+        lo, hi = wilson(k, t)
+        consistency_tfidf[name] = {"agree": k, "n": t, "rate": k / t if t else None, "wilson95": [lo, hi]}
+        print(f"    {name:<14} {k:4d}/{t:4d} = {k / t * 100:5.1f}%  (95% {lo * 100:.1f}~{hi * 100:.1f})")
+    knn_macro_tfidf = float(f1_score(lab, major_t, labels=LABELS, average="macro"))
+    print(f"    kNN 다수결 macro F1 {knn_macro_tfidf:.3f}")
 
     # ---------- 2. 아웃라이어 ----------
     nearest = nn_sim[:, 0]                              # 다른 문서 최근접 유사도
@@ -158,6 +173,8 @@ def main() -> None:
     result = {
         "dataset": version, "rows": n, "k_neighbors": K_NEIGHBORS, "k_clusters": K_CLUSTERS,
         "cross_document_label_consistency": consistency, "knn_macro_f1": knn_macro,
+        "cross_document_label_consistency_tfidf": consistency_tfidf, "knn_macro_f1_tfidf": knn_macro_tfidf,
+        "neighbor_overlap_e5_tfidf": overlap,
         "outliers": {"threshold": float(cut), "count": int(outlier.sum()), "error_rate": outlier_err, "top15": top},
         "anchors": {"clusters_covered": len(anchor_clusters), "uncovered_rows": int(uncovered.sum()), "mixed_cluster_rows": mixed},
     }
