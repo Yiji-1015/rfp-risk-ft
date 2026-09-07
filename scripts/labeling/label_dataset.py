@@ -67,6 +67,13 @@ DATASET_SPECS = {
         "rows": 1445,
     },
 }
+# v4로 두는 이유는 동결 데이터셋 감사 테스트들이 이 기본값에 기대고 있기 때문이다.
+# v5로 바꾸면 22개가 깨진다(2026-09-07 확인). 옮기려면 그 테스트들이 v4를 명시적으로
+# 요구하도록 먼저 고쳐야 한다 — `docs/NEXT.md` 참고.
+#
+# ⚠️ 그때까지 **모든 v5 실행은 `RFP_DATASET_VERSION=v5`를 반드시 붙인다.** 빠뜨리면
+# 조용히 v4 라벨로 학습한다. TF-IDF는 다시 돌리면 그만이지만 GPU 파인튜닝은 예산을
+# 그대로 날린다.
 DEFAULT_DATASET_KEY = "v4"
 DATASET_VERSION_ENV = "RFP_DATASET_VERSION"
 TEXT_MASK_ENV = "RFP_TEXT_MASK"
