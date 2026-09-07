@@ -209,6 +209,12 @@ def main() -> None:
         print("\n호출하지 않았습니다. --execute 로 실행합니다.")
         return
 
+    if args.execute:
+        from dotenv import load_dotenv
+        load_dotenv(ROOT / ".env")
+        if not os.getenv("ANTHROPIC_API_KEY"):
+            raise SystemExit("ANTHROPIC_API_KEY가 없습니다. .env를 두거나 환경변수로 넘기세요. 호출하지 않았습니다.")
+
     results: dict[str, dict[str, dict]] = {}
     for arm in arms:
         path = OUT_DIR / f"results_{arm}.jsonl"

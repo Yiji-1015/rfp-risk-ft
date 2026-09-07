@@ -16,6 +16,28 @@ TF-IDF는 다시 돌리면 그만이지만 **GPU 파인튜닝은 예산을 그�
 
 ---
 
+## 0. 문서 맥락 재판정 ← **지금 바로** (브랜치 `boundary-context`, 약 $3~5)
+
+준비는 끝났고 호출만 남았다. 커밋 `46eef2f` 이후.
+
+1. **`.env`의 `ANTHROPIC_API_KEY`를 실제 키로 되돌린다.** 2026-09-07 17:26에 자리표시자
+   `your_anthropic_api_key_here`로 덮여 있었다(Codex Solar 파일럿이 `.env.example`을 복사하면서
+   Upstage 키를 넣은 시각과 같다). 두 번 실행해 200건 전부 401 → 과금 0.
+2. 실행. 워크트리에 `.env`가 없으면 main 저장소 `.env`에서 키를 넘긴다.
+
+```bash
+RFP_DATASET_VERSION=v5 python -m scripts.evaluation.context_rejudge --execute
+```
+
+3. 결과는 `reports/current/v5/context_rejudge_100_s42/summary.json`과 표준 출력.
+   읽는 법: **plain 팔 대 context 팔의 고침/망침 차이**가 결과다. Solar 파일럿(원문만)은
+   16/17이었다. 전체 fold 평균은 100건만 교체라 0.002 안에서 움직이니 보지 않는다.
+   - context가 plain보다 순증이 뚜렷이 크면 → "문서 맥락이 경계를 푼다". 435건 전체로 확대 검토.
+   - 차이 없으면 → "맥락을 줘도 안 된다". 결론 1(2분류 운영 + 사람 판정)의 근거가 한 겹 더 두꺼워진다.
+   - 주의: v5 정답은 맥락 없이(판단 규칙 1) 만들어졌다. context가 v5와 멀어진 건은 오류일 수도
+     더 나은 판정일 수도 있으니, 망친 건 몇 개는 원문을 읽고 어느 쪽인지 적는다.
+4. decisions-09에 기록하고 main에 병합.
+
 ## 1. 파인튜닝 v5 — **끝남** (2026-09-07 17:10, decisions-09)
 
 `wc + ftB + ftL` 다수결 fold 평균 **0.666~0.683**(seed 9쌍, 평균 0.6745). 기준선 0.6395

@@ -324,3 +324,24 @@
 - 산출물: `scripts/evaluation/solar_disagreement_pilot.py`, `tests/test_solar_disagreement_pilot.py`,
   `reports/current/solar_runs/disagreement_v5_100_s42/`의 조건·입력·응답·비교 보고서.
   실행 명령은 README에 있다. 관련 검사 27개 통과, 별도 계산으로 UID 100건·전체 fold 점수를 대조했다.
+
+## 2026-09-07 23:20
+
+- 결정: **경계 이견에 문서 맥락을 주는 재판정 실험을 준비하고 실행은 보류한다**(브랜치
+  `boundary-context`). 19:20 진단이 "경계는 문서 맥락이 가른다"였고, Solar 파일럿(18:08)이
+  "원문만 다시 읽히면 16 고치고 17 망친다"는 대조군을 남겼다. 같은 100건을 Claude Sonnet 5로
+  `plain`(원문만) / `context`(원문 + 문서 맥락 카드) 두 팔 zero-shot 판정해 맥락의 효과만 분리한다.
+- 문서 맥락 카드 13장을 RFP 원본에서 만들었다(`data/context/document_context_v1.jsonl`):
+  발주기관·사업비·기간·망 환경·인프라·조달 조건·도메인·과업 요약. 원문에 없는 항목은
+  미기재로 두고 추측하지 않았다. 예산 미기재 4건(강원랜드·남동·국방·인천공항), 지역난방은
+  요구사항 정의서만 있어 예산·기간 미확인.
+- zero-shot으로 두는 이유: v5 정답은 층화 퓨샷으로 만들어졌으므로 같은 조건으로 다시 돌리면
+  정답을 재생성하는 것이 되어 "고침"이 의미를 잃는다. 대신 v5 판단 규칙 1(문서에 없는
+  예산·기간을 추측하지 않는다)이 정답 생성 시 맥락을 배제했으므로, context 팔이 v5와 멀어지는
+  것을 오류로만 읽을 수 없다는 한계를 protocol.json에 적었다.
+- 관측 — **`.env`의 `ANTHROPIC_API_KEY`가 자리표시자로 덮여 있었다.** 수정 시각 17:26이
+  Solar 파일럿 시작과 같고 `UPSTAGE_API_KEY`가 추가돼 있어, `.env.example` 복사 과정에서
+  실제 키가 사라진 것으로 본다. 두 번 실행해 200건 전부 401, 과금 0. 스크립트에 키가 없으면
+  호출 전에 멈추는 가드를 넣었다. 키 복구 후 실행 절차는 `NEXT.md` 0번.
+- 산출물: `data/context/document_context_v1.jsonl`, `scripts/evaluation/context_rejudge.py`,
+  `reports/current/v5/context_rejudge_100_s42/{protocol.json,context_cards.txt}`.
