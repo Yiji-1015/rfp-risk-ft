@@ -1,0 +1,25 @@
+{
+  "experiment": "context-rejudge-v5-100-s42",
+  "sample_from": "reports\\current\\solar_runs\\disagreement_v5_100_s42",
+  "sample_size": 100,
+  "arms": [
+    "plain",
+    "context"
+  ],
+  "members": [
+    "wc",
+    "ftB7",
+    "ftL42"
+  ],
+  "settings": {
+    "model": "claude-sonnet-5",
+    "effort": "medium",
+    "thinking": "adaptive",
+    "max_tokens": 16000,
+    "prompt_version": "claude-rfp-risk-v5"
+  },
+  "context_sha256": "432167aa01065fe1f9a4f407979fc308b633cc74686a4771decd7c6c3a0828f4",
+  "supplement_sha256": "99923ab7b0e8e9410d5cdff1a09863588d00d5634acddb91e7d54e48f485fa95",
+  "adoption": "ok -> derive_primary_action; error -> original ensemble",
+  "caveat": "v5 라벨은 문서 맥락 없이(판단 규칙 1) 생성됐다. 맥락 팔이 v5와 멀어지는 것은 오류일 수도, 더 나은 판정일 수도 있다."
+}
