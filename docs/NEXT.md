@@ -16,58 +16,15 @@ TF-IDF는 다시 돌리면 그만이지만 **GPU 파인튜닝은 예산을 그�
 
 ---
 
-## 1. 파인튜닝 v5 — 두 멤버는 끝났고, seed 범위가 남았다 ← **여기부터**
+## 1. 파인튜닝 v5 — **끝남** (2026-09-07 17:10, decisions-09)
 
-**2026-09-07 14:30 결과** (decisions-09): `wc + ftB7 + ftL42` fold 평균 **0.671** / 통합 0.691.
-기준선 0.6395 대비 +0.031, 중첩 선택 13/13 동일. `reports/current/v5/finetune_results.md`.
+`wc + ftB + ftL` 다수결 fold 평균 **0.666~0.683**(seed 9쌍, 평균 0.6745). 기준선 0.6395
+대비 전부 측정 하한 초과. 파인튜닝 단독은 large 평균 0.652(+0.012)로 하한 아래.
+`reports/current/v5/finetune_results.md`. 이 축에서 더 돌릴 것은 없다.
 
-남은 것은 **범위**다. 지금 값은 seed 하나씩이라 "0.671"이 아니라 "0.6x~0.6x"로 적어야 한다.
-v4에서 base seed 범위가 0.038, large가 0.024였다. 같은 설정으로 네 번 더 돌린다.
+## 3. 문서 +3개 ← **다음은 여기** (GPU 불필요, 라벨링 약 $4, 실행 전 사용자 확인)
 
-```bash
-RFP_DATASET_VERSION=v5 python -m scripts.modeling.finetune \
-  --model klue/roberta-large --seed 7 --fold -1 \
-  --epochs 6 --lr 2e-5 --batch-size 8 --grad-accum 4 --max-length 512
-```
-
-```bash
-RFP_DATASET_VERSION=v5 python -m scripts.modeling.finetune \
-  --model klue/roberta-large --seed 13 --fold -1 \
-  --epochs 6 --lr 2e-5 --batch-size 8 --grad-accum 4 --max-length 512
-```
-
-```bash
-RFP_DATASET_VERSION=v5 python -m scripts.modeling.finetune \
-  --model klue/roberta-base --seed 42 --fold -1 \
-  --epochs 6 --lr 2e-5 --batch-size 32 --grad-accum 1 --max-length 512
-```
-
-```bash
-RFP_DATASET_VERSION=v5 python -m scripts.modeling.finetune \
-  --model klue/roberta-base --seed 13 --fold -1 \
-  --epochs 6 --lr 2e-5 --batch-size 32 --grad-accum 1 --max-length 512
-```
-
-실행마다 `reports/current/v5/finetune_runs.jsonl`을 커밋·push한다. 컨테이너가 끝나면 사라진다.
-
-### 그다음 앙상블 (로컬 CPU, 몇 초)
-
-```bash
-RFP_DATASET_VERSION=v5 python -m scripts.evaluation.finetune_ensemble
-```
-
-v5용 TF-IDF 후보 OOF(`model_candidate_oof.csv`)는 이미 만들어져 있다. 멤버 태그가 겹치면
-멈추게 돼 있으니(`member_tag`), 같은 seed를 두 번 돌렸다면 jsonl에서 오래된 줄을 지운다.
-
-### 읽는 법
-
-- 점수는 **fold 평균 macro F1**. 통합 OOF는 같은 모델에서도 0.02쯤 높다.
-- **측정 하한 0.016**(fold SE 0.0079의 2배). 이보다 작은 차이는 해석하지 않는다.
-- large 단독이 기준선보다 +0.016으로 하한에 걸쳐 있다. seed 7·13이 나오면
-  "파인튜닝 단독이 기준선을 넘는가"에 처음으로 답할 수 있다.
-- 경계 혼동이 127 → 117로 줄었다. seed 범위 안의 흔들림인지 이때 같이 본다.
-
-## 2. 보조 헤드 — **이미 해봤고 효과가 없다** (순위 내림)
+## 4. 보조 헤드 — **이미 해봤고 효과가 없다** (순위 내림)
 
 `aux-heads` 브랜치에 **다중 헤드가 이미 구현돼 있고 v4에서 5회 돌렸다.**
 `scripts/modeling/finetune.py`의 `MultiHeadModel`, `AUX_HEADS`, `--aux`, `--aux-weight`.
@@ -94,14 +51,13 @@ v5용 TF-IDF 후보 OOF(`model_candidate_oof.csv`)는 이미 만들어져 있다
 **대체**한 것이라 그 논문의 방법이 아니고 판정도 아니다.
 
 **그래도 우선순위는 낮다.** 같은 구조에서 보조 축 넷이 모두 실패했고, 타깃만 바꿔
-0.016을 넘길 근거가 약하다. 1번과 3번을 먼저 하고, 여력이 남으면 본다.
+0.016을 넘길 근거가 약하다. 3번을 먼저 하고, 여력이 남으면 본다.
 
 구현하려면 `aux-heads`의 `finetune.py`에서 `MultiHeadModel` 계열을 가져와야 한다.
 **단, 두 브랜치의 `finetune.py`가 갈려 있어 자동 병합이 안 된다**(aux-heads에는
 `run_id`가 없고, main에는 `MultiHeadModel`이 없다). 통째 병합 말고 필요한 부분만
 옮긴다.
 
-## 3. 문서 +3개 (GPU 불필요, 약 $4)
 
 학습곡선 `macroF1 = 0.0896·ln(학습문서수) + 0.4241`(가중 R² 0.969).
 11문서 예측 0.6390 대 실측 0.6395로 검증됐다.

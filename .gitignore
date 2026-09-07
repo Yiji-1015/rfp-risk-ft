@@ -37,3 +37,6 @@ reports/**/explanation_viewer.html
 
 # 작업 중 임시 파일
 scratch_*
+
+# gcube 컨테이너 학습 로그
+runs.log
