@@ -1,5 +1,5 @@
 {
-  "experiment": "context-rejudge-v5-100-s42",
+  "experiment": "context-rejudge-v5-100-s42-solar",
   "sample_from": "reports\\current\\solar_runs\\disagreement_v5_100_s42",
   "sample_size": 100,
   "arms": [
@@ -11,13 +11,15 @@
     "ftB7",
     "ftL42"
   ],
+  "provider": "solar",
   "settings": {
-    "model": "claude-sonnet-5",
-    "effort": "medium",
-    "thinking": "adaptive",
-    "max_tokens": 16000,
-    "prompt_version": "claude-rfp-risk-v5"
+    "model": "solar-pro4-260806",
+    "temperature": 0,
+    "reasoning_effort": "low",
+    "max_tokens": 4096,
+    "prompt_basis": "claude-rfp-risk-v5 + quotation format only"
   },
+  "plain_arm": "pilot results reused (no call)",
   "context_sha256": "432167aa01065fe1f9a4f407979fc308b633cc74686a4771decd7c6c3a0828f4",
   "supplement_sha256": "99923ab7b0e8e9410d5cdff1a09863588d00d5634acddb91e7d54e48f485fa95",
   "adoption": "ok -> derive_primary_action; error -> original ensemble",
