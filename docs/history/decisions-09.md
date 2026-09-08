@@ -480,3 +480,25 @@
   임계값)면 blocker 아님. (6) 무상 유지보수 1년은 통상, HW 3년 워런티는 판단 유보.
 
 - 산출물: `reports/current/v5/boundary_review_user_judgments.json`(27건, 메모 포함).
+
+## 2026-09-08 11:30
+
+- 결정: **라벨 규칙 v7 재라벨링을 제출했다**(브랜치 `label-v7`). 10:40의 "점수 목적으로는 후순위"를
+  사용자가 뒤집었다 — 반복(3회 다수결)은 우연 잡음만 걷어내고 검토에서 본 오류는 체계적이었으므로,
+  반복보다 규칙 교정이 먼저라는 판단. 비용은 통상수용을 빼서 절반으로 줄였다.
+- 조건: 프롬프트 `system_prompt_v7.txt`(v5 전문 + `[v7 보정]` 5항, sha `b907f3ce…`), 층화 few-shot,
+  앵커 풀 **v3**(v2에서 v7 규칙과 충돌하는 9건 제거, 91건), 힌트 없음, Sonnet 5 배치.
+  v5와 다른 것은 프롬프트 한 절과 앵커 9건뿐이다.
+- 대상: **`통상수용` 제외 695건**(견적 333 + 계약 362). v7 규칙은 판정을 낮추는 방향만 있어
+  v5에서 통상수용인 750건은 v7에서도 통상수용이라고 본다(단조성). 그 가정을 통상수용 50건
+  (seed 42) 별도 배치로 확인한다. 예상 비용 $6.5.
+- 배치 ID: `msgbatch_01WyEgbmyW7CWCYLBstJ3STE`(695), `msgbatch_01NvGJWyMnVWY9br1AnzKzWv`(50).
+  결과는 29일 보관되니 회수를 놓치지 않는다(9/6 18:08의 실수 반복 금지).
+- 평가 계획: (1) 50건 중 통상수용 유지 비율 — 95% 미만이면 단조성 가정이 틀린 것이고 전수를
+  다시 돌려야 한다. (2) 695건에서 v5와 갈린 건의 방향과 수 — 계약 → 견적/통상, 견적 → 통상만
+  나와야 한다. 올라간 건이 있으면 규칙이 새는 곳이다. (3) `label_dataset_v7` = v5 통상 750 +
+  v7 695로 조립해 동결하고, `word+char` 기준선을 v7으로 학습·평가한 값을 v5의 0.6395와
+  나란히 놓는다(각자의 기준). (4) 갈린 건 중 표본을 검토판에 올려 사용자가 본다.
+- 산출물: `data/anchors/anchor_pool_v3.{jsonl,_manifest.json}`, `notebooks/prompts/system_prompt_v7.txt`,
+  `data/samples/relabel_v7_{nonnormal_695,normal_check_50}.jsonl`,
+  `reports/current/claude_batches/relabel_v7_{nonnormal,normal_check}/batch_info.json`.

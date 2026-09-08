@@ -30,11 +30,19 @@ Solar로 돌렸다. 공통 82건에서 정답 일치 49 → 54, 짝 비교 8:3(p
 
 ## 3. 문서 +3개 ← **다음은 여기** (GPU 불필요, 라벨링 약 $4, 실행 전 사용자 확인)
 
-## 3.5 라벨 규칙 v7 — **점수 목적으로는 안 함, 논문 목적으로 후순위** (2026-09-08 10:40)
+## 3.5 라벨 규칙 v7 — **배치 제출됨, 회수 대기** (2026-09-08 11:30, 브랜치 `label-v7`)
 
-검토판 C 탭 27건 완료. Claude "모델이 맞다" 27건 중 사용자도 모델 편 15건, v5 편 11건, 보류 1.
-v5가 실제로 틀린 건은 127건 중 10~15건 → 재라벨링 이득 0.01 안팎(하한 아래). 규칙 후보 셋과
-사용자 판단 기준 여섯은 decisions-09 10:40. 문서 확충·3회 다수결 뒤 여력 있으면 논문 근거용으로.
+`msgbatch_01WyEgbmyW7CWCYLBstJ3STE`(통상수용 제외 695건) · `msgbatch_01NvGJWyMnVWY9br1AnzKzWv`(통상 50건 단조성 확인).
+프롬프트 v7 + 앵커 풀 v3 + 층화. 근거·평가 계획은 decisions-09 11:30.
+
+```bash
+python -m scripts.labeling.run_claude_batch --status   --batch-dir reports/current/claude_batches/relabel_v7_nonnormal
+python -m scripts.labeling.run_claude_batch --download --batch-dir reports/current/claude_batches/relabel_v7_nonnormal
+python -m scripts.labeling.run_claude_batch --download --batch-dir reports/current/claude_batches/relabel_v7_normal_check
+```
+
+받으면: 50건 통상 유지율 확인 → 695건 방향 확인(내려간 것만이어야 함) → `label_dataset_v7` 조립·동결
+(v5 통상 750 + v7 695) → 기준선 재학습 → 갈린 건 검토판.
 
 ## 4. 보조 헤드 — **이미 해봤고 효과가 없다** (순위 내림)
 
