@@ -226,7 +226,7 @@ def train_one_fold(rows, fold, args, device) -> dict[str, Any]:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model", default="LGAI-EXAONE/EXAONE-3.5-7.8B-Instruct")
+    parser.add_argument("--model", default="Qwen/Qwen2.5-7B-Instruct", help="EXAONE-3.5는 transformers 5.x에서 커스텀 코드가 깨져 못 쓴다(2026-09-08)")
     parser.add_argument("--fold", type=int, default=0, help="-1이면 전체 fold")
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--lr", type=float, default=1e-4)
