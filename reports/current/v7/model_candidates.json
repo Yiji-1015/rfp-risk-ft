@@ -1,0 +1,1801 @@
+{
+  "protocol": "LODO: fit 8 documents / validation 1 / test 1",
+  "probability_class_order": [
+    "통상수용",
+    "견적반영",
+    "계약·질의검토"
+  ],
+  "candidates": {
+    "char_logistic": {
+      "name": "문자 3~4gram TF-IDF + balanced Logistic",
+      "summary": {
+        "macro_f1": {
+          "fold_mean": 0.5982992518524085,
+          "count_weighted": 0.6074525791110844
+        },
+        "accuracy": {
+          "fold_mean": 0.702366078463348,
+          "count_weighted": 0.7122676579925651
+        },
+        "review_precision": {
+          "fold_mean": 0.573028579607527,
+          "count_weighted": 0.5882160298233474
+        },
+        "review_recall": {
+          "fold_mean": 0.542230587187461,
+          "count_weighted": 0.531751700453988
+        },
+        "review_f1": {
+          "fold_mean": 0.5328396354459052,
+          "count_weighted": 0.5372601019138451
+        },
+        "lift_over_dummy": {
+          "fold_mean": 0.1287251885257176,
+          "count_weighted": 0.1301115241635688
+        }
+      },
+      "folds": [
+        {
+          "fold_index": 0,
+          "test_document": "ccrs_ai_platform",
+          "test_size": 88,
+          "train_size": 1181,
+          "macro_f1": 0.6371694738147105,
+          "accuracy": 0.6590909090909091,
+          "per_class_f1": {
+            "통상수용": 0.6779661016949152,
+            "견적반영": 0.6818181818181818,
+            "계약·질의검토": 0.5517241379310345
+          },
+          "review_recall": 0.42105263157894735,
+          "review_precision": 0.8,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.3977272727272727,
+          "oracle_majority_accuracy": 0.3977272727272727,
+          "repeat_exposure_rate": 0.0,
+          "macro_f1_repeat_excluded": 0.6371694738147105,
+          "macro_f1_repeat_only": null,
+          "repeat_count": 0,
+          "non_repeat_count": 88
+        },
+        {
+          "fold_index": 1,
+          "test_document": "defense_intelligent_platform",
+          "test_size": 156,
+          "train_size": 1209,
+          "macro_f1": 0.6136990787630316,
+          "accuracy": 0.6474358974358975,
+          "per_class_f1": {
+            "통상수용": 0.7391304347826086,
+            "견적반영": 0.6542056074766355,
+            "계약·질의검토": 0.44776119402985076
+          },
+          "review_recall": 0.35714285714285715,
+          "review_precision": 0.6,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.391025641025641,
+          "oracle_majority_accuracy": 0.391025641025641,
+          "repeat_exposure_rate": 0.04487179487179487,
+          "macro_f1_repeat_excluded": 0.5997535175105269,
+          "macro_f1_repeat_only": 0.6666666666666666,
+          "repeat_count": 7,
+          "non_repeat_count": 149
+        },
+        {
+          "fold_index": 2,
+          "test_document": "genai_incident_response",
+          "test_size": 59,
+          "train_size": 1300,
+          "macro_f1": 0.5286935286935287,
+          "accuracy": 0.559322033898305,
+          "per_class_f1": {
+            "통상수용": 0.7142857142857143,
+            "견적반영": 0.5384615384615384,
+            "계약·질의검토": 0.3333333333333333
+          },
+          "review_recall": 0.26666666666666666,
+          "review_precision": 0.4444444444444444,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.3389830508474576,
+          "oracle_majority_accuracy": 0.4067796610169492,
+          "repeat_exposure_rate": 0.0,
+          "macro_f1_repeat_excluded": 0.5286935286935287,
+          "macro_f1_repeat_only": null,
+          "repeat_count": 0,
+          "non_repeat_count": 59
+        },
+        {
+          "fold_index": 3,
+          "test_document": "incheon_airport_digital_work",
+          "test_size": 70,
+          "train_size": 1281,
+          "macro_f1": 0.5184012066365007,
+          "accuracy": 0.5857142857142857,
+          "per_class_f1": {
+            "통상수용": 0.7,
+            "견적반영": 0.38461538461538464,
+            "계약·질의검토": 0.47058823529411764
+          },
+          "review_recall": 0.5333333333333333,
+          "review_precision": 0.42105263157894735,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.5571428571428572,
+          "oracle_majority_accuracy": 0.5571428571428572,
+          "repeat_exposure_rate": 0.04285714285714286,
+          "macro_f1_repeat_excluded": 0.5213071895424837,
+          "macro_f1_repeat_only": 0.26666666666666666,
+          "repeat_count": 3,
+          "non_repeat_count": 67
+        },
+        {
+          "fold_index": 4,
+          "test_document": "kac_ai_work_platform",
+          "test_size": 77,
+          "train_size": 1309,
+          "macro_f1": 0.7031039136302294,
+          "accuracy": 0.7402597402597403,
+          "per_class_f1": {
+            "통상수용": 0.8461538461538461,
+            "견적반영": 0.6842105263157895,
+            "계약·질의검토": 0.5789473684210527
+          },
+          "review_recall": 0.6111111111111112,
+          "review_precision": 0.55,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.5064935064935064,
+          "oracle_majority_accuracy": 0.5064935064935064,
+          "repeat_exposure_rate": 0.09090909090909091,
+          "macro_f1_repeat_excluded": 0.704014939309057,
+          "macro_f1_repeat_only": 0.75,
+          "repeat_count": 7,
+          "non_repeat_count": 70
+        },
+        {
+          "fold_index": 5,
+          "test_document": "kangwon_land_genai",
+          "test_size": 41,
+          "train_size": 1253,
+          "macro_f1": 0.6117782378651944,
+          "accuracy": 0.6585365853658537,
+          "per_class_f1": {
+            "통상수용": 0.7111111111111111,
+            "견적반영": 0.42857142857142855,
+            "계약·질의검토": 0.6956521739130435
+          },
+          "review_recall": 0.6153846153846154,
+          "review_precision": 0.8,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.5365853658536586,
+          "oracle_majority_accuracy": 0.5365853658536586,
+          "repeat_exposure_rate": 0.12195121951219512,
+          "macro_f1_repeat_excluded": 0.6079524340393906,
+          "macro_f1_repeat_only": 0.2962962962962963,
+          "repeat_count": 5,
+          "non_repeat_count": 36
+        },
+        {
+          "fold_index": 6,
+          "test_document": "kdhc_plant_integrated_mgmt",
+          "test_size": 142,
+          "train_size": 1166,
+          "macro_f1": 0.5089380481537344,
+          "accuracy": 0.7253521126760564,
+          "per_class_f1": {
+            "통상수용": 0.8416289592760181,
+            "견적반영": 0.16666666666666666,
+            "계약·질의검토": 0.5185185185185185
+          },
+          "review_recall": 0.4666666666666667,
+          "review_precision": 0.5833333333333334,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.7394366197183099,
+          "oracle_majority_accuracy": 0.7394366197183099,
+          "repeat_exposure_rate": 0.09859154929577464,
+          "macro_f1_repeat_excluded": 0.4977324263038549,
+          "macro_f1_repeat_only": 0.5422222222222222,
+          "repeat_count": 14,
+          "non_repeat_count": 128
+        },
+        {
+          "fold_index": 7,
+          "test_document": "kexim_ai_platform",
+          "test_size": 125,
+          "train_size": 1184,
+          "macro_f1": 0.7165382679232538,
+          "accuracy": 0.768,
+          "per_class_f1": {
+            "통상수용": 0.8652482269503546,
+            "견적반영": 0.6415094339622641,
+            "계약·질의검토": 0.6428571428571429
+          },
+          "review_recall": 0.6428571428571429,
+          "review_precision": 0.6428571428571429,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.568,
+          "oracle_majority_accuracy": 0.568,
+          "repeat_exposure_rate": 0.192,
+          "macro_f1_repeat_excluded": 0.6986585944919278,
+          "macro_f1_repeat_only": 0.6592592592592593,
+          "repeat_count": 24,
+          "non_repeat_count": 101
+        },
+        {
+          "fold_index": 8,
+          "test_document": "knoc_genai_platform",
+          "test_size": 124,
+          "train_size": 1220,
+          "macro_f1": 0.796658873952854,
+          "accuracy": 0.8145161290322581,
+          "per_class_f1": {
+            "통상수용": 0.8813559322033898,
+            "견적반영": 0.75,
+            "계약·질의검토": 0.7586206896551724
+          },
+          "review_recall": 0.7333333333333333,
+          "review_precision": 0.7857142857142857,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.47580645161290325,
+          "oracle_majority_accuracy": 0.47580645161290325,
+          "repeat_exposure_rate": 0.7419354838709677,
+          "macro_f1_repeat_excluded": 0.49859336066232623,
+          "macro_f1_repeat_only": 0.9033699397071491,
+          "repeat_count": 92,
+          "non_repeat_count": 32
+        },
+        {
+          "fold_index": 9,
+          "test_document": "koen_ai_infrastructure",
+          "test_size": 90,
+          "train_size": 1295,
+          "macro_f1": 0.5820330969267139,
+          "accuracy": 0.7777777777777778,
+          "per_class_f1": {
+            "통상수용": 0.8794326241134752,
+            "견적반영": 0.3333333333333333,
+            "계약·질의검토": 0.5333333333333333
+          },
+          "review_recall": 1.0,
+          "review_precision": 0.36363636363636365,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.8444444444444444,
+          "oracle_majority_accuracy": 0.8444444444444444,
+          "repeat_exposure_rate": 0.28888888888888886,
+          "macro_f1_repeat_excluded": 0.5047246660149886,
+          "macro_f1_repeat_only": 0.6666666666666666,
+          "repeat_count": 26,
+          "non_repeat_count": 64
+        },
+        {
+          "fold_index": 10,
+          "test_document": "korail_genai_isp_ismp",
+          "test_size": 37,
+          "train_size": 1204,
+          "macro_f1": 0.432183908045977,
+          "accuracy": 0.7567567567567568,
+          "per_class_f1": {
+            "통상수용": 0.896551724137931,
+            "견적반영": 0.0,
+            "계약·질의검토": 0.4
+          },
+          "review_recall": 0.5,
+          "review_precision": 0.3333333333333333,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.7567567567567568,
+          "oracle_majority_accuracy": 0.7567567567567568,
+          "repeat_exposure_rate": 0.10810810810810811,
+          "macro_f1_repeat_excluded": 0.4339869281045752,
+          "macro_f1_repeat_only": 0.2857142857142857,
+          "repeat_count": 4,
+          "non_repeat_count": 33
+        },
+        {
+          "fold_index": 11,
+          "test_document": "mfds_drug_ai_review",
+          "test_size": 181,
+          "train_size": 1098,
+          "macro_f1": 0.5603656920382899,
+          "accuracy": 0.7734806629834254,
+          "per_class_f1": {
+            "통상수용": 0.8825622775800712,
+            "견적반영": 0.2857142857142857,
+            "계약·질의검토": 0.5128205128205128
+          },
+          "review_recall": 0.43478260869565216,
+          "review_precision": 0.625,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.7513812154696132,
+          "oracle_majority_accuracy": 0.7513812154696132,
+          "repeat_exposure_rate": 0.23756906077348067,
+          "macro_f1_repeat_excluded": 0.5276322476322476,
+          "macro_f1_repeat_only": 0.8847736625514403,
+          "repeat_count": 43,
+          "non_repeat_count": 138
+        },
+        {
+          "fold_index": 12,
+          "test_document": "supreme_court_sentencing",
+          "test_size": 155,
+          "train_size": 1195,
+          "macro_f1": 0.5683269476372925,
+          "accuracy": 0.6645161290322581,
+          "per_class_f1": {
+            "통상수용": 0.7777777777777778,
+            "견적반영": 0.4444444444444444,
+            "계약·질의검토": 0.4827586206896552
+          },
+          "review_recall": 0.4666666666666667,
+          "review_precision": 0.5,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.5935483870967742,
+          "oracle_majority_accuracy": 0.5935483870967742,
+          "repeat_exposure_rate": 0.11612903225806452,
+          "macro_f1_repeat_excluded": 0.5457146380564805,
+          "macro_f1_repeat_only": 0.7984126984126986,
+          "repeat_count": 18,
+          "non_repeat_count": 137
+        }
+      ]
+    },
+    "word_char_logistic": {
+      "name": "단어 1~2gram + 문자 3~4gram TF-IDF + balanced Logistic",
+      "summary": {
+        "macro_f1": {
+          "fold_mean": 0.6040369468255088,
+          "count_weighted": 0.6113476371380425
+        },
+        "accuracy": {
+          "fold_mean": 0.7096475643573984,
+          "count_weighted": 0.7182156133828996
+        },
+        "review_precision": {
+          "fold_mean": 0.5846329238357102,
+          "count_weighted": 0.6027515377211247
+        },
+        "review_recall": {
+          "fold_mean": 0.5163320895498329,
+          "count_weighted": 0.5135429627269052
+        },
+        "review_f1": {
+          "fold_mean": 0.5350783826093684,
+          "count_weighted": 0.5429454766523953
+        },
+        "lift_over_dummy": {
+          "fold_mean": 0.13600667441976796,
+          "count_weighted": 0.13605947955390338
+        }
+      },
+      "folds": [
+        {
+          "fold_index": 0,
+          "test_document": "ccrs_ai_platform",
+          "test_size": 88,
+          "train_size": 1181,
+          "macro_f1": 0.6248062015503876,
+          "accuracy": 0.6477272727272727,
+          "per_class_f1": {
+            "통상수용": 0.6666666666666666,
+            "견적반영": 0.6744186046511628,
+            "계약·질의검토": 0.5333333333333333
+          },
+          "review_recall": 0.42105263157894735,
+          "review_precision": 0.7272727272727273,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.3977272727272727,
+          "oracle_majority_accuracy": 0.3977272727272727,
+          "repeat_exposure_rate": 0.0,
+          "macro_f1_repeat_excluded": 0.6248062015503876,
+          "macro_f1_repeat_only": null,
+          "repeat_count": 0,
+          "non_repeat_count": 88
+        },
+        {
+          "fold_index": 1,
+          "test_document": "defense_intelligent_platform",
+          "test_size": 156,
+          "train_size": 1209,
+          "macro_f1": 0.6430855315747402,
+          "accuracy": 0.6730769230769231,
+          "per_class_f1": {
+            "통상수용": 0.762589928057554,
+            "견적반영": 0.6666666666666666,
+            "계약·질의검토": 0.5
+          },
+          "review_recall": 0.40476190476190477,
+          "review_precision": 0.6538461538461539,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.391025641025641,
+          "oracle_majority_accuracy": 0.391025641025641,
+          "repeat_exposure_rate": 0.04487179487179487,
+          "macro_f1_repeat_excluded": 0.6305575439433707,
+          "macro_f1_repeat_only": 0.6666666666666666,
+          "repeat_count": 7,
+          "non_repeat_count": 149
+        },
+        {
+          "fold_index": 2,
+          "test_document": "genai_incident_response",
+          "test_size": 59,
+          "train_size": 1300,
+          "macro_f1": 0.472700756539969,
+          "accuracy": 0.5084745762711864,
+          "per_class_f1": {
+            "통상수용": 0.6666666666666666,
+            "견적반영": 0.49056603773584906,
+            "계약·질의검토": 0.2608695652173913
+          },
+          "review_recall": 0.2,
+          "review_precision": 0.375,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.3389830508474576,
+          "oracle_majority_accuracy": 0.4067796610169492,
+          "repeat_exposure_rate": 0.0,
+          "macro_f1_repeat_excluded": 0.472700756539969,
+          "macro_f1_repeat_only": null,
+          "repeat_count": 0,
+          "non_repeat_count": 59
+        },
+        {
+          "fold_index": 3,
+          "test_document": "incheon_airport_digital_work",
+          "test_size": 70,
+          "train_size": 1281,
+          "macro_f1": 0.5836521600510123,
+          "accuracy": 0.6714285714285714,
+          "per_class_f1": {
+            "통상수용": 0.8048780487804879,
+            "견적반영": 0.4166666666666667,
+            "계약·질의검토": 0.5294117647058824
+          },
+          "review_recall": 0.6,
+          "review_precision": 0.47368421052631576,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.5571428571428572,
+          "oracle_majority_accuracy": 0.5571428571428572,
+          "repeat_exposure_rate": 0.04285714285714286,
+          "macro_f1_repeat_excluded": 0.5897963928654466,
+          "macro_f1_repeat_only": 0.26666666666666666,
+          "repeat_count": 3,
+          "non_repeat_count": 67
+        },
+        {
+          "fold_index": 4,
+          "test_document": "kac_ai_work_platform",
+          "test_size": 77,
+          "train_size": 1309,
+          "macro_f1": 0.67933413781367,
+          "accuracy": 0.7272727272727273,
+          "per_class_f1": {
+            "통상수용": 0.8395061728395061,
+            "견적반영": 0.6842105263157895,
+            "계약·질의검토": 0.5142857142857142
+          },
+          "review_recall": 0.5,
+          "review_precision": 0.5294117647058824,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.5064935064935064,
+          "oracle_majority_accuracy": 0.5064935064935064,
+          "repeat_exposure_rate": 0.09090909090909091,
+          "macro_f1_repeat_excluded": 0.6666666666666666,
+          "macro_f1_repeat_only": 0.8518518518518517,
+          "repeat_count": 7,
+          "non_repeat_count": 70
+        },
+        {
+          "fold_index": 5,
+          "test_document": "kangwon_land_genai",
+          "test_size": 41,
+          "train_size": 1253,
+          "macro_f1": 0.6520860781730348,
+          "accuracy": 0.6829268292682927,
+          "per_class_f1": {
+            "통상수용": 0.7272727272727273,
+            "견적반영": 0.5333333333333333,
+            "계약·질의검토": 0.6956521739130435
+          },
+          "review_recall": 0.6153846153846154,
+          "review_precision": 0.8,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.5365853658536586,
+          "oracle_majority_accuracy": 0.5365853658536586,
+          "repeat_exposure_rate": 0.12195121951219512,
+          "macro_f1_repeat_excluded": 0.6079524340393906,
+          "macro_f1_repeat_only": 0.6666666666666666,
+          "repeat_count": 5,
+          "non_repeat_count": 36
+        },
+        {
+          "fold_index": 6,
+          "test_document": "kdhc_plant_integrated_mgmt",
+          "test_size": 142,
+          "train_size": 1166,
+          "macro_f1": 0.47295783439281197,
+          "accuracy": 0.7183098591549296,
+          "per_class_f1": {
+            "통상수용": 0.8430493273542601,
+            "견적반영": 0.11428571428571428,
+            "계약·질의검토": 0.46153846153846156
+          },
+          "review_recall": 0.4,
+          "review_precision": 0.5454545454545454,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.7394366197183099,
+          "oracle_majority_accuracy": 0.7394366197183099,
+          "repeat_exposure_rate": 0.09859154929577464,
+          "macro_f1_repeat_excluded": 0.4591170504213982,
+          "macro_f1_repeat_only": 0.5422222222222222,
+          "repeat_count": 14,
+          "non_repeat_count": 128
+        },
+        {
+          "fold_index": 7,
+          "test_document": "kexim_ai_platform",
+          "test_size": 125,
+          "train_size": 1184,
+          "macro_f1": 0.7189988116458705,
+          "accuracy": 0.776,
+          "per_class_f1": {
+            "통상수용": 0.875,
+            "견적반영": 0.6274509803921569,
+            "계약·질의검토": 0.6545454545454545
+          },
+          "review_recall": 0.6428571428571429,
+          "review_precision": 0.6666666666666666,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.568,
+          "oracle_majority_accuracy": 0.568,
+          "repeat_exposure_rate": 0.192,
+          "macro_f1_repeat_excluded": 0.7032640874150308,
+          "macro_f1_repeat_only": 0.6592592592592593,
+          "repeat_count": 24,
+          "non_repeat_count": 101
+        },
+        {
+          "fold_index": 8,
+          "test_document": "knoc_genai_platform",
+          "test_size": 124,
+          "train_size": 1220,
+          "macro_f1": 0.8053988718775181,
+          "accuracy": 0.8225806451612904,
+          "per_class_f1": {
+            "통상수용": 0.8907563025210085,
+            "견적반영": 0.7397260273972602,
+            "계약·질의검토": 0.7857142857142857
+          },
+          "review_recall": 0.7333333333333333,
+          "review_precision": 0.8461538461538461,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.47580645161290325,
+          "oracle_majority_accuracy": 0.47580645161290325,
+          "repeat_exposure_rate": 0.7419354838709677,
+          "macro_f1_repeat_excluded": 0.49859336066232623,
+          "macro_f1_repeat_only": 0.9141075100077737,
+          "repeat_count": 92,
+          "non_repeat_count": 32
+        },
+        {
+          "fold_index": 9,
+          "test_document": "koen_ai_infrastructure",
+          "test_size": 90,
+          "train_size": 1295,
+          "macro_f1": 0.6281155810637645,
+          "accuracy": 0.8222222222222222,
+          "per_class_f1": {
+            "통상수용": 0.9041095890410958,
+            "견적반영": 0.43478260869565216,
+            "계약·질의검토": 0.5454545454545454
+          },
+          "review_recall": 0.75,
+          "review_precision": 0.42857142857142855,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.8444444444444444,
+          "oracle_majority_accuracy": 0.8444444444444444,
+          "repeat_exposure_rate": 0.28888888888888886,
+          "macro_f1_repeat_excluded": 0.6002539967129837,
+          "macro_f1_repeat_only": 0.5487528344671202,
+          "repeat_count": 26,
+          "non_repeat_count": 64
+        },
+        {
+          "fold_index": 10,
+          "test_document": "korail_genai_isp_ismp",
+          "test_size": 37,
+          "train_size": 1204,
+          "macro_f1": 0.44699872286079184,
+          "accuracy": 0.7567567567567568,
+          "per_class_f1": {
+            "통상수용": 0.896551724137931,
+            "견적반영": 0.0,
+            "계약·질의검토": 0.4444444444444444
+          },
+          "review_recall": 0.5,
+          "review_precision": 0.4,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.7567567567567568,
+          "oracle_majority_accuracy": 0.7567567567567568,
+          "repeat_exposure_rate": 0.10810810810810811,
+          "macro_f1_repeat_excluded": 0.44880174291939,
+          "macro_f1_repeat_only": 0.2857142857142857,
+          "repeat_count": 4,
+          "non_repeat_count": 33
+        },
+        {
+          "fold_index": 11,
+          "test_document": "mfds_drug_ai_review",
+          "test_size": 181,
+          "train_size": 1098,
+          "macro_f1": 0.5739145867052844,
+          "accuracy": 0.7734806629834254,
+          "per_class_f1": {
+            "통상수용": 0.8785714285714286,
+            "견적반영": 0.27906976744186046,
+            "계약·질의검토": 0.5641025641025641
+          },
+          "review_recall": 0.4782608695652174,
+          "review_precision": 0.6875,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.7513812154696132,
+          "oracle_majority_accuracy": 0.7513812154696132,
+          "repeat_exposure_rate": 0.23756906077348067,
+          "macro_f1_repeat_excluded": 0.5415704649372991,
+          "macro_f1_repeat_only": 0.8847736625514403,
+          "repeat_count": 43,
+          "non_repeat_count": 138
+        },
+        {
+          "fold_index": 12,
+          "test_document": "supreme_court_sentencing",
+          "test_size": 155,
+          "train_size": 1195,
+          "macro_f1": 0.5504310344827587,
+          "accuracy": 0.6451612903225806,
+          "per_class_f1": {
+            "통상수용": 0.7708333333333334,
+            "견적반영": 0.41379310344827586,
+            "계약·질의검토": 0.4666666666666667
+          },
+          "review_recall": 0.4666666666666667,
+          "review_precision": 0.4666666666666667,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.5935483870967742,
+          "oracle_majority_accuracy": 0.5935483870967742,
+          "repeat_exposure_rate": 0.11612903225806452,
+          "macro_f1_repeat_excluded": 0.5267553584626755,
+          "macro_f1_repeat_only": 0.7984126984126986,
+          "repeat_count": 18,
+          "non_repeat_count": 137
+        }
+      ]
+    },
+    "tfidf_e5_hybrid": {
+      "name": "문자 TF-IDF + E5 검증 선택 결합",
+      "summary": {
+        "macro_f1": {
+          "fold_mean": 0.5900829381459665,
+          "count_weighted": 0.604632391249759
+        },
+        "accuracy": {
+          "fold_mean": 0.6997068085643369,
+          "count_weighted": 0.7122676579925651
+        },
+        "review_precision": {
+          "fold_mean": 0.5476549091933708,
+          "count_weighted": 0.5758942853924266
+        },
+        "review_recall": {
+          "fold_mean": 0.502980094090814,
+          "count_weighted": 0.5092705261140775
+        },
+        "review_f1": {
+          "fold_mean": 0.5094652696947867,
+          "count_weighted": 0.526807770757114
+        },
+        "lift_over_dummy": {
+          "fold_mean": 0.1260659186267064,
+          "count_weighted": 0.1301115241635688
+        }
+      },
+      "folds": [
+        {
+          "fold_index": 0,
+          "test_document": "ccrs_ai_platform",
+          "test_size": 88,
+          "train_size": 1181,
+          "macro_f1": 0.6371694738147105,
+          "accuracy": 0.6590909090909091,
+          "per_class_f1": {
+            "통상수용": 0.6779661016949152,
+            "견적반영": 0.6818181818181818,
+            "계약·질의검토": 0.5517241379310345
+          },
+          "review_recall": 0.42105263157894735,
+          "review_precision": 0.8,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.25,
+          "trained_majority_accuracy": 0.3977272727272727,
+          "oracle_majority_accuracy": 0.3977272727272727,
+          "repeat_exposure_rate": 0.0,
+          "macro_f1_repeat_excluded": 0.6371694738147105,
+          "macro_f1_repeat_only": null,
+          "repeat_count": 0,
+          "non_repeat_count": 88
+        },
+        {
+          "fold_index": 1,
+          "test_document": "defense_intelligent_platform",
+          "test_size": 156,
+          "train_size": 1209,
+          "macro_f1": 0.6136990787630316,
+          "accuracy": 0.6474358974358975,
+          "per_class_f1": {
+            "통상수용": 0.7391304347826086,
+            "견적반영": 0.6542056074766355,
+            "계약·질의검토": 0.44776119402985076
+          },
+          "review_recall": 0.35714285714285715,
+          "review_precision": 0.6,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.391025641025641,
+          "oracle_majority_accuracy": 0.391025641025641,
+          "repeat_exposure_rate": 0.04487179487179487,
+          "macro_f1_repeat_excluded": 0.5997535175105269,
+          "macro_f1_repeat_only": 0.6666666666666666,
+          "repeat_count": 7,
+          "non_repeat_count": 149
+        },
+        {
+          "fold_index": 2,
+          "test_document": "genai_incident_response",
+          "test_size": 59,
+          "train_size": 1300,
+          "macro_f1": 0.48688995215311004,
+          "accuracy": 0.5084745762711864,
+          "per_class_f1": {
+            "통상수용": 0.631578947368421,
+            "견적반영": 0.509090909090909,
+            "계약·질의검토": 0.32
+          },
+          "review_recall": 0.26666666666666666,
+          "review_precision": 0.4,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.5,
+          "trained_majority_accuracy": 0.3389830508474576,
+          "oracle_majority_accuracy": 0.4067796610169492,
+          "repeat_exposure_rate": 0.0,
+          "macro_f1_repeat_excluded": 0.48688995215311004,
+          "macro_f1_repeat_only": null,
+          "repeat_count": 0,
+          "non_repeat_count": 59
+        },
+        {
+          "fold_index": 3,
+          "test_document": "incheon_airport_digital_work",
+          "test_size": 70,
+          "train_size": 1281,
+          "macro_f1": 0.5572310405643739,
+          "accuracy": 0.6285714285714286,
+          "per_class_f1": {
+            "통상수용": 0.7407407407407407,
+            "견적반영": 0.4166666666666667,
+            "계약·질의검토": 0.5142857142857142
+          },
+          "review_recall": 0.6,
+          "review_precision": 0.45,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.5,
+          "trained_majority_accuracy": 0.5571428571428572,
+          "oracle_majority_accuracy": 0.5571428571428572,
+          "repeat_exposure_rate": 0.04285714285714286,
+          "macro_f1_repeat_excluded": 0.5619701427481748,
+          "macro_f1_repeat_only": 0.26666666666666666,
+          "repeat_count": 3,
+          "non_repeat_count": 67
+        },
+        {
+          "fold_index": 4,
+          "test_document": "kac_ai_work_platform",
+          "test_size": 77,
+          "train_size": 1309,
+          "macro_f1": 0.7031039136302294,
+          "accuracy": 0.7402597402597403,
+          "per_class_f1": {
+            "통상수용": 0.8461538461538461,
+            "견적반영": 0.6842105263157895,
+            "계약·질의검토": 0.5789473684210527
+          },
+          "review_recall": 0.6111111111111112,
+          "review_precision": 0.55,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.25,
+          "trained_majority_accuracy": 0.5064935064935064,
+          "oracle_majority_accuracy": 0.5064935064935064,
+          "repeat_exposure_rate": 0.09090909090909091,
+          "macro_f1_repeat_excluded": 0.704014939309057,
+          "macro_f1_repeat_only": 0.75,
+          "repeat_count": 7,
+          "non_repeat_count": 70
+        },
+        {
+          "fold_index": 5,
+          "test_document": "kangwon_land_genai",
+          "test_size": 41,
+          "train_size": 1253,
+          "macro_f1": 0.53743961352657,
+          "accuracy": 0.6097560975609756,
+          "per_class_f1": {
+            "통상수용": 0.6956521739130435,
+            "견적반영": 0.3333333333333333,
+            "계약·질의검토": 0.5833333333333334
+          },
+          "review_recall": 0.5384615384615384,
+          "review_precision": 0.6363636363636364,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 1.0,
+          "trained_majority_accuracy": 0.5365853658536586,
+          "oracle_majority_accuracy": 0.5365853658536586,
+          "repeat_exposure_rate": 0.12195121951219512,
+          "macro_f1_repeat_excluded": 0.531872781872782,
+          "macro_f1_repeat_only": 0.2962962962962963,
+          "repeat_count": 5,
+          "non_repeat_count": 36
+        },
+        {
+          "fold_index": 6,
+          "test_document": "kdhc_plant_integrated_mgmt",
+          "test_size": 142,
+          "train_size": 1166,
+          "macro_f1": 0.48249158249158247,
+          "accuracy": 0.7112676056338029,
+          "per_class_f1": {
+            "통상수용": 0.8363636363636363,
+            "견적반영": 0.1111111111111111,
+            "계약·질의검토": 0.5
+          },
+          "review_recall": 0.4666666666666667,
+          "review_precision": 0.5384615384615384,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.25,
+          "trained_majority_accuracy": 0.7394366197183099,
+          "oracle_majority_accuracy": 0.7394366197183099,
+          "repeat_exposure_rate": 0.09859154929577464,
+          "macro_f1_repeat_excluded": 0.47054131054131054,
+          "macro_f1_repeat_only": 0.5422222222222222,
+          "repeat_count": 14,
+          "non_repeat_count": 128
+        },
+        {
+          "fold_index": 7,
+          "test_document": "kexim_ai_platform",
+          "test_size": 125,
+          "train_size": 1184,
+          "macro_f1": 0.7370103916866507,
+          "accuracy": 0.784,
+          "per_class_f1": {
+            "통상수용": 0.8776978417266187,
+            "견적반영": 0.6666666666666666,
+            "계약·질의검토": 0.6666666666666666
+          },
+          "review_recall": 0.6428571428571429,
+          "review_precision": 0.6923076923076923,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 1.0,
+          "trained_majority_accuracy": 0.568,
+          "oracle_majority_accuracy": 0.568,
+          "repeat_exposure_rate": 0.192,
+          "macro_f1_repeat_excluded": 0.7207349388200451,
+          "macro_f1_repeat_only": 0.6592592592592593,
+          "repeat_count": 24,
+          "non_repeat_count": 101
+        },
+        {
+          "fold_index": 8,
+          "test_document": "knoc_genai_platform",
+          "test_size": 124,
+          "train_size": 1220,
+          "macro_f1": 0.796658873952854,
+          "accuracy": 0.8145161290322581,
+          "per_class_f1": {
+            "통상수용": 0.8813559322033898,
+            "견적반영": 0.75,
+            "계약·질의검토": 0.7586206896551724
+          },
+          "review_recall": 0.7333333333333333,
+          "review_precision": 0.7857142857142857,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.47580645161290325,
+          "oracle_majority_accuracy": 0.47580645161290325,
+          "repeat_exposure_rate": 0.7419354838709677,
+          "macro_f1_repeat_excluded": 0.49859336066232623,
+          "macro_f1_repeat_only": 0.9033699397071491,
+          "repeat_count": 92,
+          "non_repeat_count": 32
+        },
+        {
+          "fold_index": 9,
+          "test_document": "koen_ai_infrastructure",
+          "test_size": 90,
+          "train_size": 1295,
+          "macro_f1": 0.6396396396396397,
+          "accuracy": 0.8444444444444444,
+          "per_class_f1": {
+            "통상수용": 0.918918918918919,
+            "견적반영": 0.5,
+            "계약·질의검토": 0.5
+          },
+          "review_recall": 0.75,
+          "review_precision": 0.375,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 1.0,
+          "trained_majority_accuracy": 0.8444444444444444,
+          "oracle_majority_accuracy": 0.8444444444444444,
+          "repeat_exposure_rate": 0.28888888888888886,
+          "macro_f1_repeat_excluded": 0.611111111111111,
+          "macro_f1_repeat_only": 0.5487528344671202,
+          "repeat_count": 26,
+          "non_repeat_count": 64
+        },
+        {
+          "fold_index": 10,
+          "test_document": "korail_genai_isp_ismp",
+          "test_size": 37,
+          "train_size": 1204,
+          "macro_f1": 0.36785938480853736,
+          "accuracy": 0.7297297297297297,
+          "per_class_f1": {
+            "통상수용": 0.8813559322033898,
+            "견적반영": 0.0,
+            "계약·질의검토": 0.2222222222222222
+          },
+          "review_recall": 0.25,
+          "review_precision": 0.2,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 1.0,
+          "trained_majority_accuracy": 0.7567567567567568,
+          "oracle_majority_accuracy": 0.7567567567567568,
+          "repeat_exposure_rate": 0.10810810810810811,
+          "macro_f1_repeat_excluded": 0.36894586894586895,
+          "macro_f1_repeat_only": 0.2857142857142857,
+          "repeat_count": 4,
+          "non_repeat_count": 33
+        },
+        {
+          "fold_index": 11,
+          "test_document": "mfds_drug_ai_review",
+          "test_size": 181,
+          "train_size": 1098,
+          "macro_f1": 0.5603656920382899,
+          "accuracy": 0.7734806629834254,
+          "per_class_f1": {
+            "통상수용": 0.8825622775800712,
+            "견적반영": 0.2857142857142857,
+            "계약·질의검토": 0.5128205128205128
+          },
+          "review_recall": 0.43478260869565216,
+          "review_precision": 0.625,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.7513812154696132,
+          "oracle_majority_accuracy": 0.7513812154696132,
+          "repeat_exposure_rate": 0.23756906077348067,
+          "macro_f1_repeat_excluded": 0.5276322476322476,
+          "macro_f1_repeat_only": 0.8847736625514403,
+          "repeat_count": 43,
+          "non_repeat_count": 138
+        },
+        {
+          "fold_index": 12,
+          "test_document": "supreme_court_sentencing",
+          "test_size": 155,
+          "train_size": 1195,
+          "macro_f1": 0.5515195588279854,
+          "accuracy": 0.6451612903225806,
+          "per_class_f1": {
+            "통상수용": 0.7668393782383419,
+            "견적반영": 0.42105263157894735,
+            "계약·질의검토": 0.4666666666666667
+          },
+          "review_recall": 0.4666666666666667,
+          "review_precision": 0.4666666666666667,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 1.0,
+          "trained_majority_accuracy": 0.5935483870967742,
+          "oracle_majority_accuracy": 0.5935483870967742,
+          "repeat_exposure_rate": 0.11612903225806452,
+          "macro_f1_repeat_excluded": 0.5277216610549943,
+          "macro_f1_repeat_only": 0.7984126984126986,
+          "repeat_count": 18,
+          "non_repeat_count": 137
+        }
+      ]
+    }
+  },
+  "ensembles": {
+    "soft_vote": {
+      "name": "세 후보 동일 가중 soft voting",
+      "summary": {
+        "macro_f1": {
+          "fold_mean": 0.5935778837458591,
+          "count_weighted": 0.6046330492879989
+        },
+        "accuracy": {
+          "fold_mean": 0.7040002923765865,
+          "count_weighted": 0.7137546468401487
+        },
+        "review_precision": {
+          "fold_mean": 0.5574823108796252,
+          "count_weighted": 0.5835734486051565
+        },
+        "review_recall": {
+          "fold_mean": 0.49556906157856695,
+          "count_weighted": 0.5013753568688789
+        },
+        "review_f1": {
+          "fold_mean": 0.5096865761152304,
+          "count_weighted": 0.5254179125449402
+        },
+        "lift_over_dummy": {
+          "fold_mean": 0.13035940243895613,
+          "count_weighted": 0.13159851301115247
+        }
+      },
+      "folds": [
+        {
+          "fold_index": 0,
+          "test_document": "ccrs_ai_platform",
+          "test_size": 88,
+          "train_size": 1181,
+          "macro_f1": 0.614180968067584,
+          "accuracy": 0.6477272727272727,
+          "per_class_f1": {
+            "통상수용": 0.6779661016949152,
+            "견적반영": 0.6818181818181818,
+            "계약·질의검토": 0.4827586206896552
+          },
+          "review_recall": 0.3684210526315789,
+          "review_precision": 0.7,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.3977272727272727,
+          "oracle_majority_accuracy": 0.3977272727272727,
+          "repeat_exposure_rate": 0.0,
+          "macro_f1_repeat_excluded": 0.614180968067584,
+          "macro_f1_repeat_only": null,
+          "repeat_count": 0,
+          "non_repeat_count": 88
+        },
+        {
+          "fold_index": 1,
+          "test_document": "defense_intelligent_platform",
+          "test_size": 156,
+          "train_size": 1209,
+          "macro_f1": 0.6182402833566744,
+          "accuracy": 0.6474358974358975,
+          "per_class_f1": {
+            "통상수용": 0.7299270072992701,
+            "견적반영": 0.6542056074766355,
+            "계약·질의검토": 0.47058823529411764
+          },
+          "review_recall": 0.38095238095238093,
+          "review_precision": 0.6153846153846154,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.391025641025641,
+          "oracle_majority_accuracy": 0.391025641025641,
+          "repeat_exposure_rate": 0.04487179487179487,
+          "macro_f1_repeat_excluded": 0.6042503540073634,
+          "macro_f1_repeat_only": 0.6666666666666666,
+          "repeat_count": 7,
+          "non_repeat_count": 149
+        },
+        {
+          "fold_index": 2,
+          "test_document": "genai_incident_response",
+          "test_size": 59,
+          "train_size": 1300,
+          "macro_f1": 0.5009756097560977,
+          "accuracy": 0.5254237288135594,
+          "per_class_f1": {
+            "통상수용": 0.6829268292682927,
+            "견적반영": 0.5,
+            "계약·질의검토": 0.32
+          },
+          "review_recall": 0.26666666666666666,
+          "review_precision": 0.4,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.3389830508474576,
+          "oracle_majority_accuracy": 0.4067796610169492,
+          "repeat_exposure_rate": 0.0,
+          "macro_f1_repeat_excluded": 0.5009756097560977,
+          "macro_f1_repeat_only": null,
+          "repeat_count": 0,
+          "non_repeat_count": 59
+        },
+        {
+          "fold_index": 3,
+          "test_document": "incheon_airport_digital_work",
+          "test_size": 70,
+          "train_size": 1281,
+          "macro_f1": 0.5464285714285714,
+          "accuracy": 0.6142857142857143,
+          "per_class_f1": {
+            "통상수용": 0.725,
+            "견적반영": 0.4,
+            "계약·질의검토": 0.5142857142857142
+          },
+          "review_recall": 0.6,
+          "review_precision": 0.45,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.5571428571428572,
+          "oracle_majority_accuracy": 0.5571428571428572,
+          "repeat_exposure_rate": 0.04285714285714286,
+          "macro_f1_repeat_excluded": 0.5503174603174603,
+          "macro_f1_repeat_only": 0.26666666666666666,
+          "repeat_count": 3,
+          "non_repeat_count": 67
+        },
+        {
+          "fold_index": 4,
+          "test_document": "kac_ai_work_platform",
+          "test_size": 77,
+          "train_size": 1309,
+          "macro_f1": 0.67933413781367,
+          "accuracy": 0.7272727272727273,
+          "per_class_f1": {
+            "통상수용": 0.8395061728395061,
+            "견적반영": 0.6842105263157895,
+            "계약·질의검토": 0.5142857142857142
+          },
+          "review_recall": 0.5,
+          "review_precision": 0.5294117647058824,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.5064935064935064,
+          "oracle_majority_accuracy": 0.5064935064935064,
+          "repeat_exposure_rate": 0.09090909090909091,
+          "macro_f1_repeat_excluded": 0.6666666666666666,
+          "macro_f1_repeat_only": 0.8518518518518517,
+          "repeat_count": 7,
+          "non_repeat_count": 70
+        },
+        {
+          "fold_index": 5,
+          "test_document": "kangwon_land_genai",
+          "test_size": 41,
+          "train_size": 1253,
+          "macro_f1": 0.6321070234113711,
+          "accuracy": 0.6829268292682927,
+          "per_class_f1": {
+            "통상수용": 0.7391304347826086,
+            "견적반영": 0.46153846153846156,
+            "계약·질의검토": 0.6956521739130435
+          },
+          "review_recall": 0.6153846153846154,
+          "review_precision": 0.8,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.5365853658536586,
+          "oracle_majority_accuracy": 0.5365853658536586,
+          "repeat_exposure_rate": 0.12195121951219512,
+          "macro_f1_repeat_excluded": 0.6327849588719153,
+          "macro_f1_repeat_only": 0.2962962962962963,
+          "repeat_count": 5,
+          "non_repeat_count": 36
+        },
+        {
+          "fold_index": 6,
+          "test_document": "kdhc_plant_integrated_mgmt",
+          "test_size": 142,
+          "train_size": 1166,
+          "macro_f1": 0.4701624701624702,
+          "accuracy": 0.7112676056338029,
+          "per_class_f1": {
+            "통상수용": 0.8378378378378378,
+            "견적반영": 0.1111111111111111,
+            "계약·질의검토": 0.46153846153846156
+          },
+          "review_recall": 0.4,
+          "review_precision": 0.5454545454545454,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.7394366197183099,
+          "oracle_majority_accuracy": 0.7394366197183099,
+          "repeat_exposure_rate": 0.09859154929577464,
+          "macro_f1_repeat_excluded": 0.45607624839582467,
+          "macro_f1_repeat_only": 0.5422222222222222,
+          "repeat_count": 14,
+          "non_repeat_count": 128
+        },
+        {
+          "fold_index": 7,
+          "test_document": "kexim_ai_platform",
+          "test_size": 125,
+          "train_size": 1184,
+          "macro_f1": 0.7298368298368297,
+          "accuracy": 0.784,
+          "per_class_f1": {
+            "통상수용": 0.8811188811188811,
+            "견적반영": 0.6538461538461539,
+            "계약·질의검토": 0.6545454545454545
+          },
+          "review_recall": 0.6428571428571429,
+          "review_precision": 0.6666666666666666,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.568,
+          "oracle_majority_accuracy": 0.568,
+          "repeat_exposure_rate": 0.192,
+          "macro_f1_repeat_excluded": 0.714970264835494,
+          "macro_f1_repeat_only": 0.6592592592592593,
+          "repeat_count": 24,
+          "non_repeat_count": 101
+        },
+        {
+          "fold_index": 8,
+          "test_document": "knoc_genai_platform",
+          "test_size": 124,
+          "train_size": 1220,
+          "macro_f1": 0.8042287090274707,
+          "accuracy": 0.8225806451612904,
+          "per_class_f1": {
+            "통상수용": 0.8907563025210085,
+            "견적반영": 0.75,
+            "계약·질의검토": 0.7719298245614035
+          },
+          "review_recall": 0.7333333333333333,
+          "review_precision": 0.8148148148148148,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.47580645161290325,
+          "oracle_majority_accuracy": 0.47580645161290325,
+          "repeat_exposure_rate": 0.7419354838709677,
+          "macro_f1_repeat_excluded": 0.49859336066232623,
+          "macro_f1_repeat_only": 0.9137551491902967,
+          "repeat_count": 92,
+          "non_repeat_count": 32
+        },
+        {
+          "fold_index": 9,
+          "test_document": "koen_ai_infrastructure",
+          "test_size": 90,
+          "train_size": 1295,
+          "macro_f1": 0.6292517006802721,
+          "accuracy": 0.8333333333333334,
+          "per_class_f1": {
+            "통상수용": 0.9115646258503401,
+            "견적반영": 0.47619047619047616,
+            "계약·질의검토": 0.5
+          },
+          "review_recall": 0.75,
+          "review_precision": 0.375,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.8444444444444444,
+          "oracle_majority_accuracy": 0.8444444444444444,
+          "repeat_exposure_rate": 0.28888888888888886,
+          "macro_f1_repeat_excluded": 0.5993953136810279,
+          "macro_f1_repeat_only": 0.5487528344671202,
+          "repeat_count": 26,
+          "non_repeat_count": 64
+        },
+        {
+          "fold_index": 10,
+          "test_document": "korail_genai_isp_ismp",
+          "test_size": 37,
+          "train_size": 1204,
+          "macro_f1": 0.36785938480853736,
+          "accuracy": 0.7297297297297297,
+          "per_class_f1": {
+            "통상수용": 0.8813559322033898,
+            "견적반영": 0.0,
+            "계약·질의검토": 0.2222222222222222
+          },
+          "review_recall": 0.25,
+          "review_precision": 0.2,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.7567567567567568,
+          "oracle_majority_accuracy": 0.7567567567567568,
+          "repeat_exposure_rate": 0.10810810810810811,
+          "macro_f1_repeat_excluded": 0.36894586894586895,
+          "macro_f1_repeat_only": 0.2857142857142857,
+          "repeat_count": 4,
+          "non_repeat_count": 33
+        },
+        {
+          "fold_index": 11,
+          "test_document": "mfds_drug_ai_review",
+          "test_size": 181,
+          "train_size": 1098,
+          "macro_f1": 0.5592048302574618,
+          "accuracy": 0.7679558011049724,
+          "per_class_f1": {
+            "통상수용": 0.8785714285714286,
+            "견적반영": 0.2727272727272727,
+            "계약·질의검토": 0.5263157894736842
+          },
+          "review_recall": 0.43478260869565216,
+          "review_precision": 0.6666666666666666,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.7513812154696132,
+          "oracle_majority_accuracy": 0.7513812154696132,
+          "repeat_exposure_rate": 0.23756906077348067,
+          "macro_f1_repeat_excluded": 0.5260244310985823,
+          "macro_f1_repeat_only": 0.8847736625514403,
+          "repeat_count": 43,
+          "non_repeat_count": 138
+        },
+        {
+          "fold_index": 12,
+          "test_document": "supreme_court_sentencing",
+          "test_size": 155,
+          "train_size": 1195,
+          "macro_f1": 0.5647019700891573,
+          "accuracy": 0.6580645161290323,
+          "per_class_f1": {
+            "통상수용": 0.78125,
+            "견적반영": 0.42105263157894735,
+            "계약·질의검토": 0.4918032786885246
+          },
+          "review_recall": 0.5,
+          "review_precision": 0.4838709677419355,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.5935483870967742,
+          "oracle_majority_accuracy": 0.5935483870967742,
+          "repeat_exposure_rate": 0.11612903225806452,
+          "macro_f1_repeat_excluded": 0.5425968942229105,
+          "macro_f1_repeat_only": 0.7984126984126986,
+          "repeat_count": 18,
+          "non_repeat_count": 137
+        }
+      ]
+    },
+    "review_union": {
+      "name": "후보 하나라도 계약 검토면 검토",
+      "summary": {
+        "macro_f1": {
+          "fold_mean": 0.6048172058749683,
+          "count_weighted": 0.6143357987787411
+        },
+        "accuracy": {
+          "fold_mean": 0.708079189735689,
+          "count_weighted": 0.7167286245353159
+        },
+        "review_precision": {
+          "fold_mean": 0.556805200909452,
+          "count_weighted": 0.5812705867091017
+        },
+        "review_recall": {
+          "fold_mean": 0.5763323388653436,
+          "count_weighted": 0.571246355643266
+        },
+        "review_f1": {
+          "fold_mean": 0.5462450273280866,
+          "count_weighted": 0.5581242323472331
+        },
+        "lift_over_dummy": {
+          "fold_mean": 0.13443829979805857,
+          "count_weighted": 0.13457249070631974
+        }
+      },
+      "folds": [
+        {
+          "fold_index": 0,
+          "test_document": "ccrs_ai_platform",
+          "test_size": 88,
+          "train_size": 1181,
+          "macro_f1": 0.6520952271966296,
+          "accuracy": 0.6704545454545454,
+          "per_class_f1": {
+            "통상수용": 0.6779661016949152,
+            "견적반영": 0.6976744186046512,
+            "계약·질의검토": 0.5806451612903226
+          },
+          "review_recall": 0.47368421052631576,
+          "review_precision": 0.75,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.3977272727272727,
+          "oracle_majority_accuracy": 0.3977272727272727,
+          "repeat_exposure_rate": 0.0,
+          "macro_f1_repeat_excluded": 0.6520952271966296,
+          "macro_f1_repeat_only": null,
+          "repeat_count": 0,
+          "non_repeat_count": 88
+        },
+        {
+          "fold_index": 1,
+          "test_document": "defense_intelligent_platform",
+          "test_size": 156,
+          "train_size": 1209,
+          "macro_f1": 0.6274177827707,
+          "accuracy": 0.6538461538461539,
+          "per_class_f1": {
+            "통상수용": 0.7352941176470589,
+            "견적반영": 0.6542056074766355,
+            "계약·질의검토": 0.4927536231884058
+          },
+          "review_recall": 0.40476190476190477,
+          "review_precision": 0.6296296296296297,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.391025641025641,
+          "oracle_majority_accuracy": 0.391025641025641,
+          "repeat_exposure_rate": 0.04487179487179487,
+          "macro_f1_repeat_excluded": 0.613831655709994,
+          "macro_f1_repeat_only": 0.6666666666666666,
+          "repeat_count": 7,
+          "non_repeat_count": 149
+        },
+        {
+          "fold_index": 2,
+          "test_document": "genai_incident_response",
+          "test_size": 59,
+          "train_size": 1300,
+          "macro_f1": 0.5009756097560977,
+          "accuracy": 0.5254237288135594,
+          "per_class_f1": {
+            "통상수용": 0.6829268292682927,
+            "견적반영": 0.5,
+            "계약·질의검토": 0.32
+          },
+          "review_recall": 0.26666666666666666,
+          "review_precision": 0.4,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.3389830508474576,
+          "oracle_majority_accuracy": 0.4067796610169492,
+          "repeat_exposure_rate": 0.0,
+          "macro_f1_repeat_excluded": 0.5009756097560977,
+          "macro_f1_repeat_only": null,
+          "repeat_count": 0,
+          "non_repeat_count": 59
+        },
+        {
+          "fold_index": 3,
+          "test_document": "incheon_airport_digital_work",
+          "test_size": 70,
+          "train_size": 1281,
+          "macro_f1": 0.5433587433587433,
+          "accuracy": 0.6142857142857143,
+          "per_class_f1": {
+            "통상수용": 0.7435897435897436,
+            "견적반영": 0.4,
+            "계약·질의검토": 0.4864864864864865
+          },
+          "review_recall": 0.6,
+          "review_precision": 0.4090909090909091,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.5571428571428572,
+          "oracle_majority_accuracy": 0.5571428571428572,
+          "repeat_exposure_rate": 0.04285714285714286,
+          "macro_f1_repeat_excluded": 0.5476263935168045,
+          "macro_f1_repeat_only": 0.26666666666666666,
+          "repeat_count": 3,
+          "non_repeat_count": 67
+        },
+        {
+          "fold_index": 4,
+          "test_document": "kac_ai_work_platform",
+          "test_size": 77,
+          "train_size": 1309,
+          "macro_f1": 0.7031039136302294,
+          "accuracy": 0.7402597402597403,
+          "per_class_f1": {
+            "통상수용": 0.8461538461538461,
+            "견적반영": 0.6842105263157895,
+            "계약·질의검토": 0.5789473684210527
+          },
+          "review_recall": 0.6111111111111112,
+          "review_precision": 0.55,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.5064935064935064,
+          "oracle_majority_accuracy": 0.5064935064935064,
+          "repeat_exposure_rate": 0.09090909090909091,
+          "macro_f1_repeat_excluded": 0.704014939309057,
+          "macro_f1_repeat_only": 0.75,
+          "repeat_count": 7,
+          "non_repeat_count": 70
+        },
+        {
+          "fold_index": 5,
+          "test_document": "kangwon_land_genai",
+          "test_size": 41,
+          "train_size": 1253,
+          "macro_f1": 0.6326774001192607,
+          "accuracy": 0.6829268292682927,
+          "per_class_f1": {
+            "통상수용": 0.7441860465116279,
+            "견적반영": 0.46153846153846156,
+            "계약·질의검토": 0.6923076923076923
+          },
+          "review_recall": 0.6923076923076923,
+          "review_precision": 0.6923076923076923,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.5365853658536586,
+          "oracle_majority_accuracy": 0.5365853658536586,
+          "repeat_exposure_rate": 0.12195121951219512,
+          "macro_f1_repeat_excluded": 0.6327300150829563,
+          "macro_f1_repeat_only": 0.2962962962962963,
+          "repeat_count": 5,
+          "non_repeat_count": 36
+        },
+        {
+          "fold_index": 6,
+          "test_document": "kdhc_plant_integrated_mgmt",
+          "test_size": 142,
+          "train_size": 1166,
+          "macro_f1": 0.48249158249158247,
+          "accuracy": 0.7112676056338029,
+          "per_class_f1": {
+            "통상수용": 0.8363636363636363,
+            "견적반영": 0.1111111111111111,
+            "계약·질의검토": 0.5
+          },
+          "review_recall": 0.4666666666666667,
+          "review_precision": 0.5384615384615384,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.7394366197183099,
+          "oracle_majority_accuracy": 0.7394366197183099,
+          "repeat_exposure_rate": 0.09859154929577464,
+          "macro_f1_repeat_excluded": 0.47054131054131054,
+          "macro_f1_repeat_only": 0.5422222222222222,
+          "repeat_count": 14,
+          "non_repeat_count": 128
+        },
+        {
+          "fold_index": 7,
+          "test_document": "kexim_ai_platform",
+          "test_size": 125,
+          "train_size": 1184,
+          "macro_f1": 0.7206853394329119,
+          "accuracy": 0.776,
+          "per_class_f1": {
+            "통상수용": 0.8794326241134752,
+            "견적반영": 0.6274509803921569,
+            "계약·질의검토": 0.6551724137931034
+          },
+          "review_recall": 0.6785714285714286,
+          "review_precision": 0.6333333333333333,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.568,
+          "oracle_majority_accuracy": 0.568,
+          "repeat_exposure_rate": 0.192,
+          "macro_f1_repeat_excluded": 0.7053968253968255,
+          "macro_f1_repeat_only": 0.6592592592592593,
+          "repeat_count": 24,
+          "non_repeat_count": 101
+        },
+        {
+          "fold_index": 8,
+          "test_document": "knoc_genai_platform",
+          "test_size": 124,
+          "train_size": 1220,
+          "macro_f1": 0.796658873952854,
+          "accuracy": 0.8145161290322581,
+          "per_class_f1": {
+            "통상수용": 0.8813559322033898,
+            "견적반영": 0.75,
+            "계약·질의검토": 0.7586206896551724
+          },
+          "review_recall": 0.7333333333333333,
+          "review_precision": 0.7857142857142857,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.47580645161290325,
+          "oracle_majority_accuracy": 0.47580645161290325,
+          "repeat_exposure_rate": 0.7419354838709677,
+          "macro_f1_repeat_excluded": 0.49859336066232623,
+          "macro_f1_repeat_only": 0.9033699397071491,
+          "repeat_count": 92,
+          "non_repeat_count": 32
+        },
+        {
+          "fold_index": 9,
+          "test_document": "koen_ai_infrastructure",
+          "test_size": 90,
+          "train_size": 1295,
+          "macro_f1": 0.61455938697318,
+          "accuracy": 0.8222222222222222,
+          "per_class_f1": {
+            "통상수용": 0.9103448275862069,
+            "견적반영": 0.4,
+            "계약·질의검토": 0.5333333333333333
+          },
+          "review_recall": 1.0,
+          "review_precision": 0.36363636363636365,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.8444444444444444,
+          "oracle_majority_accuracy": 0.8444444444444444,
+          "repeat_exposure_rate": 0.28888888888888886,
+          "macro_f1_repeat_excluded": 0.5432052483598876,
+          "macro_f1_repeat_only": 0.6666666666666666,
+          "repeat_count": 26,
+          "non_repeat_count": 64
+        },
+        {
+          "fold_index": 10,
+          "test_document": "korail_genai_isp_ismp",
+          "test_size": 37,
+          "train_size": 1204,
+          "macro_f1": 0.432183908045977,
+          "accuracy": 0.7567567567567568,
+          "per_class_f1": {
+            "통상수용": 0.896551724137931,
+            "견적반영": 0.0,
+            "계약·질의검토": 0.4
+          },
+          "review_recall": 0.5,
+          "review_precision": 0.3333333333333333,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.7567567567567568,
+          "oracle_majority_accuracy": 0.7567567567567568,
+          "repeat_exposure_rate": 0.10810810810810811,
+          "macro_f1_repeat_excluded": 0.4339869281045752,
+          "macro_f1_repeat_only": 0.2857142857142857,
+          "repeat_count": 4,
+          "non_repeat_count": 33
+        },
+        {
+          "fold_index": 11,
+          "test_document": "mfds_drug_ai_review",
+          "test_size": 181,
+          "train_size": 1098,
+          "macro_f1": 0.5929946041607531,
+          "accuracy": 0.7790055248618785,
+          "per_class_f1": {
+            "통상수용": 0.8808664259927798,
+            "견적반영": 0.27906976744186046,
+            "계약·질의검토": 0.6190476190476191
+          },
+          "review_recall": 0.5652173913043478,
+          "review_precision": 0.6842105263157895,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.7513812154696132,
+          "oracle_majority_accuracy": 0.7513812154696132,
+          "repeat_exposure_rate": 0.23756906077348067,
+          "macro_f1_repeat_excluded": 0.5622448979591836,
+          "macro_f1_repeat_only": 0.8847736625514403,
+          "repeat_count": 43,
+          "non_repeat_count": 138
+        },
+        {
+          "fold_index": 12,
+          "test_document": "supreme_court_sentencing",
+          "test_size": 155,
+          "train_size": 1195,
+          "macro_f1": 0.5634213044856695,
+          "accuracy": 0.6580645161290323,
+          "per_class_f1": {
+            "통상수용": 0.7853403141361257,
+            "견적반영": 0.42105263157894735,
+            "계약·질의검토": 0.4838709677419355
+          },
+          "review_recall": 0.5,
+          "review_precision": 0.46875,
+          "review_weight_multiplier": 1.0,
+          "type_feature_weight": 0.0,
+          "embedding_weight": 0.0,
+          "trained_majority_accuracy": 0.5935483870967742,
+          "oracle_majority_accuracy": 0.5935483870967742,
+          "repeat_exposure_rate": 0.11612903225806452,
+          "macro_f1_repeat_excluded": 0.541427984867873,
+          "macro_f1_repeat_only": 0.7984126984126986,
+          "repeat_count": 18,
+          "non_repeat_count": 137
+        }
+      ]
+    }
+  },
+  "agreement": {
+    "row_count": 1345,
+    "all_agree_count": 1248,
+    "all_agree_rate": 0.9278810408921933,
+    "all_wrong_count": 343,
+    "all_wrong_rate": 0.2550185873605948,
+    "at_least_one_correct_count": 1002,
+    "at_least_one_correct_rate": 0.7449814126394052
+  }
+}

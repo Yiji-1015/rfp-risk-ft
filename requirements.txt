@@ -14,6 +14,9 @@ torch
 transformers>=4.35.0
 datasets>=2.14.0
 accelerate>=0.24.0
+# sLLM QLoRA (scripts/modeling/finetune_llm.py, GPU 전용)
+peft>=0.13.0
+bitsandbytes>=0.43.0
 
 # LLM API & Utilities
 anthropic>=0.77.0

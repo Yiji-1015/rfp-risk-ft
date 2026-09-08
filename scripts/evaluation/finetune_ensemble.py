@@ -54,6 +54,9 @@ def member_tag(config: dict[str, Any]) -> str:
     이름 앞부분을 쓴다 — `kobigbird-bert-base`처럼 `base`로 끝나는 이름이 있어서
     크기만 보면 roberta-base와 겹친다.
     """
+    # sLLM 실행(`finetune_llm.py`)은 기록할 때 태그를 박는다. 모델 이름은 계열마다 달라 못 믿는다.
+    if config.get("tag"):
+        return f"{config['tag']}{config['seed']}{'M' if config.get('mask') else ''}"
     model = config["model"]
     if model.startswith(ROBERTA):
         size = SIZE_CODES.get(model[len(ROBERTA):].split("-")[0])
@@ -72,6 +75,8 @@ CANDIDATE_COMBOS = (
     ("sv", "ftB7", "ftL42"), ("wc", "e5", "ftB7"), ("wc", "ch", "ftL42"),
     ("wc", "ftL42", "ftB13M"), ("ch", "e5", "ftL42"), ("wc", "e5", "ftB13M"),
     ("e5", "ftL42", "ftB13M"), ("wc", "ch", "e5"), ("wc", "ch", "e5", "ftB7", "ftL42"),
+    # sLLM 멤버. 결과를 보기 전에 정한 조합이다(2026-09-08).
+    ("llm42",), ("wc", "ftL42", "llm42"), ("ftB7", "ftL42", "llm42"), ("wc", "ftB7", "ftL42", "llm42", "e5"),
 )
 
 
@@ -244,7 +249,7 @@ def render(report: dict[str, Any]) -> str:
         "## 읽을 때 주의",
         "",
         "- 파인튜닝 멤버의 seed를 바꾸면 앙상블 점수도 바뀐다. 하나의 값이 아니라 **범위**로 읽는다.",
-        "- 앙상블은 오답을 줄이지만 **경계 혼동은 줄이지 않는다.** 위 표의 마지막 두 열을 함께 본다.",
+        "- 전체 오답과 견적·계약 경계 혼동의 변화는 다를 수 있다. 위 표의 마지막 두 열을 함께 본다.",
         f"- 확정은 새 RFP에서 한다. 여기 모든 값은 같은 {report['evaluated']}건에서 나왔다.",
     ]
     return "\n".join(lines) + "\n"
