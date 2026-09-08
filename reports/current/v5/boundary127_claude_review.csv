@@ -1,0 +1,128 @@
+﻿n,uid,name,v5,model,v6,claude_verdict,claude_note
+1,ccrs_ai_platform:ECR-002,논리 아키텍처 및 서비스 구성,계약·질의검토,견적반영,통상수용,v5-lean,연계 구현 범위·허용 협의는 범위 open
+2,ccrs_ai_platform:ECR-006,AI플랫폼 장비 도입,계약·질의검토,견적반영,견적반영,model,"H200는 동급 허용·조달 가능, 사양표는 견적"
+3,ccrs_ai_platform:INR-002,언어모델 표준 인터페이스,견적반영,계약·질의검토,통상수용,v5,
+4,ccrs_ai_platform:INR-007,데이터분석 환경(MLOps)-AI플랫폼 간 연동,계약·질의검토,견적반영,통상수용,v5,
+5,ccrs_ai_platform:PER-005,RAG 이상 징후 탐지·벡터 DB 복구(RTO),계약·질의검토,견적반영,통상수용,model-lean,임계값·RTO 재산정 협의는 세부 파라미터
+6,ccrs_ai_platform:SER-002,RAG 보안 통제 정책,계약·질의검토,견적반영,견적반영,v5-lean,잔존 0건 검증은 수치 검증
+7,ccrs_ai_platform:SER-004,사용자 데이터 보관•보호 및 활용 범위 통제,계약·질의검토,견적반영,통상수용,neither(통상수용),"TTL 기간 협의는 세부 파라미터, 원가도 없음"
+8,ccrs_ai_platform:SER-006,SSO 인증•암호화 및 폐쇄망 운영 보안,계약·질의검토,견적반영,계약·질의검토,model-lean,"GS/CC SSO 제품 다수, 폐쇄망 오프라인은 통상"
+9,ccrs_ai_platform:SER-007,에이전트•AI 생성물 보안 통제 및 배포 거버넌스,계약·질의검토,견적반영,통상수용,neither(통상수용),"'100% 태깅'은 정책, 원가 없음"
+10,ccrs_ai_platform:SER-009,학습데이터 개인정보 비식별화 통제,계약·질의검토,견적반영,견적반영,model,'100% 가명처리'는 정책이지 성능목표 아님
+11,ccrs_ai_platform:SFR-003,지식화 파이프라인·분류·시점관리 및 벡터 인덱스,계약·질의검토,견적반영,견적반영,ambiguous,"협의 항목 다수, 그러나 대부분 파라미터"
+12,ccrs_ai_platform:SFR-006,표준 서식 템플릿 매핑 및 HWPX 변환 기능,계약·질의검토,견적반영,견적반영,v5-lean,추가 템플릿 범위 기술협상
+13,ccrs_ai_platform:SFR-008,피드백 기반 품질 개선 및 골든셋 평가 기능,견적반영,계약·질의검토,견적반영,v5,
+14,ccrs_ai_platform:SFR-009,RAG 품질 및 성능 통합 모니터링 대시보드,견적반영,계약·질의검토,통상수용,v5,
+15,ccrs_ai_platform:SFR-012,플랫폼 자원·LLM 모델 통합 관리 기능,계약·질의검토,견적반영,계약·질의검토,model-lean,GPU quota·오프라인 반입은 플랫폼 표준
+16,ccrs_ai_platform:SFR-014,콜센터 상담 어시스턴트 구축,견적반영,계약·질의검토,통상수용,v5,
+17,ccrs_ai_platform:SFR-019,Agent 민원처리 지원,견적반영,계약·질의검토,통상수용,v5,
+18,ccrs_ai_platform:SFR-021,Agent 협약기관 검색,견적반영,계약·질의검토,통상수용,v5,
+19,ccrs_ai_platform:SFR-023,Agent 사내규정 검색,견적반영,계약·질의검토,통상수용,v5,
+20,ccrs_ai_platform:TER-003,생성형 AI 응답 품질 및 RAG 파이프라인 검증,계약·질의검토,견적반영,통상수용,ambiguous,합격기준 PER·기술협상 확정
+21,defense_intelligent_platform:ECR-007,CPU클러스터 서버(AI플랫폼),견적반영,계약·질의검토,견적반영,v5,
+22,defense_intelligent_platform:ECR-008,CPU클러스터 서버(클라우드 관리(IaaS/PaaS/CMP)),견적반영,계약·질의검토,견적반영,v5,
+23,defense_intelligent_platform:ECR-009,CPU클러스터 서버(데이터 플랫폼),견적반영,계약·질의검토,견적반영,v5,
+24,defense_intelligent_platform:ECR-017,표준랙,계약·질의검토,견적반영,견적반영,model,"FMS 센서 연동은 표준 DCIM, 장비 원가"
+25,defense_intelligent_platform:ECR-021,AI 플랫폼(개발/운영) SW,계약·질의검토,견적반영,계약·질의검토,v5-lean,국방망 설치 가능성
+26,defense_intelligent_platform:ECR-023,지능형 클라우드 네이티브 보안환경 구축 설계,계약·질의검토,견적반영,계약·질의검토,v5,
+27,defense_intelligent_platform:ECR-025,IaaS 가상화,계약·질의검토,견적반영,견적반영,model-lean,"vGPU 라이선스 조달 가능, 상세설계 확정은 통상"
+28,defense_intelligent_platform:ECR-028,VDI 솔루션 요구사항,견적반영,계약·질의검토,견적반영,v5,
+29,defense_intelligent_platform:PMR-003,투입인력 요건,견적반영,계약·질의검토,통상수용,v5,
+30,defense_intelligent_platform:SER-007,K-RMF 적용 - 보안평가·후속조치·인가,견적반영,계약·질의검토,계약·질의검토,v5,
+31,defense_intelligent_platform:SFR-033,데이터 플랫폼 – 데이터 가공 -학습데이터 구축 및 라벨링,계약·질의검토,견적반영,계약·질의검토,ambiguous,외부 라벨링 솔루션 국방망 사용
+32,defense_intelligent_platform:SFR-035,데이터 플랫폼 – 신뢰기반 레이크하우스 구축 - 통합저장구조,계약·질의검토,견적반영,견적반영,model,"레이크하우스 표준 기능, 수치목표 없음"
+33,defense_intelligent_platform:SFR-038,AI 플랫폼 – 작업환경 - 생성형 AI코드 생성 도구 연동,계약·질의검토,견적반영,계약·질의검토,ambiguous,폐쇄망 코드 어시스턴트 조달
+34,defense_intelligent_platform:SFR-042,AI 플랫폼 – 학습/추론 - AI모델 실험/학습/튜닝,계약·질의검토,견적반영,계약·질의검토,model,'10종 이상'은 수량이지 성능목표 아님
+35,defense_intelligent_platform:SFR-049,AI플랫폼 – LLM 활용지원,계약·질의검토,견적반영,계약·질의검토,v5,
+36,defense_intelligent_platform:SFR-051,AI플랫폼 – 플레이그라운드,계약·질의검토,견적반영,계약·질의검토,model-lean,"RL 시뮬레이터는 부속, 나머지 표준 플레이그라운드"
+37,defense_intelligent_platform:SFR-062,클라우드 플랫폼 -서비스 인프라 관리,계약·질의검토,견적반영,계약·질의검토,v5-lean,기존 네트워크 장비 미특정
+38,defense_intelligent_platform:SFR-063,클라우드 플랫폼 – 인프라관리 - 모니터링,계약·질의검토,견적반영,견적반영,model,"MIG 모니터링은 표준, 벤더종속 과다"
+39,defense_intelligent_platform:TER-005,장애 및 백업 복구테스트,계약·질의검토,견적반영,견적반영,v5-lean,3시간 복구는 수치목표(규칙상)
+40,defense_intelligent_platform:TER-008,실증 프로젝트,계약·질의검토,견적반영,계약·질의검토,v5,
+41,genai_incident_response:DAR-001,지식 데이터 구축 – 데이터 수집 및 가공,계약·질의검토,견적반영,통상수용,ambiguous,수집 채널 KISA 협의
+42,genai_incident_response:INR-001,외부 시스템 연동 – 분석 도구 연동 및 결과 통합,계약·질의검토,견적반영,계약·질의검토,v5-lean,외부 도구·API 미특정
+43,genai_incident_response:INR-005,LLM 모델 선택 및 운영 설정,계약·질의검토,견적반영,견적반영,model,sLLM 조달은 SFR-003의 일이지 이 항목 아님
+44,genai_incident_response:PMR-001,사업 수행조직 및 투입 인력 관리,견적반영,계약·질의검토,견적반영,v5,
+45,genai_incident_response:PSR-003,비상 시 운영 연속성 확보 방안,견적반영,계약·질의검토,견적반영,v5,
+46,genai_incident_response:SER-004,수행업체 보안 준수사항,견적반영,계약·질의검토,견적반영,v5,
+47,genai_incident_response:SER-005,소프트웨어 개발보안,견적반영,계약·질의검토,견적반영,v5,
+48,genai_incident_response:SER-007,"시스템(서버, 네트워크, 보안장비) 보안",견적반영,계약·질의검토,견적반영,v5,
+49,genai_incident_response:SFR-003,침해대응 업무 특화 sLLM(전문가 모델) 도입,계약·질의검토,견적반영,계약·질의검토,v5-lean,공급망 보안 신뢰 확인+범위 조정
+50,genai_incident_response:SFR-008,악성코드 분석 AI 에이전트 기능 고도화,계약·질의검토,견적반영,견적반영,ambiguous,120B+전문인력 참여 필수+범위
+51,genai_incident_response:SFR-009,방화벽·웹 로그 분석 AI 에이전트 고도화 및 확장 구축,계약·질의검토,견적반영,견적반영,model,120B 모델 조달 근거가 KISA 5건에 복제됨(오픈웨이트 존재)
+52,genai_incident_response:SFR-010,아티팩트 분석 에이전트① – 해킹진단 도구 연동,계약·질의검토,견적반영,견적반영,model,동일
+53,genai_incident_response:SFR-012,위협 인텔리전스 분석 에이전트,계약·질의검토,견적반영,견적반영,model,동일
+54,genai_incident_response:SFR-013,현장 지원 에이전트 – 온디바이스 기반 로그 분석 기능 구현,계약·질의검토,견적반영,견적반영,v5,
+55,genai_incident_response:SFR-014,분석 보고서 생성 지원 에이전트,계약·질의검토,견적반영,견적반영,model,동일
+56,genai_incident_response:SFR-019,CI/CD 파이프라인 – 소프트웨어 배포 자동화,계약·질의검토,견적반영,통상수용,ambiguous,커버리지 80% 수치
+57,genai_incident_response:TER-001,파운데이션 모델 성능 평가 및 테스트,계약·질의검토,견적반영,견적반영,v5,
+58,genai_incident_response:TER-003,시스템 통합 테스트 (RAG + LLM 오케스트레이션 + AI 에이전트),견적반영,계약·질의검토,견적반영,v5,
+59,incheon_airport_digital_work:PER-005,CPU 효율성,견적반영,계약·질의검토,견적반영,v5,
+60,incheon_airport_digital_work:SFR-008,(과제 5) 디지털 재무회계 리셉션,견적반영,계약·질의검토,견적반영,v5,
+61,incheon_airport_digital_work:SFR-010,(과제 7) AI 감사관리,계약·질의검토,견적반영,견적반영,model-lean,연계 대상(그룹웨어·주차관제) 특정됨
+62,incheon_airport_digital_work:SFR-019,(과제 16) 업무효율 강화 S/W 개념증명(PoC),견적반영,계약·질의검토,견적반영,v5,
+63,incheon_airport_digital_work:TER-001,테스트 일반사항,견적반영,계약·질의검토,견적반영,v5,
+64,kac_ai_work_platform:AIP-004,API 기반 AI 모델 서빙 환경 구축 요구사항,계약·질의검토,견적반영,계약·질의검토,model-lean,20개 분할은 GPU 수로 충족
+65,kac_ai_work_platform:DAR-004,데이터 보안 요구사항,계약·질의검토,견적반영,통상수용,neither(통상수용),"보안 규정 협의는 표준 문구, 원가 없음"
+66,kac_ai_work_platform:ECR-006,"서버실 냉방장비 및 구성, 전력 설치 요구사항",견적반영,계약·질의검토,견적반영,v5,
+67,kac_ai_work_platform:GW-014,원격지원 및 화상회의,견적반영,계약·질의검토,견적반영,v5,
+68,kac_ai_work_platform:PSR-005,개발환경 설치,견적반영,계약·질의검토,통상수용,v5,
+69,kac_ai_work_platform:QUR-003,품질보증 및 하자보증,견적반영,계약·질의검토,견적반영,v5,
+70,kac_ai_work_platform:SER-005,AI보안 가이드라인 준수,계약·질의검토,견적반영,견적반영,model-lean,"'방안 제시' 목록, 특정 blocker 없음"
+71,kangwon_land_genai:DAR-002,문서 승인 기반 RAG 학습 자동화,계약·질의검토,견적반영,계약·질의검토,v5,
+72,kangwon_land_genai:SIR-001,타 시스템 간 인터페이스,견적반영,계약·질의검토,계약·질의검토,v5,
+73,kdhc_plant_integrated_mgmt:PMR-009,지능형 품질 보증(AI QA),견적반영,계약·질의검토,견적반영,v5,
+74,kdhc_plant_integrated_mgmt:PMR-010,AI 코딩 어시스턴트 환경 구축,견적반영,계약·질의검토,계약·질의검토,v5,
+75,kdhc_plant_integrated_mgmt:SFR-002,공통기능 -모바일,계약·질의검토,견적반영,견적반영,model,"GPS 대상 협의는 세부 파라미터, 앱 개발 원가"
+76,kexim_ai_platform:ASR-006,업무 맞춤형 AI 모델 제공,계약·질의검토,견적반영,견적반영,model-lean,KNOC ASR-006(#90)과 거의 같은 원문이 견적으로 라벨됨
+77,kexim_ai_platform:DAR-002,데이터 정제,계약·질의검토,견적반영,견적반영,model,"OCR 정확도는 제안사가 제시, 외부 목표 아님"
+78,kexim_ai_platform:ECR-001,문서 중앙 저장소(ECM) 구축,계약·질의검토,견적반영,계약·질의검토,v5-lean,기존 ECM 기능 전부 누락 금지(미상)
+79,kexim_ai_platform:ECR-008,"H/W, S/W, N/W 구성",견적반영,계약·질의검토,견적반영,v5,
+80,kexim_ai_platform:INR-004,통합 보안 체계 구축 및 컴플라이언스 준수,견적반영,계약·질의검토,견적반영,v5,
+81,kexim_ai_platform:INR-DTL-002,HCI 통합 가상화 서버,계약·질의검토,견적반영,견적반영,model-lean,H200 NVL·CC인증 HCI 모두 조달 가능
+82,kexim_ai_platform:INR-DTL-003,x86 서버,견적반영,계약·질의검토,견적반영,v5,
+83,kexim_ai_platform:INR-DTL-004,TOR Switch,견적반영,계약·질의검토,견적반영,v5,
+84,kexim_ai_platform:PER-002,성능 최적화,계약·질의검토,견적반영,통상수용,neither(통상수용),"목표치 미기재만으로 blocker 아님, 원가 없음"
+85,kexim_ai_platform:PMR-021,사업에 필요한 공간 및 장비 준비,견적반영,계약·질의검토,견적반영,v5,
+86,kexim_ai_platform:SEC-008,AI 가드레일 구축,견적반영,계약·질의검토,견적반영,v5,
+87,kexim_ai_platform:SYS-001,시스템 구성 공통 요건,견적반영,계약·질의검토,견적반영,v5,
+88,kexim_ai_platform:SYS-003,내부업무지원용 AI 시스템 구성,견적반영,계약·질의검토,견적반영,v5,
+89,knoc_genai_platform:ASR-002,RAG(Retrieval-Augmented Generation) 기능 정의,계약·질의검토,견적반영,견적반영,model,"Advanced RAG는 표준, 수치목표 없음"
+90,knoc_genai_platform:ASR-006,업무 맞춤형 AI 모델 제공,견적반영,계약·질의검토,견적반영,v5,
+91,knoc_genai_platform:DAR-001,데이터 요구사항 공통사항,견적반영,계약·질의검토,견적반영,v5,
+92,knoc_genai_platform:DAR-002,데이터 현황 분석 및 활용대상 정의,견적반영,계약·질의검토,견적반영,v5,
+93,knoc_genai_platform:DAR-003,데이터 분류체계 및 C/S/O 등급 분류,계약·질의검토,견적반영,계약·질의검토,v5-lean,N2SF 초안 반영 의무(미래 변경)
+94,knoc_genai_platform:DPR-003,데이터 수집·연계 기능,계약·질의검토,견적반영,견적반영,v5,
+95,knoc_genai_platform:FUR-006,[석유정보] 석유시장 보고서 작성 AI 서비스,계약·질의검토,견적반영,견적반영,v5-lean,외부 뉴스 수집 라이선스
+96,knoc_genai_platform:GOV-003,AI 수명주기별 검토 요건 수립,계약·질의검토,견적반영,견적반영,model,검토 요건 수립은 컨설팅 산출물
+97,knoc_genai_platform:INR-DTL-004,S/W 도입 품목 요구사항,견적반영,계약·질의검토,견적반영,v5,
+98,knoc_genai_platform:QMR-001,생성형 AI 시스템 답변 품질 검증 및 관리 체계,계약·질의검토,견적반영,계약·질의검토,v5,
+99,koen_ai_infrastructure:CON-002,MCP 기반 AI 연계 표준 정의,계약·질의검토,견적반영,통상수용,neither(통상수용),연계 표준 정의는 통상 컨설팅
+100,koen_ai_infrastructure:PER-002,동시 사용자 처리 성능 확보,견적반영,계약·질의검토,견적반영,v5,
+101,korail_genai_isp_ismp:CSR-012,제안요청서 작성,견적반영,계약·질의검토,통상수용,v5,
+102,mfds_drug_ai_review:COR-001,AI 기능 관련 구축 공통사항,계약·질의검토,견적반영,계약·질의검토,model-lean,"'검토' 수준, 소버린 모델 미채택해도 진행"
+103,mfds_drug_ai_review:DAR-007,RAG 구축,견적반영,계약·질의검토,견적반영,v5,
+104,mfds_drug_ai_review:DAR-008,학습데이터셋 구축,견적반영,계약·질의검토,견적반영,v5,
+105,mfds_drug_ai_review:DAR-009,평가데이터셋 구축,견적반영,계약·질의검토,견적반영,v5,
+106,mfds_drug_ai_review:PER-009,CPU 사용률,계약·질의검토,견적반영,견적반영,v5-lean,최대부하 2배 90% 수치
+107,mfds_drug_ai_review:SFR-003,대국민 AI 상담 서비스,견적반영,계약·질의검토,통상수용,v5,
+108,mfds_drug_ai_review:SFR-027,임베딩 모델 등 환경구성 및 성능강화,견적반영,계약·질의검토,견적반영,v5,
+109,mfds_drug_ai_review:SFR-045,문서자료 디지털 전환,계약·질의검토,견적반영,계약·질의검토,model-lean,동일
+110,mfds_drug_ai_review:SFR-056,인프라 구축,견적반영,계약·질의검토,견적반영,v5,
+111,supreme_court_sentencing:ECR-007,"AI/ML 기반 텍스트분석, 통계분석 SW",계약·질의검토,견적반영,계약·질의검토,v5,
+112,supreme_court_sentencing:ECR-008,LLM 플랫폼 SW,계약·질의검토,견적반영,계약·질의검토,v5,
+113,supreme_court_sentencing:ECR-009,클라우드 가상화 환경 구성,견적반영,계약·질의검토,계약·질의검토,v5,
+114,supreme_court_sentencing:INR-002,통합UI 구성방안,계약·질의검토,견적반영,통상수용,ambiguous,법원 내부 시스템 연계 대상 미특정
+115,supreme_court_sentencing:PER-004,성능시험 결과 반영,견적반영,계약·질의검토,견적반영,v5,
+116,supreme_court_sentencing:PMR-009,사업 수행 장소 및 환경,견적반영,계약·질의검토,견적반영,v5,
+117,supreme_court_sentencing:PSR-013,운영이관 후 운영/하자관리 지원 계획,견적반영,계약·질의검토,견적반영,v5,
+118,supreme_court_sentencing:SER-002,사업수행 자료 보안,견적반영,계약·질의검토,통상수용,v5,
+119,supreme_court_sentencing:SFR-LDA-001,유사판결문 제공기능을 위한 레이블링,견적반영,계약·질의검토,견적반영,v5,
+120,supreme_court_sentencing:SFR-LDA-002,판결문 레이블링 대상 범위,계약·질의검토,견적반영,견적반영,v5-lean,레이블링 최종 범위 협의
+121,supreme_court_sentencing:SFR-NSS-006,AI 활용한 운영점검 조사 실시,견적반영,계약·질의검토,계약·질의검토,v5,
+122,supreme_court_sentencing:SFR-SCF-001,검색 필터 서비스 기능,계약·질의검토,견적반영,통상수용,v5,
+123,supreme_court_sentencing:SFR-SIE-001,양형정보 추출 기본원칙,견적반영,계약·질의검토,견적반영,v5,
+124,supreme_court_sentencing:SFR-SIE-002,양형인자 추출,견적반영,계약·질의검토,견적반영,v5,
+125,supreme_court_sentencing:SFR-SIE-003,참작사유 추출,견적반영,계약·질의검토,견적반영,v5,
+126,supreme_court_sentencing:SFR-SIM-003,대상 법령 분류,견적반영,계약·질의검토,견적반영,v5,
+127,supreme_court_sentencing:SFR-SIM-005,법정형 등 추출,견적반영,계약·질의검토,통상수용,v5,

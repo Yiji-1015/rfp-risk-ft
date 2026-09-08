@@ -1,0 +1,160 @@
+{
+ "source": "artifact db judgments (2026-09-08 09:30 KST 기준)",
+ "n": 14,
+ "items": [
+  {
+   "uid": "ccrs_ai_platform:ECR-006",
+   "v5_label": "계약·질의검토",
+   "v6_label": "견적반영",
+   "user_button": "v5",
+   "user_side": "v5",
+   "claude_side": "model",
+   "agree": false,
+   "memo": "장비의 경우 이렇게까지 자세하게 적어두면 계약을 검토해봐야 하는 건 맞음. 일단 견적반영이라기에는 너무 큰 돈을 차지하기도 하고, GPU처럼 변동이 심해서 조달가능성이 불투명한 경우에는..",
+   "ts": "2026-09-07T22:49:06.764Z"
+  },
+  {
+   "uid": "ccrs_ai_platform:PER-005",
+   "v5_label": "계약·질의검토",
+   "v6_label": "통상수용",
+   "user_button": "v6",
+   "user_side": "model",
+   "claude_side": "model",
+   "agree": true,
+   "memo": "통상같긴한데 환각률측정이 가능한가? 암튼좀애매..",
+   "ts": "2026-09-07T22:51:32.454Z"
+  },
+  {
+   "uid": "ccrs_ai_platform:SER-006",
+   "v5_label": "계약·질의검토",
+   "v6_label": "계약·질의검토",
+   "user_button": "none",
+   "user_side": "model",
+   "claude_side": "model",
+   "agree": true,
+   "memo": "견적반영인가? 내가 이런쪽은 잘 몰라서 어려운지는 모르겟는데 그냥 일반적으로 폐쇄망쓰는 공공기관은 다 하는 것 같기도 해.",
+   "ts": "2026-09-07T23:00:35.082Z"
+  },
+  {
+   "uid": "ccrs_ai_platform:SER-009",
+   "v5_label": "계약·질의검토",
+   "v6_label": "견적반영",
+   "user_button": "hold",
+   "user_side": "보류",
+   "claude_side": "model",
+   "agree": null,
+   "memo": "정책이 맞긴 한데, PII 이런건 솔루션으로 나올 정도라고해서 잘 모르겟어. 근데 또 많이본거같기도하고 이곳저곳에서..",
+   "ts": "2026-09-07T23:04:56.559Z"
+  },
+  {
+   "uid": "ccrs_ai_platform:SFR-012",
+   "v5_label": "계약·질의검토",
+   "v6_label": "계약·질의검토",
+   "user_button": "none",
+   "user_side": "model",
+   "claude_side": "model",
+   "agree": true,
+   "memo": "요구사항 하나에 너무많은것들이 들어가있어서 그렇지 하나하나 뜯어보면 견적반영인거같아.\nGPU 할당이 좀 많이 어려워보이는데 이거는 협상가능한 부분이라고 하니...",
+   "ts": "2026-09-07T23:13:33.447Z"
+  },
+  {
+   "uid": "defense_intelligent_platform:ECR-017",
+   "v5_label": "계약·질의검토",
+   "v6_label": "견적반영",
+   "user_button": "v6",
+   "user_side": "model",
+   "claude_side": "model",
+   "agree": true,
+   "memo": "일반적인가? 뭐 장비 제안하려면 당연히 거기 상황 봐야할거같긴 한데..\n근데 이게 특정 업체만 할 수 잇도록 한 독소조항인지를 봐야해 근데 내가 하드웨어쪽으로는 잘 몰라가지고",
+   "ts": "2026-09-07T23:16:28.399Z"
+  },
+  {
+   "uid": "defense_intelligent_platform:ECR-025",
+   "v5_label": "계약·질의검토",
+   "v6_label": "견적반영",
+   "user_button": "v6",
+   "user_side": "model",
+   "claude_side": "model",
+   "agree": true,
+   "memo": "여기서 말하는 라이선스는 그냥 장비달라는거맞나? 그리고 이것도 내가 잘은 모르지만 그냥 인프라담당자가 하는 일 정도 같긴 함",
+   "ts": "2026-09-07T23:40:41.288Z"
+  },
+  {
+   "uid": "defense_intelligent_platform:SFR-035",
+   "v5_label": "계약·질의검토",
+   "v6_label": "견적반영",
+   "user_button": "v5",
+   "user_side": "v5",
+   "claude_side": "model",
+   "agree": false,
+   "memo": "오픈소스나 이런거 잘 알아야 하고, 저장소도 이것저것 많이 알아야 할 것 같은 모양새임 그리고 페타바이트 라는 게 문제인듯..",
+   "ts": "2026-09-07T23:43:21.073Z"
+  },
+  {
+   "uid": "defense_intelligent_platform:SFR-042",
+   "v5_label": "계약·질의검토",
+   "v6_label": "계약·질의검토",
+   "user_button": "v6",
+   "user_side": "v5",
+   "claude_side": "model",
+   "agree": false,
+   "memo": "잘 모르겟긴한데 승인이 필요하니 10+를 우리 쪽에서 다 실험해봐야 할 것 같아. 환경구축 자체는 그냥 MLOps 구축 느낌이긴 한디 더 어려운 게 있나 봐야할거같아",
+   "ts": "2026-09-07T23:48:26.767Z"
+  },
+  {
+   "uid": "defense_intelligent_platform:SFR-051",
+   "v5_label": "계약·질의검토",
+   "v6_label": "계약·질의검토",
+   "user_button": "none",
+   "user_side": "model",
+   "claude_side": "model",
+   "agree": true,
+   "memo": "하나하나 는 할 수 있어 보이긴 하는데 저 많은것들의 정합성을 지키려면 어려울 것 같아. 견적반영이긴 한 것 같은데... 어렵긴하네 ",
+   "ts": "2026-09-08T00:15:57.995Z"
+  },
+  {
+   "uid": "defense_intelligent_platform:SFR-063",
+   "v5_label": "계약·질의검토",
+   "v6_label": "견적반영",
+   "user_button": "v6",
+   "user_side": "model",
+   "claude_side": "model",
+   "agree": true,
+   "memo": "GPU 가져오는 게 검토면 검토였지 이거는 견적반영이 맞아보이네",
+   "ts": "2026-09-08T00:17:15.126Z"
+  },
+  {
+   "uid": "genai_incident_response:INR-005",
+   "v5_label": "계약·질의검토",
+   "v6_label": "견적반영",
+   "user_button": "v6",
+   "user_side": "model",
+   "claude_side": "model",
+   "agree": true,
+   "memo": "이것도 뭐,, 그냥 기능구현 이니",
+   "ts": "2026-09-08T00:18:25.891Z"
+  },
+  {
+   "uid": "genai_incident_response:SFR-009",
+   "v5_label": "계약·질의검토",
+   "v6_label": "견적반영",
+   "user_button": "v5",
+   "user_side": "v5",
+   "claude_side": "model",
+   "agree": false,
+   "memo": "이게 좀 우리회사에서 자와자와했던 건인데, 중추 파운데이션 모델(120B↑) 이게 잘 없는데다가 (사실상 업스테이지 하나?) 전문인력 참여 필수 라는 게 좀 걸리네",
+   "ts": "2026-09-08T00:21:44.665Z"
+  },
+  {
+   "uid": "genai_incident_response:SFR-010",
+   "v5_label": "계약·질의검토",
+   "v6_label": "견적반영",
+   "user_button": "v5",
+   "user_side": "v5",
+   "claude_side": "model",
+   "agree": false,
+   "memo": "아까 13도 그랬지만 이거 자체가 약간 음.. 특정 회사가 써준거같은 느낌이야 그 회사에 적합하도록. (실제로 그랬었고)",
+   "ts": "2026-09-08T00:24:59.619Z"
+  }
+ ]
+}
