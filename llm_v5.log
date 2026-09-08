@@ -1,0 +1,97 @@
+모델 Qwen/Qwen2.5-7B-Instruct | 장치 cuda | seed 42 | 양자화 없음 | r=16
+데이터 label_dataset_v5 1445건 | max_length 512
+Sliding Window Attention is enabled but not implemented for `sdpa`; unexpected results may be encountered.
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 275.39it/s]
+trainable params: 40,370,176 || all params: 7,655,986,688 || trainable%: 0.5273
+  학습 1181 / 검증 156 / 평가 88  (ccrs_ai_platform), 222 step
+  epoch 1/3  학습 loss 0.2808  검증 macro F1 0.596  ← 최고
+  epoch 2/3  학습 loss 0.1289  검증 macro F1 0.675  ← 최고
+  epoch 3/3  학습 loss 0.0716  검증 macro F1 0.687  ← 최고
+  평가 문서 macro F1 0.604 (검증 최고 0.687 시점)
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 270.92it/s]
+trainable params: 40,370,176 || all params: 7,655,986,688 || trainable%: 0.5273
+  학습 1209 / 검증 59 / 평가 156  (defense_intelligent_platform), 228 step
+  epoch 1/3  학습 loss 0.2460  검증 macro F1 0.380  ← 최고
+  epoch 2/3  학습 loss 0.1107  검증 macro F1 0.575  ← 최고
+  epoch 3/3  학습 loss 0.0622  검증 macro F1 0.515
+  평가 문서 macro F1 0.676 (검증 최고 0.575 시점)
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 274.57it/s]
+trainable params: 40,370,176 || all params: 7,655,986,688 || trainable%: 0.5273
+  학습 1300 / 검증 70 / 평가 59  (genai_incident_response), 246 step
+  epoch 1/3  학습 loss 0.2659  검증 macro F1 0.490  ← 최고
+  epoch 2/3  학습 loss 0.1121  검증 macro F1 0.619  ← 최고
+  epoch 3/3  학습 loss 0.0621  검증 macro F1 0.627  ← 최고
+  평가 문서 macro F1 0.562 (검증 최고 0.627 시점)
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 270.83it/s]
+trainable params: 40,370,176 || all params: 7,655,986,688 || trainable%: 0.5273
+  학습 1281 / 검증 77 / 평가 70  (incheon_airport_digital_work), 243 step
+  epoch 1/3  학습 loss 0.2558  검증 macro F1 0.695  ← 최고
+  epoch 2/3  학습 loss 0.1158  검증 macro F1 0.681
+  epoch 3/3  학습 loss 0.0646  검증 macro F1 0.652
+  평가 문서 macro F1 0.584 (검증 최고 0.695 시점)
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 238.62it/s]
+trainable params: 40,370,176 || all params: 7,655,986,688 || trainable%: 0.5273
+  학습 1309 / 검증 41 / 평가 77  (kac_ai_work_platform), 246 step
+  epoch 1/3  학습 loss 0.2550  검증 macro F1 0.573  ← 최고
+  epoch 2/3  학습 loss 0.1123  검증 macro F1 0.538
+  epoch 3/3  학습 loss 0.0615  검증 macro F1 0.615  ← 최고
+  평가 문서 macro F1 0.707 (검증 최고 0.615 시점)
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 270.23it/s]
+trainable params: 40,370,176 || all params: 7,655,986,688 || trainable%: 0.5273
+  학습 1253 / 검증 142 / 평가 41  (kangwon_land_genai), 237 step
+  epoch 1/3  학습 loss 0.2604  검증 macro F1 0.514  ← 최고
+  epoch 2/3  학습 loss 0.1041  검증 macro F1 0.541  ← 최고
+  epoch 3/3  학습 loss 0.0570  검증 macro F1 0.541  ← 최고
+  평가 문서 macro F1 0.554 (검증 최고 0.541 시점)
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 271.78it/s]
+trainable params: 40,370,176 || all params: 7,655,986,688 || trainable%: 0.5273
+  학습 1166 / 검증 125 / 평가 142  (kdhc_plant_integrated_mgmt), 219 step
+  epoch 1/3  학습 loss 0.2739  검증 macro F1 0.635  ← 최고
+  epoch 2/3  학습 loss 0.1201  검증 macro F1 0.739  ← 최고
+  epoch 3/3  학습 loss 0.0707  검증 macro F1 0.800  ← 최고
+  평가 문서 macro F1 0.600 (검증 최고 0.800 시점)
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 272.64it/s]
+trainable params: 40,370,176 || all params: 7,655,986,688 || trainable%: 0.5273
+  학습 1184 / 검증 124 / 평가 125  (kexim_ai_platform), 222 step
+  epoch 1/3  학습 loss 0.2650  검증 macro F1 0.660  ← 최고
+  epoch 2/3  학습 loss 0.1262  검증 macro F1 0.687  ← 최고
+  epoch 3/3  학습 loss 0.0732  검증 macro F1 0.762  ← 최고
+  평가 문서 macro F1 0.754 (검증 최고 0.762 시점)
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 268.80it/s]
+trainable params: 40,370,176 || all params: 7,655,986,688 || trainable%: 0.5273
+  학습 1220 / 검증 90 / 평가 124  (knoc_genai_platform), 231 step
+  epoch 1/3  학습 loss 0.2708  검증 macro F1 0.469  ← 최고
+  epoch 2/3  학습 loss 0.1188  검증 macro F1 0.671  ← 최고
+  epoch 3/3  학습 loss 0.0658  검증 macro F1 0.660
+  평가 문서 macro F1 0.725 (검증 최고 0.671 시점)
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 268.51it/s]
+trainable params: 40,370,176 || all params: 7,655,986,688 || trainable%: 0.5273
+  학습 1295 / 검증 37 / 평가 90  (koen_ai_infrastructure), 243 step
+  epoch 1/3  학습 loss 0.2537  검증 macro F1 0.664  ← 최고
+  epoch 2/3  학습 loss 0.1191  검증 macro F1 0.630
+  epoch 3/3  학습 loss 0.0642  검증 macro F1 0.651
+  평가 문서 macro F1 0.646 (검증 최고 0.664 시점)
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 229.00it/s]
+trainable params: 40,370,176 || all params: 7,655,986,688 || trainable%: 0.5273
+  학습 1204 / 검증 181 / 평가 37  (korail_genai_isp_ismp), 228 step
+  epoch 1/3  학습 loss 0.2779  검증 macro F1 0.590  ← 최고
+  epoch 2/3  학습 loss 0.1195  검증 macro F1 0.528
+  epoch 3/3  학습 loss 0.0706  검증 macro F1 0.719  ← 최고
+  평가 문서 macro F1 0.646 (검증 최고 0.719 시점)
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 269.40it/s]
+trainable params: 40,370,176 || all params: 7,655,986,688 || trainable%: 0.5273
+  학습 1098 / 검증 155 / 평가 181  (mfds_drug_ai_review), 207 step
+  epoch 1/3  학습 loss 0.2697  검증 macro F1 0.480  ← 최고
+  epoch 2/3  학습 loss 0.1255  검증 macro F1 0.550  ← 최고
+  epoch 3/3  학습 loss 0.0741  검증 macro F1 0.646  ← 최고
+  평가 문서 macro F1 0.683 (검증 최고 0.646 시점)
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00, 270.46it/s]
+trainable params: 40,370,176 || all params: 7,655,986,688 || trainable%: 0.5273
+  학습 1195 / 검증 88 / 평가 155  (supreme_court_sentencing), 225 step
+  epoch 1/3  학습 loss 0.2695  검증 macro F1 0.594  ← 최고
+  epoch 2/3  학습 loss 0.1144  검증 macro F1 0.611  ← 최고
+  epoch 3/3  학습 loss 0.0607  검증 macro F1 0.606
+  평가 문서 macro F1 0.627 (검증 최고 0.611 시점)
+fold 평균 평가 macro F1 0.644
+통합 OOF macro F1 0.677 (1345건)
+기록 추가: /workspace/rfp-risk-ft/reports/current/v5/finetune_runs.jsonl  (run_id=Qwen2.5-7B-Instruct.s42.len512.v5)
