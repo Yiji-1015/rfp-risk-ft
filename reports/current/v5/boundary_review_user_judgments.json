@@ -1,6 +1,13 @@
 {
- "source": "artifact db judgments (2026-09-08 09:30 KST 기준)",
- "n": 14,
+ "source": "artifact db judgments — C 탭 27건 완료 (2026-09-08 10:40 KST)",
+ "n": 27,
+ "summary": {
+  "agree": 15,
+  "disagree": 11,
+  "hold": 1,
+  "user_model_side": 15,
+  "user_v5_side": 11
+ },
  "items": [
   {
    "uid": "ccrs_ai_platform:ECR-006",
@@ -155,6 +162,162 @@
    "agree": false,
    "memo": "아까 13도 그랬지만 이거 자체가 약간 음.. 특정 회사가 써준거같은 느낌이야 그 회사에 적합하도록. (실제로 그랬었고)",
    "ts": "2026-09-08T00:24:59.619Z"
+  },
+  {
+   "uid": "genai_incident_response:SFR-012",
+   "v5_label": "계약·질의검토",
+   "v6_label": "견적반영",
+   "user_button": "v5",
+   "user_side": "v5",
+   "claude_side": "model",
+   "agree": false,
+   "memo": "",
+   "ts": "2026-09-08T00:46:44.537Z",
+   "claude_note": "동일"
+  },
+  {
+   "uid": "genai_incident_response:SFR-014",
+   "v5_label": "계약·질의검토",
+   "v6_label": "견적반영",
+   "user_button": "v5",
+   "user_side": "v5",
+   "claude_side": "model",
+   "agree": false,
+   "memo": "",
+   "ts": "2026-09-08T00:46:53.170Z",
+   "claude_note": "동일"
+  },
+  {
+   "uid": "incheon_airport_digital_work:SFR-010",
+   "v5_label": "계약·질의검토",
+   "v6_label": "견적반영",
+   "user_button": "v6",
+   "user_side": "model",
+   "claude_side": "model",
+   "agree": true,
+   "memo": "감사...는 좀 어려운 건 맞긴 해서 애매하네",
+   "ts": "2026-09-08T01:05:56.924Z",
+   "claude_note": "연계 대상(그룹웨어·주차관제) 특정됨"
+  },
+  {
+   "uid": "kac_ai_work_platform:AIP-004",
+   "v5_label": "계약·질의검토",
+   "v6_label": "계약·질의검토",
+   "user_button": "none",
+   "user_side": "model",
+   "claude_side": "model",
+   "agree": true,
+   "memo": "저 GPU 가져오는 건 또 다른 요구사항이니까 견적반영으로 보는 게 좋아보이긴 해. 양자화 많이 어렵나..",
+   "ts": "2026-09-08T01:10:14.355Z",
+   "claude_note": "20개 분할은 GPU 수로 충족"
+  },
+  {
+   "uid": "kac_ai_work_platform:SER-005",
+   "v5_label": "계약·질의검토",
+   "v6_label": "견적반영",
+   "user_button": "v6",
+   "user_side": "model",
+   "claude_side": "model",
+   "agree": true,
+   "memo": "보안 준수는 통상적이긴 한데 여기서 요구하는건 좀 많긴하네 ㅋㅋ",
+   "ts": "2026-09-08T01:12:17.051Z",
+   "claude_note": "'방안 제시' 목록, 특정 blocker 없음"
+  },
+  {
+   "uid": "kdhc_plant_integrated_mgmt:SFR-002",
+   "v5_label": "계약·질의검토",
+   "v6_label": "견적반영",
+   "user_button": "v6",
+   "user_side": "model",
+   "claude_side": "model",
+   "agree": true,
+   "memo": "GPS도 협의긴 하니 뭐..",
+   "ts": "2026-09-08T01:13:25.875Z",
+   "claude_note": "GPS 대상 협의는 세부 파라미터, 앱 개발 원가"
+  },
+  {
+   "uid": "kexim_ai_platform:ASR-006",
+   "v5_label": "계약·질의검토",
+   "v6_label": "견적반영",
+   "user_button": "v5",
+   "user_side": "v5",
+   "claude_side": "model",
+   "agree": false,
+   "memo": "일단 근거들에 따라 어려워 보이는 것도 있는데, 인간 피드백 강화학습이라는 게 좀 걸리긴 하네..",
+   "ts": "2026-09-08T01:15:48.536Z",
+   "claude_note": "KNOC ASR-006(#90)과 거의 같은 원문이 견적으로 라벨됨"
+  },
+  {
+   "uid": "kexim_ai_platform:DAR-002",
+   "v5_label": "계약·질의검토",
+   "v6_label": "견적반영",
+   "user_button": "v6",
+   "user_side": "model",
+   "claude_side": "model",
+   "agree": true,
+   "memo": "",
+   "ts": "2026-09-08T01:16:15.423Z",
+   "claude_note": "OCR 정확도는 제안사가 제시, 외부 목표 아님"
+  },
+  {
+   "uid": "kexim_ai_platform:INR-DTL-002",
+   "v5_label": "계약·질의검토",
+   "v6_label": "견적반영",
+   "user_button": "v5",
+   "user_side": "v5",
+   "claude_side": "model",
+   "agree": false,
+   "memo": "무상유지보수 1년정도는 통상이긴 한데 하드웨어 3년워런티는 ㄹㅇ모르겠네 ㅋㅋ",
+   "ts": "2026-09-08T01:25:36.801Z",
+   "claude_note": "H200 NVL·CC인증 HCI 모두 조달 가능"
+  },
+  {
+   "uid": "knoc_genai_platform:ASR-002",
+   "v5_label": "계약·질의검토",
+   "v6_label": "견적반영",
+   "user_button": "v6",
+   "user_side": "model",
+   "claude_side": "model",
+   "agree": true,
+   "memo": "",
+   "ts": "2026-09-08T01:26:09.165Z",
+   "claude_note": "Advanced RAG는 표준, 수치목표 없음"
+  },
+  {
+   "uid": "knoc_genai_platform:GOV-003",
+   "v5_label": "계약·질의검토",
+   "v6_label": "견적반영",
+   "user_button": "v6",
+   "user_side": "model",
+   "claude_side": "model",
+   "agree": true,
+   "memo": "",
+   "ts": "2026-09-08T01:33:46.464Z",
+   "claude_note": "검토 요건 수립은 컨설팅 산출물"
+  },
+  {
+   "uid": "mfds_drug_ai_review:COR-001",
+   "v5_label": "계약·질의검토",
+   "v6_label": "계약·질의검토",
+   "user_button": "v6",
+   "user_side": "v5",
+   "claude_side": "model",
+   "agree": false,
+   "memo": "소버린AI가 완전 정부 어쩌구는 아니고 라이선스가 필요한 건 맞으니 이건 블로커 걸리는 게 맞는 것 같아",
+   "ts": "2026-09-08T01:36:45.195Z",
+   "claude_note": "'검토' 수준, 소버린 모델 미채택해도 진행"
+  },
+  {
+   "uid": "mfds_drug_ai_review:SFR-045",
+   "v5_label": "계약·질의검토",
+   "v6_label": "계약·질의검토",
+   "user_button": "v5",
+   "user_side": "v5",
+   "claude_side": "model",
+   "agree": false,
+   "memo": "이것도 마찬가지",
+   "ts": "2026-09-08T01:37:13.219Z",
+   "claude_note": "동일"
   }
  ]
 }
