@@ -54,6 +54,9 @@ def member_tag(config: dict[str, Any]) -> str:
     이름 앞부분을 쓴다 — `kobigbird-bert-base`처럼 `base`로 끝나는 이름이 있어서
     크기만 보면 roberta-base와 겹친다.
     """
+    # sLLM 실행(`finetune_llm.py`)은 기록할 때 태그를 박는다. 모델 이름은 계열마다 달라 못 믿는다.
+    if config.get("tag"):
+        return f"{config['tag']}{config['seed']}{'M' if config.get('mask') else ''}"
     model = config["model"]
     if model.startswith(ROBERTA):
         size = SIZE_CODES.get(model[len(ROBERTA):].split("-")[0])
@@ -72,6 +75,8 @@ CANDIDATE_COMBOS = (
     ("sv", "ftB7", "ftL42"), ("wc", "e5", "ftB7"), ("wc", "ch", "ftL42"),
     ("wc", "ftL42", "ftB13M"), ("ch", "e5", "ftL42"), ("wc", "e5", "ftB13M"),
     ("e5", "ftL42", "ftB13M"), ("wc", "ch", "e5"), ("wc", "ch", "e5", "ftB7", "ftL42"),
+    # sLLM 멤버. 결과를 보기 전에 정한 조합이다(2026-09-08).
+    ("llm42",), ("wc", "ftL42", "llm42"), ("ftB7", "ftL42", "llm42"), ("wc", "ftB7", "ftL42", "llm42", "e5"),
 )
 
 
