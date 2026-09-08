@@ -66,6 +66,15 @@ DATASET_SPECS = {
         "has_model_text": True,
         "rows": 1445,
     },
+    # v5 위에 프롬프트 v7(과다 판정 방지 절 추가)·anchor_pool_v3·층화로 통상수용 제외 692건을
+    # 다시 매긴 것. 통상수용 750건과 미회수 3건은 v5 라벨 그대로(decisions-09 2026-09-08).
+    "v7": {
+        "dataset_version": "label_dataset_v7",
+        "path": ROOT / "data" / "labels" / "label_dataset_v7.jsonl",
+        "sha256": "a2985e611ca7b454763fe09084824be03256aa29745497b228cf91720aaf7301",
+        "has_model_text": True,
+        "rows": 1445,
+    },
 }
 # v4로 두는 이유는 동결 데이터셋 감사 테스트들이 이 기본값에 기대고 있기 때문이다.
 # v5로 바꾸면 22개가 깨진다(2026-09-07 확인). 옮기려면 그 테스트들이 v4를 명시적으로

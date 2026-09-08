@@ -22,6 +22,8 @@ Solar로 돌렸다. 공통 82건에서 정답 일치 49 → 54, 짝 비교 8:3(p
 불변.** 맥락 카드는 채택하지 않는다. Claude 팔은 키 복구 후 `--provider claude --execute`로
 돌릴 수 있지만 우선순위 없음. 경계 혼동에 대한 처방은 "2분류 운영 + 사람 판정"으로 확정.
 
+## ⚠️ Anthropic 크레딧 소진 (2026-09-08). 라벨링·문서 확충 전에 충전 필요.
+
 ## 1. 파인튜닝 v5 — **끝남** (2026-09-07 17:10, decisions-09)
 
 `wc + ftB + ftL` 다수결 fold 평균 **0.666~0.683**(seed 9쌍, 평균 0.6745). 기준선 0.6395
@@ -30,19 +32,12 @@ Solar로 돌렸다. 공통 82건에서 정답 일치 49 → 54, 짝 비교 8:3(p
 
 ## 3. 문서 +3개 ← **다음은 여기** (GPU 불필요, 라벨링 약 $4, 실행 전 사용자 확인)
 
-## 3.5 라벨 규칙 v7 — **배치 제출됨, 회수 대기** (2026-09-08 11:30, 브랜치 `label-v7`)
+## 3.5 라벨 규칙 v7 — **끝남. 라벨은 나아졌고 점수는 내려갔다** (2026-09-08 12:40)
 
-`msgbatch_01WyEgbmyW7CWCYLBstJ3STE`(통상수용 제외 695건) · `msgbatch_01NvGJWyMnVWY9br1AnzKzWv`(통상 50건 단조성 확인).
-프롬프트 v7 + 앵커 풀 v3 + 층화. 근거·평가 계획은 decisions-09 11:30.
-
-```bash
-python -m scripts.labeling.run_claude_batch --status   --batch-dir reports/current/claude_batches/relabel_v7_nonnormal
-python -m scripts.labeling.run_claude_batch --download --batch-dir reports/current/claude_batches/relabel_v7_nonnormal
-python -m scripts.labeling.run_claude_batch --download --batch-dir reports/current/claude_batches/relabel_v7_normal_check
-```
-
-받으면: 50건 통상 유지율 확인 → 695건 방향 확인(내려간 것만이어야 함) → `label_dataset_v7` 조립·동결
-(v5 통상 750 + v7 695) → 기준선 재학습 → 갈린 건 검토판.
+`label_dataset_v7` 동결(`RFP_DATASET_VERSION=v7`). word+char fold 평균 **0.6040**(v5 0.6395, -0.035).
+오답 401→379, 경계 127→107, 정확도 +0.8%p인데 계약 비중이 25.1→19.6%로 얇아져 macro F1 하락.
+v6과 같은 패턴. **점수 목표면 v5 유지.** 논문에서는 "라벨 정의를 실무 판단에 맞추면 점수가
+내려간다"의 근거. 미회수 3건은 크레딧 소진으로 v5 유지(`relabel_v7_retry_3.jsonl`, 충전 후 제출 가능).
 
 ## 4. 보조 헤드 — **이미 해봤고 효과가 없다** (순위 내림)
 

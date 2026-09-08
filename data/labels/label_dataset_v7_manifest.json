@@ -1,0 +1,78 @@
+{
+  "dataset_version": "label_dataset_v7",
+  "built_at": "2026-09-08T02:51:06+00:00",
+  "row_count": 1445,
+  "schema_version": "4.0.0",
+  "base": {
+    "path": "data/labels/label_dataset_v5.jsonl",
+    "sha256": "5ca9e2ea47663e9a0c0cafcc1fde38cfdd74a1da24f9c0b7a4e31c4d026e160c",
+    "kept_rows": 753
+  },
+  "relabeled_rows": 692,
+  "not_relabeled_non_normal": [
+    "genai_incident_response:QUR-001",
+    "mfds_drug_ai_review:SFR-014",
+    "supreme_court_sentencing:SFR-SCF-005"
+  ],
+  "source_runs": [
+    "relabel_v7_nonnormal",
+    "relabel_v7_retry"
+  ],
+  "labeling_conditions": {
+    "prompt_version": "system_prompt_v7",
+    "prompt_file": "notebooks\\prompts\\system_prompt_v7.txt",
+    "prompt_sha256": "3c76e75105b94b3bcc491a5f0585a74fcfe249eba06b3adec01670ff7032f6e2",
+    "retrieval": "stratified",
+    "anchor_pool": "data\\anchors\\anchor_pool_v3.jsonl",
+    "anchor_pool_sha256": "66af76ae173df49a77d7b2385bba700cdede25aab2d3840866477ae5567ef54d",
+    "anchors_per_request": 3,
+    "hints": false,
+    "note": "v5의 통상수용 행은 다시 매기지 않았다(v7 규칙은 판정을 낮추는 방향만). 통상수용 50건 표본에서 49건 유지 확인."
+  },
+  "transitions_from_v5": {
+    "견적반영→견적반영": 273,
+    "계약·질의검토→계약·질의검토": 262,
+    "계약·질의검토→견적반영": 56,
+    "계약·질의검토→통상수용": 43,
+    "견적반영→통상수용": 38,
+    "견적반영→계약·질의검토": 20
+  },
+  "primary_action_counts": {
+    "통상수용": 831,
+    "계약·질의검토": 283,
+    "견적반영": 331
+  },
+  "rule_corrections": [
+    {
+      "requirement_uid": "defense_intelligent_platform:ECR-019",
+      "model": "통상수용",
+      "rule": "견적반영",
+      "blockers": [],
+      "cost_basis": "라이선스"
+    },
+    {
+      "requirement_uid": "kac_ai_work_platform:PSR-005",
+      "model": "통상수용",
+      "rule": "견적반영",
+      "blockers": [],
+      "cost_basis": "장비·인프라"
+    },
+    {
+      "requirement_uid": "kexim_ai_platform:ECR-010",
+      "model": "견적반영",
+      "rule": "계약·질의검토",
+      "blockers": [
+        "검수·성능기준"
+      ],
+      "cost_basis": "복합"
+    },
+    {
+      "requirement_uid": "koen_ai_infrastructure:PMR-022",
+      "model": "통상수용",
+      "rule": "견적반영",
+      "blockers": [],
+      "cost_basis": "장비·인프라"
+    }
+  ],
+  "output_sha256": "a2985e611ca7b454763fe09084824be03256aa29745497b228cf91720aaf7301"
+}
