@@ -93,6 +93,25 @@ def macro(gold: Sequence[int], pred: Sequence[int]) -> float:
     return float(f1_score(gold, pred, labels=list(range(len(LABELS))), average="macro", zero_division=0))
 
 
+def patch_embeddings(model) -> None:
+    """trust_remote_code 모델(EXAONE 3.5)이 transformers 5.x에서 `get_input_embeddings`를
+    구현하지 않아 peft가 죽는다. 어휘 크기의 Embedding 층을 찾아 직접 답하게 한다."""
+    try:
+        model.get_input_embeddings()
+        return
+    except NotImplementedError:
+        pass
+    embedding = max((m for m in model.modules() if isinstance(m, torch.nn.Embedding)), key=lambda m: m.num_embeddings)
+    inner = getattr(model, getattr(model, "base_model_prefix", ""), model)
+    for cls in {type(model), type(inner)}:
+        cls.get_input_embeddings = lambda self, _e=embedding: _e
+    if not hasattr(type(model), "get_output_embeddings") or model.get_output_embeddings() is None:
+        head = getattr(model, "lm_head", None)
+        if head is not None:
+            type(model).get_output_embeddings = lambda self, _h=head: _h
+    print(f"  임베딩 층 패치: {type(embedding).__name__}({embedding.num_embeddings})")
+
+
 def load_model(args, device):
     from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 
@@ -108,6 +127,7 @@ def load_model(args, device):
         )
         kwargs["device_map"] = {"": 0}
     model = AutoModelForCausalLM.from_pretrained(args.model, **kwargs)
+    patch_embeddings(model)
     if args.no_quant:
         model.to(device)
     if not args.no_quant:
