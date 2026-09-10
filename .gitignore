@@ -40,3 +40,5 @@ scratch_*
 
 # gcube 컨테이너 학습 로그
 runs.log
+# 로컬 검토·전달본 (아티팩트 원본, 토크나이저 캐시)
+outputs/

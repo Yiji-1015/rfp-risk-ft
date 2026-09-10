@@ -6,9 +6,17 @@
 13개 RFP · 요구사항 1,445건을 Claude로 전수 라벨링해 동결하고(`label_dataset_v5`),
 문서 단위 LODO로 Dummy부터 경량 인코더 파인튜닝까지 **23종을 같은 분할에서 비교**했다.
 
-> 아래 결과표와 "모델 비교" 절의 수치는 **10개 RFP · 1,024건(`v4`)** 기준이다.
-> v5(13문서)에서는 단독 기준선 word+char **0.6395**(fold 평균, v4 0.6144)만 측정됐고
-> 파인튜닝·앙상블 재학습은 [`docs/NEXT.md`](docs/NEXT.md)에 있다.
+## 최신 결과와 Qwen 파인튜닝 (2026-09-09)
+
+Qwen2.5-7B-Instruct를 **양자화 없는 LoRA**로 학습하고 v5·v7 각각 13문서 LODO로 평가했다.
+v5 기존 앙상블 0.671, Qwen 포함 조합 0.683으로 +0.011이다. 선별 기준 +0.016에 못 미쳐 기존 구성을 유지한다.
+v7 Qwen 단독은 0.665다. v5·v7은 정답이 다르므로 버전 내부에서 비교한다.
+
+- [Qwen 학습·평가·오답 분석 노트북](notebooks/23_qwen_lora_analysis.ipynb): GPU 없이 저장 예측을 다시 계산한다.
+- [Qwen 결과](reports/current/sllm_results.md) · [입력·경계 진단](reports/current/sllm_boundary_diagnosis.md)
+- [포트폴리오 콘텐츠](docs/portfolio/rfp_portfolio_detailed.md)
+
+> 아래 결과표와 모델 비교 설명은 **10문서 v4의 당시 결과**다. 최신 v5·v7 결과는 위 자료를 따른다.
 
 ## 결과
 

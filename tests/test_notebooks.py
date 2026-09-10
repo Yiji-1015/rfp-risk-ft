@@ -27,6 +27,7 @@ EXPECTED_NOTEBOOKS = {
     "20_boundary_cases.ipynb",
     "21_cluster_diagnostics.ipynb",
     "22_project_summary.ipynb",
+    "23_qwen_lora_analysis.ipynb",
 }
 
 
